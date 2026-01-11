@@ -3,6 +3,7 @@ import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import GlobeBackground from "@/components/ui/GlobeBackground";
 import Navbar from "@/components/ui/Navbar";
+import StructuredData from "@/components/StructuredData";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -15,8 +16,79 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Binod Prasad Joshi | Cloud & Backend Engineer",
-  description: "Portfolio of Binod Prasad Joshi, AWS Certified Backend & Cloud Engineer.",
+  title: {
+    default: "Binod Prasad Joshi | AWS Certified Cloud & Backend Engineer",
+    template: "%s | Binod Prasad Joshi"
+  },
+  description: "Portfolio of Binod Prasad Joshi - AWS Certified Solutions Architect & Developer Associate. Specializing in cloud architecture, backend development, FastAPI, Docker, and cloud-native security.",
+  keywords: [
+    "Binod Prasad Joshi",
+    "AWS Certified",
+    "Cloud Engineer",
+    "Backend Developer",
+    "Solutions Architect",
+    "FastAPI",
+    "Python Developer",
+    "Docker",
+    "Cloud Architecture",
+    "Nepal Developer",
+    "AWS Solutions Architect",
+    "AWS Developer Associate",
+    "Cloud Native Security",
+    "Backend Engineering"
+  ],
+  authors: [{ name: "Binod Prasad Joshi", url: "https://github.com/Binod231" }],
+  creator: "Binod Prasad Joshi",
+  publisher: "Binod Prasad Joshi",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL("https://portfolio-bin.vercel.app"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://portfolio-bin.vercel.app",
+    title: "Binod Prasad Joshi | AWS Certified Cloud & Backend Engineer",
+    description: "Portfolio showcasing cloud engineering expertise, AWS certifications, and backend development projects. Specializing in FastAPI, Docker, and cloud-native solutions.",
+    siteName: "Binod Prasad Joshi Portfolio",
+    images: [
+      {
+        url: "/portfoilo.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "Binod Prasad Joshi - Cloud & Backend Engineer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Binod Prasad Joshi | AWS Certified Cloud & Backend Engineer",
+    description: "AWS Certified Solutions Architect & Developer. Specializing in cloud architecture, FastAPI, and backend development.",
+    images: ["/portfoilo.jpeg"],
+    creator: "@binodprasadjoshi",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
@@ -26,6 +98,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <StructuredData />
+      </head>
       <body
         suppressHydrationWarning={true}
         className={`${inter.variable} ${outfit.variable} antialiased text-foreground font-sans relative selection:bg-primary/20 selection:text-primary`}

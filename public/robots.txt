@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://portfolio-bin.vercel.app/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 0
+
+# Disallow admin paths (if any in future)
+# Disallow: /admin/

@@ -17,8 +17,16 @@ export default function SectionWrapper({ children, id, className, delay = 0 }: S
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, margin: "-100px", amount: 0.3 }}
-        transition={{ duration: 0.6, delay, ease: "easeOut" }}
+        viewport={{ 
+          once: false, 
+          margin: "0px 0px -15% 0px", // Trigger when 15% from bottom of viewport
+          amount: 0.2 // Trigger when 20% visible (better for mobile)
+        }}
+        transition={{ 
+          duration: 0.8, // Longer duration for better visibility
+          delay, 
+          ease: "easeOut" 
+        }}
       >
         {children}
       </motion.div>

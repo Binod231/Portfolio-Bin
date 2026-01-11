@@ -1,0 +1,16 @@
+{
+    "name": "Binod Prasad Joshi Portfolio",
+    "short_name": "BP Portfolio",
+    "description": "Portfolio of Binod Prasad Joshi - AWS Certified Cloud & Backend Engineer",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#030712",
+    "theme_color": "#2563eb",
+    "icons": [
+        {
+            "src": "/favicon.ico",
+            "sizes": "any",
+            "type": "image/x-icon"
+        }
+    ]
+}

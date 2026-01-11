@@ -7,7 +7,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.0-FF0055?style=flat-square)](https://www.framer.com/motion/)
 
-**Live Demo:** [Coming Soon]
+**Live Demo:** https://binodprasadjoshi.vercel.app/
 
 ---
 

@@ -5,8 +5,8 @@ export default function StructuredData() {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Binod Prasad Joshi",
-    url: "https://portfolio-bin.vercel.app",
-    image: "https://portfolio-bin.vercel.app/portfoilo.jpeg",
+    url: "https://binodprasadjoshi.com.np",
+    image: "https://binodprasadjoshi.com.np/portfoilo.jpeg",
     sameAs: [
       "https://github.com/Binod231",
       "https://www.linkedin.com/in/binod-prasad-joshi-549067281",

@@ -45,14 +45,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://portfolio-bin.vercel.app"),
+  metadataBase: new URL("https://binodprasadjoshi.com.np"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://portfolio-bin.vercel.app",
+    url: "https://binodprasadjoshi.com.np",
     title: "Binod Prasad Joshi | AWS Certified Cloud & Backend Engineer",
     description: "Portfolio showcasing cloud engineering expertise, AWS certifications, and backend development projects. Specializing in FastAPI, Docker, and cloud-native solutions.",
     siteName: "Binod Prasad Joshi Portfolio",

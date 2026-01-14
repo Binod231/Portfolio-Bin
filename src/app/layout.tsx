@@ -98,13 +98,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <head>
-        <StructuredData />
-      </head>
       <body
         suppressHydrationWarning={true}
         className={`${inter.variable} ${outfit.variable} antialiased text-foreground font-sans relative selection:bg-primary/20 selection:text-primary`}
       >
+        <StructuredData />
         {/* Solid Background Layer */}
         <div className="fixed inset-0 bg-background z-[-2]" />
         

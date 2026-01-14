@@ -41,9 +41,6 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h2 className="text-xl md:text-2xl font-semibold text-blue-400 mb-4">
-              Hi, I'm Binod Prasad Joshi
-            </h2>
             <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-6 leading-tight">
               Building Scalable <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Cloud-Native Systems</span>

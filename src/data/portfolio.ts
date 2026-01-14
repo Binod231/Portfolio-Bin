@@ -8,7 +8,7 @@ export const portfolio = {
     links: {
       github: "https://github.com/Binod231", // Placeholder
       linkedin: "https://www.linkedin.com/in/binod-prasad-joshi-549067281", // Placeholder
-      resume: "https://drive.google.com/file/d/12hdGpkW3rVX7Uknl0PXPvyNTzCajQTTz/view?usp=drive_link",
+      resume: "https://drive.google.com/file/d/1WCPjfw0yLgO1gQfOgpPcib6qczGJu0V7/view?usp=drive_link",
     },
     photo: "/portfoilo.jpeg",
   },
@@ -42,8 +42,8 @@ export const portfolio = {
         "Worked with RBAC, secure APIs, multi-role platforms",
       ],
       history: [
-         { role: "Backend Engineer Trainee", period: "Dec 2025 – Jan 2026" },
-         { role: "Backend Software Intern", period: "Sep 2025 – Dec 2025" }
+        { role: "Backend Engineer Trainee", period: "Dec 2025 – Jan 2026" },
+        { role: "Backend Software Intern", period: "Sep 2025 – Dec 2025" }
       ]
     },
     {
@@ -130,7 +130,7 @@ export const portfolio = {
       type: "Desktop Application",
       desc: "Centralized patient information system streamlining hospital operations.",
       tech: ["Python", "Tkinter", "SQLite", "MySQL"],
-      repo: "https://github.com/Binod231/Hospital-Management-System.git", 
+      repo: "https://github.com/Binod231/Hospital-Management-System.git",
       color: "cyan",
       highlights: [
         "Engineered Tkinter-based GUI for streamlined navigation",

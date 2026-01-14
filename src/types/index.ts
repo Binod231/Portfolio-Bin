@@ -46,8 +46,12 @@ export interface ProjectItem {
 }
 
 export interface CertificationItem {
-  name: string;
+  title: string;
   issuer: string;
-  validity?: string;
-  badge?: string;
+  date: string;
+  id?: string;
+  theme?: string;
+  border?: string;
+  gradient?: string;
+  link?: string;
 }

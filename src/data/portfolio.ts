@@ -149,6 +149,8 @@ export const portfolio = {
       theme: "orange",
       border: "hover:border-orange-500/50",
       gradient: "from-orange-500/10 to-transparent",
+      link: "https://cp.certmetrics.com/amazon/en/public/verify/credential/608246a4da294388bcb53230d5012505", // Placeholder logic
+
     },
     {
       title: "AWS Certified Cloud Practitioner",
@@ -158,6 +160,8 @@ export const portfolio = {
       theme: "blue",
       border: "hover:border-blue-500/50",
       gradient: "from-blue-500/10 to-transparent",
+      link: "https://www.credly.com/badges/f31fbcf5-1fdc-4f17-9f1b-41d7a1973d5c/public_url",
+
     },
     {
       title: "AWS Cloud Quest: Cloud Practitioner",
@@ -167,6 +171,8 @@ export const portfolio = {
       theme: "green",
       border: "hover:border-green-500/50",
       gradient: "from-green-500/10 to-transparent",
+      link: "https://www.credly.com/badges/f3b317af-3010-4168-a35d-57019fab009e/public_url",
+
     },
     {
       title: "NPTEL Elite + Silver Award",
@@ -176,6 +182,8 @@ export const portfolio = {
       theme: "yellow",
       border: "hover:border-yellow-500/50",
       gradient: "from-yellow-500/10 to-transparent",
+      link: "https://drive.google.com/file/d/1PLmbxr-GYJdqlXvptDIMHc2d7Xa9_DVz/view?usp=drive_link",
+
     },
     {
       title: "Top SQL 50 Badge",
@@ -185,6 +193,8 @@ export const portfolio = {
       theme: "amber",
       border: "hover:border-amber-500/50",
       gradient: "from-amber-500/10 to-transparent",
+      link: "https://leetcode.com/u/Binod124/",
+
     },
     {
       title: "AWS Academy Graduate",
@@ -193,7 +203,9 @@ export const portfolio = {
       id: "FOUNDATION",
       theme: "purple",
       border: "hover:border-purple-500/50",
-      gradient: "from-purple-500/10 to-transparent"
+      gradient: "from-purple-500/10 to-transparent",
+      link: "https://www.credly.com/badges/399aee65-8615-4184-8e2e-936079480423/public_url",
+
     },
   ],
   blogs: [

@@ -2,7 +2,7 @@
 
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import { portfolio } from "@/data/portfolio";
-import { Award, Cloud, Database, GraduationCap, Trophy, Gamepad2 } from "lucide-react";
+import { Award, Cloud, Database, GraduationCap, Trophy, Gamepad2, ExternalLink } from "lucide-react";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
 const getIcon = (id: string) => {
@@ -85,7 +85,7 @@ export default function Certifications() {
                   rounded-2xl p-6 flex flex-col items-start gap-4 transition-all duration-300
                   ${cert.border} hover:shadow-2xl ${style.shadow}
                 `}>
-                  
+
                   {/* Card Background Gradient (Subtle) */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${cert.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}></div>
 
@@ -98,14 +98,31 @@ export default function Certifications() {
                   </div>
 
                   <div className="relative z-10 w-full">
-                    <h3 className={`text-lg font-bold text-white mb-2 leading-tight ${style.titleGroupText} transition-colors`}>
-                      {cert.title}
-                    </h3>
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className={`text-lg font-bold text-white leading-tight ${style.titleGroupText} transition-colors pr-2`}>
+                        {cert.title}
+                      </h3>
+                      {cert.link && (
+                        <a
+                          href={cert.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`
+                                    p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all
+                                    border border-white/5 hover:border-white/20
+                                `}
+                          aria-label={`Verify ${cert.title}`}
+                        >
+                          <ExternalLink size={16} />
+                        </a>
+                      )}
+                    </div>
+
                     <div className="text-sm font-medium text-slate-400 mb-4 pb-4 border-b border-white/5">{cert.issuer}</div>
-                    
+
                     <div className="flex items-center justify-between mt-auto w-full pt-2 gap-3">
-                       <span className="text-[10px] font-mono tracking-widest uppercase text-slate-500 px-2 py-1 rounded border border-white/5 whitespace-nowrap">{cert.id}</span>
-                       <span className={`text-xs font-semibold ${style.dateText} text-right`}>{cert.date}</span>
+                      <span className="text-[10px] font-mono tracking-widest uppercase text-slate-500 px-2 py-1 rounded border border-white/5 whitespace-nowrap">{cert.id}</span>
+                      <span className={`text-xs font-semibold ${style.dateText} text-right`}>{cert.date}</span>
                     </div>
                   </div>
                 </div>

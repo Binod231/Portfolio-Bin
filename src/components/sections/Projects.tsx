@@ -98,7 +98,13 @@ export default function Projects() {
                       </div>
                       <div className="flex gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
                         {project.repo && (
-                          <a href={project.repo} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+                          <a 
+                            href={project.repo} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            aria-label="View Source Code"
+                            className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                          >
                             <Github size={18} />
                           </a>
                         )}

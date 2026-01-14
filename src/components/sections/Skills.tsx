@@ -156,10 +156,11 @@ export default function Skills() {
                       ) : (
                         // Pure Icon
                         <div className="w-full h-full">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
+                          <Image
                             src={tech.icon}
                             alt={tech.name}
+                            width={tech.size}
+                            height={tech.size}
                             className="w-full h-full object-contain drop-shadow-2xl filter transition-all"
                           />
                         </div>

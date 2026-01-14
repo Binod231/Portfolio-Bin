@@ -17,11 +17,14 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: {
-    default: "Binod Prasad Joshi | AWS Certified Cloud & Backend Engineer",
+    default: "Binod Portfolio | Binod Prasad Joshi - AWS Certified Cloud Engineer",
     template: "%s | Binod Prasad Joshi"
   },
-  description: "Portfolio of Binod Prasad Joshi - AWS Certified Solutions Architect & Developer Associate. Specializing in cloud architecture, backend development, FastAPI, Docker, and cloud-native security.",
+  description: "Binod Portfolio - Official portfolio of Binod Prasad Joshi. AWS Certified Solutions Architect & Developer Associate specializing in cloud architecture, FastAPI, and Docker.",
   keywords: [
+    "Binod Portfolio",
+    "Binod Prasad Joshi Portfolio",
+    "Binod Nepal Portfolio",
     "Binod Prasad Joshi",
     "AWS Certified",
     "Cloud Engineer",

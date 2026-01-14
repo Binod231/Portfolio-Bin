@@ -56,7 +56,7 @@ export default function About() {
                     </div>
 
                     <h3 className="text-2xl font-bold text-white mb-4">
-                      Hello, I'm Binod.
+                      Hello, I'm Binod Prasad Joshi.
                     </h3>
 
                     <p className="text-lg text-slate-400 leading-relaxed mb-4">

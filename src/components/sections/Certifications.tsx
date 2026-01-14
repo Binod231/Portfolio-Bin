@@ -90,33 +90,34 @@ export default function Certifications() {
                   <div className={`absolute inset-0 bg-gradient-to-br ${cert.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}></div>
 
                   {/* Icon with Glow */}
-                  <div className={`
-                    relative p-3 rounded-xl ${style.iconText} 
-                    ring-1 ring-white/5 shadow-inner group-hover:scale-110 transition-transform duration-300
-                  `}>
-                    {getIcon(cert.id || "")}
-                  </div>
+                  {/* --- Header Row: Icon Left, Link Right --- */}
+                  <div className="w-full flex justify-between items-start mb-4 relative z-10">
+                    <div className={`
+                      relative p-3 rounded-xl ${style.iconText} 
+                      ring-1 ring-white/5 shadow-inner group-hover:scale-110 transition-transform duration-300
+                    `}>
+                      {getIcon(cert.id || "")}
+                    </div>
 
-                  <div className="relative z-10 w-full">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className={`text-lg font-bold text-white leading-tight ${style.titleGroupText} transition-colors pr-2`}>
-                        {cert.title}
-                      </h3>
-                      {cert.link && (
+                    {cert.link && (
+                      <div className="opacity-50 group-hover:opacity-100 transition-opacity">
                         <a
                           href={cert.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`
-                                    p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all
-                                    border border-white/5 hover:border-white/20
-                                `}
+                          className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors block"
                           aria-label={`Verify ${cert.title}`}
                         >
-                          <ExternalLink size={16} />
+                          <ExternalLink size={18} />
                         </a>
-                      )}
-                    </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="relative z-10 w-full flex-grow flex flex-col">
+                    <h3 className={`text-lg font-bold text-white mb-2 leading-tight ${style.titleGroupText} transition-colors`}>
+                      {cert.title}
+                    </h3>
 
                     <div className="text-sm font-medium text-slate-400 mb-4 pb-4 border-b border-white/5">{cert.issuer}</div>
 

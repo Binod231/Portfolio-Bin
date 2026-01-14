@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Terminal, Github, Linkedin, FileText } from "lucide-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { portfolio } from "@/data/portfolio";
@@ -99,7 +100,13 @@ export default function Navbar() {
         >
           <div className="flex items-center gap-3 md:gap-4">
             <div className="relative flex items-center justify-center shrink-0">
-              <img src="/favicon.ico" alt="Logo" className="w-12 h-12 md:w-14 md:h-14" />
+               <Image 
+                src="/favicon.ico" 
+                alt="Logo" 
+                width={48} 
+                height={48} 
+                className="w-12 h-12 md:w-14 md:h-14 object-contain invert" 
+              />
             </div>
             <div className="font-bold text-lg sm:text-xl md:text-3xl tracking-tight whitespace-nowrap">
               Binod<span className="text-blue-500"> Prasad</span><span className="tracking-tight whitespace-nowrap"> Joshi</span>
@@ -133,10 +140,22 @@ export default function Navbar() {
 
         {/* Desktop Social/CTA */}
         <div className="hidden lg:flex items-center gap-2 ml-2">
-          <a href={portfolio.personal.links.github} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full border border-transparent hover:border-white/10">
+          <a 
+            href={portfolio.personal.links.github} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            aria-label="GitHub Profile"
+            className="p-2 text-slate-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full border border-transparent hover:border-white/10"
+          >
             <Github className="w-5 h-5" />
           </a>
-          <a href={portfolio.personal.links.linkedin} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full border border-transparent hover:border-white/10">
+          <a 
+            href={portfolio.personal.links.linkedin} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            aria-label="LinkedIn Profile"
+            className="p-2 text-slate-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full border border-transparent hover:border-white/10"
+          >
             <Linkedin className="w-5 h-5" />
           </a>
           <Button size="sm" className="ml-2 bg-white text-slate-900 hover:bg-slate-200" asChild>
@@ -192,10 +211,22 @@ export default function Navbar() {
                 </button>
               ))}
               <div className="flex items-center gap-4 mt-2 pt-4 border-t border-white/10 px-2 justify-center">
-                <a href={portfolio.personal.links.github} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white bg-white/5 rounded-full">
+                <a 
+                  href={portfolio.personal.links.github} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  aria-label="GitHub Profile"
+                  className="p-2 text-slate-400 hover:text-white bg-white/5 rounded-full"
+                >
                   <Github className="w-5 h-5" />
                 </a>
-                <a href={portfolio.personal.links.linkedin} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white bg-white/5 rounded-full">
+                <a 
+                  href={portfolio.personal.links.linkedin} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  aria-label="LinkedIn Profile"
+                  className="p-2 text-slate-400 hover:text-white bg-white/5 rounded-full"
+                >
                   <Linkedin className="w-5 h-5" />
                 </a>
                 <Button size="sm" className="ml-2 bg-blue-600 hover:bg-blue-500 text-white border-none" asChild>

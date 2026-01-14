@@ -38,24 +38,30 @@ export default function Navbar() {
     const handleScrollForActive = () => {
       // Get all sections
       const sectionIds = ['hero', ...navItems.map(item => item.href.replace("#", ""))];
-      
+
+      // Bottom of page check
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50) {
+        setActiveSection(sectionIds[sectionIds.length - 1]);
+        return;
+      }
+
       let currentSection = sectionIds[0];
       const scrollY = window.scrollY;
-      
+
       // Check each section
       for (const sectionId of sectionIds) {
         const element = document.getElementById(sectionId);
         if (element) {
           const rect = element.getBoundingClientRect();
           const elementTop = rect.top + scrollY;
-          
+
           // If we've scrolled past this section's top (with small offset), it's active
           if (scrollY >= elementTop - 200) {
             currentSection = sectionId;
           }
         }
       }
-      
+
       setActiveSection(currentSection);
     };
 
@@ -79,26 +85,26 @@ export default function Navbar() {
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled 
-          ? "bg-slate-950/80 backdrop-blur-xl border-b border-white/5 py-3 shadow-lg shadow-black/20" 
+        scrolled
+          ? "bg-slate-950/80 backdrop-blur-xl border-b border-white/5 py-3 shadow-lg shadow-black/20"
           : "bg-transparent py-5"
       )}
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        
+
         {/* Logo */}
-        <div 
-            className="flex items-center gap-2 cursor-pointer group" 
-            onClick={() => scrollToSection("#hero")}
+        <div
+          className="flex items-center gap-2 cursor-pointer group"
+          onClick={() => scrollToSection("#hero")}
         >
-            <div className="flex items-center gap-3 md:gap-4">
-              <div className="relative flex items-center justify-center shrink-0">
-                <img src="/favicon.ico" alt="Logo" className="w-12 h-12 md:w-14 md:h-14" />
-              </div>
-              <div className="font-bold text-lg sm:text-xl md:text-3xl tracking-tight whitespace-nowrap">
-                Binod<span className="text-blue-500"> Prasad</span><span className="tracking-tight whitespace-nowrap"> Joshi</span>
-              </div>
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="relative flex items-center justify-center shrink-0">
+              <img src="/favicon.ico" alt="Logo" className="w-12 h-12 md:w-14 md:h-14" />
             </div>
+            <div className="font-bold text-lg sm:text-xl md:text-3xl tracking-tight whitespace-nowrap">
+              Binod<span className="text-blue-500"> Prasad</span><span className="tracking-tight whitespace-nowrap"> Joshi</span>
+            </div>
+          </div>
         </div>
 
         <div className="hidden lg:flex items-center gap-1 bg-slate-900/50 p-1 rounded-full border border-white/5 backdrop-blur-sm">
@@ -108,8 +114,8 @@ export default function Navbar() {
               onClick={() => scrollToSection(item.href)}
               className={cn(
                 "px-3 xl:px-4 py-2 text-xs xl:text-sm font-medium rounded-full transition-colors relative z-10 whitespace-nowrap",
-                activeSection === item.href.substring(1) 
-                  ? "text-white" 
+                activeSection === item.href.substring(1)
+                  ? "text-white"
                   : "text-slate-400 hover:text-white"
               )}
             >
@@ -127,21 +133,21 @@ export default function Navbar() {
 
         {/* Desktop Social/CTA */}
         <div className="hidden lg:flex items-center gap-2 ml-2">
-            <a href={portfolio.personal.links.github} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full border border-transparent hover:border-white/10">
-                <Github className="w-5 h-5" />
+          <a href={portfolio.personal.links.github} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full border border-transparent hover:border-white/10">
+            <Github className="w-5 h-5" />
+          </a>
+          <a href={portfolio.personal.links.linkedin} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full border border-transparent hover:border-white/10">
+            <Linkedin className="w-5 h-5" />
+          </a>
+          <Button size="sm" className="ml-2 bg-white text-slate-900 hover:bg-slate-200" asChild>
+            <a href={portfolio.personal.links.resume} target="_blank" rel="noopener noreferrer">
+              Resume
             </a>
-             <a href={portfolio.personal.links.linkedin} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full border border-transparent hover:border-white/10">
-                <Linkedin className="w-5 h-5" />
-            </a>
-            <Button size="sm" className="ml-2 bg-white text-slate-900 hover:bg-slate-200" asChild>
-                <a href={portfolio.personal.links.resume} target="_blank" rel="noopener noreferrer">
-                    Resume
-                </a>
-            </Button>
+          </Button>
         </div>
 
         {/* Mobile Menu Toggle */}
-        <button 
+        <button
           className="lg:hidden p-2 text-white bg-white/5 rounded-lg border border-white/10"
           onClick={() => setIsOpen(!isOpen)}
         >
@@ -177,25 +183,25 @@ export default function Navbar() {
                   }}
                   className={cn(
                     "w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-colors block",
-                    activeSection === item.href.substring(1) 
-                      ? "text-blue-400 bg-blue-500/10 border border-blue-500/20" 
+                    activeSection === item.href.substring(1)
+                      ? "text-blue-400 bg-blue-500/10 border border-blue-500/20"
                       : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent"
                   )}
                 >
                   {item.name}
                 </button>
               ))}
-               <div className="flex items-center gap-4 mt-2 pt-4 border-t border-white/10 px-2 justify-center">
-                  <a href={portfolio.personal.links.github} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white bg-white/5 rounded-full">
-                      <Github className="w-5 h-5" />
-                  </a>
-                  <a href={portfolio.personal.links.linkedin} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white bg-white/5 rounded-full">
-                      <Linkedin className="w-5 h-5" />
-                  </a>
-                  <Button size="sm" className="ml-2 bg-blue-600 hover:bg-blue-500 text-white border-none" asChild>
-                     <a href={portfolio.personal.links.resume} target="_blank" rel="noopener noreferrer">Resume</a>
-                  </Button>
-               </div>
+              <div className="flex items-center gap-4 mt-2 pt-4 border-t border-white/10 px-2 justify-center">
+                <a href={portfolio.personal.links.github} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white bg-white/5 rounded-full">
+                  <Github className="w-5 h-5" />
+                </a>
+                <a href={portfolio.personal.links.linkedin} target="_blank" rel="noopener noreferrer" className="p-2 text-slate-400 hover:text-white bg-white/5 rounded-full">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+                <Button size="sm" className="ml-2 bg-blue-600 hover:bg-blue-500 text-white border-none" asChild>
+                  <a href={portfolio.personal.links.resume} target="_blank" rel="noopener noreferrer">Resume</a>
+                </Button>
+              </div>
             </div>
           </motion.div>
         )}

@@ -17,7 +17,7 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: {
-    default: "Binod Portfolio | Binod Prasad Joshi - AWS Certified Cloud Engineer",
+    default: "Binod Prasad Joshi - AWS Certified Cloud Engineer",
     template: "%s | Binod Prasad Joshi"
   },
   description: "Binod Portfolio - Official portfolio of Binod Prasad Joshi. AWS Certified Solutions Architect & Developer Associate specializing in cloud architecture, FastAPI, and Docker.",
@@ -108,14 +108,14 @@ export default function RootLayout({
         <StructuredData />
         {/* Solid Background Layer */}
         <div className="fixed inset-0 bg-background z-[-2]" />
-        
+
         {/* Interactive Canvas Layer - Globe Background */}
         <div className="fixed inset-0 z-[-1]">
-           <GlobeBackground />
+          <GlobeBackground />
         </div>
-        
+
         <Navbar />
-        
+
         {/* Content */}
         {children}
       </body>

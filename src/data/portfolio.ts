@@ -73,6 +73,19 @@ export const portfolio = {
   ],
   projects: [
     {
+      title: "Build a RAG API with FastAPI",
+      type: "AI Engineering",
+      desc: "Demonstrating RAG implementation with FastAPI, using Ollama, Chroma, and TinyLlama for local AI model execution.",
+      tech: ["Python", "FastAPI", "Ollama", "ChromaDB", "TinyLlama"],
+      repo: "https://learn.nextwork.org/nostalgic_pink_clever_cherimoya/docs/ai-devops-api",
+      color: "violet",
+      highlights: [
+        "Integrated Ollama and TinyLlama for local AI model execution",
+        "Built a RAG pipeline with ChromaDB for knowledge base embeddings",
+        "Developed FastAPI endpoints for querying and dynamic content management",
+      ],
+    },
+    {
       title: "School Bus Management System",
       type: "Cloud SaaS",
       desc: "Multi-tenant backend with real-time GPS ingestion.",

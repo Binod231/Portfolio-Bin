@@ -43,6 +43,8 @@ export interface ProjectItem {
   desc: string;
   tech: string[];
   highlights: string[];
+  repo?: string;
+  color?: string;
 }
 
 export interface CertificationItem {

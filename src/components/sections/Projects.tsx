@@ -5,13 +5,13 @@ import { portfolio } from "@/data/portfolio";
 import { Terminal, Github, ExternalLink } from "lucide-react";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
-const projectStyles: Record<string, { 
-    border: string; 
-    gradient: string; 
-    iconBg: string; 
-    tech: string; 
-    glow: string; 
-    shadow: string; 
+const projectStyles: Record<string, {
+  border: string;
+  gradient: string;
+  iconBg: string;
+  tech: string;
+  glow: string;
+  shadow: string;
 }> = {
   emerald: {
     border: "hover:border-emerald-500/50",
@@ -75,8 +75,8 @@ export default function Projects() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => {
-             const style = projectStyles[project.color || 'emerald'] || projectStyles.emerald;
-             return (
+            const style = projectStyles[project.color || 'emerald'] || projectStyles.emerald;
+            return (
               <RevealOnScroll key={index} delay={index * 100}>
                 {/* --- MODERN PROJECT CARD --- */}
                 <div className={`
@@ -98,20 +98,20 @@ export default function Projects() {
                       </div>
                       <div className="flex gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
                         {project.repo && (
-                          <a 
-                            href={project.repo} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            aria-label="View Source Code"
+                          <a
+                            href={project.repo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={project.repo.includes("github.com") ? "View Source Code" : "View Project"}
                             className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
                           >
-                            <Github size={18} />
+                            {project.repo.includes("github.com") ? <Github size={18} /> : <ExternalLink size={18} />}
                           </a>
                         )}
                         {/* Placeholder for live link */}
                       </div>
                     </div>
-                    
+
                     <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
                       {project.title}
                     </h3>
@@ -119,7 +119,7 @@ export default function Projects() {
                       {project.desc}
                     </p>
                   </div>
-                  
+
                   {/* Tech Stack Pills */}
                   <div className="mt-auto flex flex-wrap gap-2 relative z-10">
                     {project.tech.map((t, i) => (
@@ -141,7 +141,7 @@ export default function Projects() {
                   `}></div>
                 </div>
               </RevealOnScroll>
-             );
+            );
           })}
         </div>
       </div>

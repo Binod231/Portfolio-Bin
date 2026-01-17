@@ -162,7 +162,7 @@ export const portfolio = {
       theme: "orange",
       border: "hover:border-orange-500/50",
       gradient: "from-orange-500/10 to-transparent",
-      link: "https://cp.certmetrics.com/amazon/en/public/verify/credential/608246a4da294388bcb53230d5012505", // Placeholder logic
+      link: "https://www.credly.com/badges/4fe1dc98-121e-41ed-a1b1-0d611ef6b6ac/public_url", // Placeholder logic
 
     },
     {

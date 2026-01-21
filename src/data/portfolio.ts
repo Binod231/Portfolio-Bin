@@ -225,23 +225,15 @@ export const portfolio = {
     {
       title: "Hands-On: Deploying a Backend Application on AWS EC2 (Beginner-Friendly)",
       description: "A step-by-step guide to deploying your first backend application on AWS EC2, covering setup, security groups, and deployment best practices.",
-      date: "January 2026",
+      date: "January 8, 2026",
       tags: ["AWS", "EC2", "Tutorial", "DevOps"],
       url: "https://awspathway.com/blog/hands-on-deploying-a-backend-application-on-aws-ec2-beginner-friendly",
       color: "blue"
     },
     {
-      title: "AWS Latest Updates 2025",
-      description: "A comprehensive roundup of the latest AWS service updates, features, and enhancements announced in 2025.",
-      date: "January 2026",
-      tags: ["AWS", "Updates", "Cloud"],
-      url: "https://awspathway.com/blog/aws-latest-updates-2025",
-      color: "emerald"
-    },
-    {
       title: "AWS re:Invent 2025 Recap: The 5 Biggest Announcements Shaping the Cloud",
       description: "An in-depth analysis of the most impactful announcements from AWS re:Invent 2025 and their implications for cloud engineering.",
-      date: "December 2025",
+      date: "December 15, 2025",
       tags: ["AWS", "re:Invent", "Cloud News"],
       url: "https://awspathway.com/blog/aws-re-invent-2025-recap-the-5-biggest-announcements-shaping-the-cloud",
       color: "orange"

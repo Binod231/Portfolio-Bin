@@ -231,6 +231,14 @@ export const portfolio = {
       color: "blue"
     },
     {
+      title: "AWS Latest Updates 2025",
+      description: "A comprehensive roundup of the latest AWS service updates, features, and enhancements announced in 2025.",
+      date: "January 2026",
+      tags: ["AWS", "Updates", "Cloud"],
+      url: "https://awspathway.com/blog/aws-latest-updates-2025",
+      color: "emerald"
+    },
+    {
       title: "AWS re:Invent 2025 Recap: The 5 Biggest Announcements Shaping the Cloud",
       description: "An in-depth analysis of the most impactful announcements from AWS re:Invent 2025 and their implications for cloud engineering.",
       date: "December 2025",
@@ -239,12 +247,20 @@ export const portfolio = {
       color: "orange"
     },
     {
-      title: "AWS Latest Updates 2025",
-      description: "A comprehensive roundup of the latest AWS service updates, features, and enhancements announced in 2025.",
-      date: "January 2026",
-      tags: ["AWS", "Updates", "Cloud"],
-      url: "https://awspathway.com/blog/aws-latest-updates-2025",
-      color: "emerald"
+      title: "The Definitive Guide to AWS RDS: Architecting Persistence for Modern Backends",
+      description: "In the modern cloud ecosystem, \"stateless\" is the goal for compute, but \"stateful\" is the reality for business logic. Every user session, every transaction, and every inventory update needs a home. While spinning up an EC2 instance or a Lambda function is trivial, architecting a production-ready, highly available, and secure database layer remains one of the most challenging tasks for a Backend Engineer. This is not a quick-start guide. This is an architectural deep dive. We are going to deconstruct the Amazon Relational Database Service (RDS), dissect the networking principles that secure it, and build a robust environment using the \"Least Privilege\" security model. We will move beyond the Management Console and verify our infrastructure using the command line, just as a DevOps engineer would in a real-world scenario.",
+      date: "October 18, 2025",
+      tags: ["AWS", "RDS", "Database", "Architecture", "Security"],
+      url: "https://awspathway.com/blog/build-your-db-server-and-interact-with-your-db-using-an-app",
+      color: "amber"
+    },
+    {
+      title: "AWS Amplify Deployment & Security Guide for Next.js (Production-Ready)",
+      description: "Deploying a modern web application is not just about pushing code to the cloud; it's about leveraging the cloud's capabilities to deliver a seamless user experience. A production-ready deployment requires a robust DNS strategy and secure edge protection.",
+      date: "September 15, 2025",
+      tags: ["AWS Amplify", "Next.js", "Security", "Deployment"],
+      url: "https://awspathway.com/blog/aws-amplify-deployment-security-guide-for-next-js-production-ready",
+      color: "purple"
     },
   ],
 };

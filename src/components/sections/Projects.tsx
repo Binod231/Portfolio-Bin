@@ -4,6 +4,7 @@ import SectionWrapper from "@/components/ui/SectionWrapper";
 import { portfolio } from "@/data/portfolio";
 import { Terminal, Github, ExternalLink } from "lucide-react";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
+import ThreeDTiltCard from "@/components/ui/ThreeDTiltCard";
 
 const projectStyles: Record<string, {
   border: string;
@@ -52,6 +53,22 @@ const projectStyles: Record<string, {
     tech: "group-hover:border-cyan-500/30 group-hover:text-cyan-300",
     glow: "bg-cyan-600/10 group-hover:bg-cyan-600/20",
     shadow: "hover:shadow-cyan-500/10"
+  },
+  red: {
+    border: "hover:border-red-500/50",
+    gradient: "from-transparent via-red-500 to-transparent",
+    iconBg: "text-red-400 group-hover:bg-red-500/20 group-hover:text-red-300 group-hover:ring-red-500/30",
+    tech: "group-hover:border-red-500/30 group-hover:text-red-300",
+    glow: "bg-red-600/10 group-hover:bg-red-600/20",
+    shadow: "hover:shadow-red-500/10"
+  },
+  violet: {
+    border: "hover:border-violet-500/50",
+    gradient: "from-transparent via-violet-500 to-transparent",
+    iconBg: "text-violet-400 group-hover:bg-violet-500/20 group-hover:text-violet-300 group-hover:ring-violet-500/30",
+    tech: "group-hover:border-violet-500/30 group-hover:text-violet-300",
+    glow: "bg-violet-600/10 group-hover:bg-violet-600/20",
+    shadow: "hover:shadow-violet-500/10"
   }
 };
 
@@ -78,11 +95,15 @@ export default function Projects() {
             const style = projectStyles[project.color || 'emerald'] || projectStyles.emerald;
             return (
               <RevealOnScroll key={index} delay={index * 100}>
-                {/* --- MODERN PROJECT CARD --- */}
+                <ThreeDTiltCard intensity={8} className="h-full">
+                {/* --- GLASSMORPHISM + 3D PROJECT CARD --- */}
                 <div className={`
-                  group relative h-full border border-slate-800 rounded-2xl p-6 
-                  hover:-translate-y-2 ${style.border} transition-all duration-300 overflow-hidden
-                  shadow-lg ${style.shadow}
+                  group relative h-full min-h-[280px] border border-white/10 rounded-2xl p-6 
+                  backdrop-blur-xl bg-slate-900/40 
+                  transition-all duration-300 overflow-hidden
+                  shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05),inset_0_1px_0_rgba(255,255,255,0.05)]
+                  hover:shadow-[0_16px_48px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.1),0_0_60px_-15px_rgba(56,189,248,0.15),inset_0_1px_0_rgba(255,255,255,0.08)]
+                  ${style.border} ${style.shadow}
                 `}>
                   {/* Top Gradient Line */}
                   <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${style.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
@@ -140,6 +161,7 @@ export default function Projects() {
                     ${style.glow}
                   `}></div>
                 </div>
+                </ThreeDTiltCard>
               </RevealOnScroll>
             );
           })}

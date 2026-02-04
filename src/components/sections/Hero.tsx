@@ -1,10 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, ShieldCheck, ChevronRight } from "lucide-react";
-import SectionWrapper from "@/components/ui/SectionWrapper";
 
 export default function Hero() {
+  const { scrollYProgress } = useScroll();
+  const bgY1 = useTransform(scrollYProgress, [0, 0.5], ["0%", "15%"]);
+  const bgY2 = useTransform(scrollYProgress, [0, 0.5], ["0%", "-10%"]);
+  const bgY3 = useTransform(scrollYProgress, [0, 0.5], ["0%", "8%"]);
+  const bgOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0.6]);
 
   const scrollTo = (id: string) => {
     const element = document.getElementById(id);
@@ -19,10 +23,20 @@ export default function Hero() {
 
   return (
     <section id="hero" className="min-h-screen flex items-center justify-center relative pt-16 overflow-hidden">
-        {/* Background Gradients */}
+        {/* Parallax Background Gradients */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[100px]"></div>
+          <motion.div
+            style={{ y: bgY1, opacity: bgOpacity }}
+            className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] animate-pulse"
+          />
+          <motion.div
+            style={{ y: bgY2, opacity: bgOpacity }}
+            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[100px]"
+          />
+          <motion.div
+            style={{ y: bgY3 }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px]"
+          />
         </div>
 
         <div className="max-w-5xl mx-auto px-6 text-center z-10 relative">
@@ -31,7 +45,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/50 border border-slate-800 text-blue-400 text-sm font-medium mb-8 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/40 border border-white/10 text-blue-400 text-sm font-medium mb-8 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.05)]">
               <ShieldCheck size={14} /> 2x AWS Certified 
             </div>
           </motion.div>
@@ -67,7 +81,7 @@ export default function Hero() {
               <button onClick={() => scrollTo('projects')} className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2 cursor-pointer">
                 View My Work <ChevronRight size={18} />
               </button>
-              <button onClick={() => scrollTo('about')} className="w-full sm:w-auto px-8 py-4 bg-slate-900/50 hover:bg-slate-800 text-white rounded-xl font-semibold transition-all border border-slate-800 backdrop-blur-sm cursor-pointer">
+              <button onClick={() => scrollTo('about')} className="w-full sm:w-auto px-8 py-4 bg-slate-900/40 hover:bg-slate-800/80 text-white rounded-xl font-semibold transition-all border border-white/10 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.3)] cursor-pointer">
                 About Me
               </button>
             </div>

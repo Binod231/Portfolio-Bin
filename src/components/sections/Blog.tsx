@@ -36,6 +36,22 @@ const blogStyles: Record<string, {
     tag: "group-hover:border-emerald-500/30 group-hover:text-emerald-300",
     glow: "bg-emerald-600/10 group-hover:bg-emerald-600/20",
     shadow: "hover:shadow-emerald-500/10"
+  },
+  amber: {
+    border: "hover:border-amber-500/50",
+    gradient: "from-transparent via-amber-500 to-transparent",
+    iconBg: "text-amber-400 group-hover:bg-amber-500/20 group-hover:text-amber-300 group-hover:ring-amber-500/30",
+    tag: "group-hover:border-amber-500/30 group-hover:text-amber-300",
+    glow: "bg-amber-600/10 group-hover:bg-amber-600/20",
+    shadow: "hover:shadow-amber-500/10"
+  },
+  purple: {
+    border: "hover:border-purple-500/50",
+    gradient: "from-transparent via-purple-500 to-transparent",
+    iconBg: "text-purple-400 group-hover:bg-purple-500/20 group-hover:text-purple-300 group-hover:ring-purple-500/30",
+    tag: "group-hover:border-purple-500/30 group-hover:text-purple-300",
+    glow: "bg-purple-600/10 group-hover:bg-purple-600/20",
+    shadow: "hover:shadow-purple-500/10"
   }
 };
 
@@ -68,9 +84,12 @@ export default function Blog() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`
-                    group relative h-full border border-slate-800 rounded-2xl p-6 
-                    hover:-translate-y-2 ${style.border} transition-all duration-300 overflow-hidden
-                    shadow-lg ${style.shadow} block
+                    group relative h-full border border-white/10 rounded-2xl p-6 
+                    backdrop-blur-xl bg-slate-900/40
+                    hover:-translate-y-1 ${style.border} transition-all duration-300 overflow-hidden
+                    shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)]
+                    hover:shadow-[0_16px_48px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.1)]
+                    ${style.shadow} block
                   `}
                 >
                   {/* Top Gradient Line */}

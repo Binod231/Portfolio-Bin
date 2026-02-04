@@ -6,6 +6,13 @@ export interface PortfolioData {
   certifications: CertificationItem[];
 }
 
+export interface AboutCard {
+  title: string;
+  subtitle: string;
+  icon: "shield" | "cloud" | "code" | "database" | "book" | "globe" | "briefcase" | "award";
+  theme?: "blue" | "purple" | "emerald" | "amber" | "cyan";
+}
+
 export interface PersonalInfo {
   name: string;
   role: string;
@@ -18,6 +25,7 @@ export interface PersonalInfo {
     resume: string;
   };
   photo?: string;
+  aboutCards?: AboutCard[];
 }
 
 export interface Skills {
@@ -52,6 +60,8 @@ export interface CertificationItem {
   issuer: string;
   date: string;
   id?: string;
+  badgeId?: string;
+  image?: string;
   theme?: string;
   border?: string;
   gradient?: string;

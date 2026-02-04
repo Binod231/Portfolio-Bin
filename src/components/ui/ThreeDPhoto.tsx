@@ -62,9 +62,12 @@ export default function ThreeDPhoto({ src, alt, className }: ThreeDPhotoProps) {
         style={{
           transform: "translateZ(50px)",
           transformStyle: "preserve-3d",
+          boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1), 0 0 80px -20px rgba(56,189,248,0.3), inset 0 1px 0 rgba(255,255,255,0.2), inset -1px -1px 0 rgba(0,0,0,0.1)",
         }}
-        className="absolute inset-0 rounded-full shadow-2xl bg-gradient-to-br from-primary/20 to-secondary/20 p-1"
+        className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/30 via-primary/10 to-secondary/30 p-1 ring-2 ring-white/10"
       >
+        {/* Rim light - subtle gradient border */}
+        <div className="absolute top-0 left-0 right-0 h-1/2 rounded-t-full bg-gradient-to-b from-white/20 to-transparent opacity-60 pointer-events-none" />
         <div className="relative w-full h-full rounded-full overflow-hidden bg-background">
             <Image 
                 src={src} 
@@ -76,7 +79,7 @@ export default function ThreeDPhoto({ src, alt, className }: ThreeDPhotoProps) {
             />
             {/* Shine Effect */}
             <div 
-                className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/15 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                 style={{ mixBlendMode: "overlay" }}
             />
         </div>

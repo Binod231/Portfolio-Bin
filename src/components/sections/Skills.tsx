@@ -92,7 +92,7 @@ export default function Skills() {
             return (
               <div
                 key={tech.name}
-                className="absolute left-1/2 top-1/2"
+                className={`absolute left-1/2 top-1/2 pointer-events-none ${isCenter ? 'z-50' : 'z-10'}`}
                 style={{
                   width: radius * 2,
                   height: radius * 2,
@@ -127,7 +127,7 @@ export default function Skills() {
                       initial={{ scale: 0, opacity: 0 }}
                       whileInView={{ scale: 1, opacity: 1 }}
                       viewport={{ once: true, amount: 0.2 }}
-                      whileHover={{ scale: 1.3 }}
+                      whileHover={!isCenter ? { scale: 1.3 } : {}}
                       animate={!isCenter ? { rotate: -360 - tech.angle } : {}}
                       transition={
                         !isCenter
@@ -145,14 +145,19 @@ export default function Skills() {
                     >
                       {isCenter ? (
                         // AWS Center - Text Badge
-                        <div className="w-full h-full rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 backdrop-blur-md border-2 border-primary/40 flex items-center justify-center shadow-2xl">
+                        <a 
+                          href="https://www.credly.com/users/binod-prasad-joshi.69a505f6/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full h-full rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 backdrop-blur-md border-2 border-primary/40 flex items-center justify-center shadow-2xl hover:scale-105 transition-transform cursor-pointer"
+                        >
                           <div className="text-center">
                             <div className="text-4xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                               AWS
                             </div>
                             <div className="text-sm md:text-sm text-muted-foreground mt-1">Certified</div>
                           </div>
-                        </div>
+                        </a>
                       ) : (
                         // Pure Icon
                         <div className="w-full h-full">

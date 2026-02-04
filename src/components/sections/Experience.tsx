@@ -94,7 +94,7 @@ export default function Experience() {
                   transition={{ duration: 0.4 }}
                   className={`w-full md:w-[45%] pl-12 md:pl-0 relative z-10 text-left`}
                 >
-                   <div className={`bg-slate-900/50 border border-slate-800 p-6 rounded-3xl backdrop-blur-sm hover:border-blue-500/30 transition-all duration-300 group-hover:bg-slate-900/80 ${expandedId === index ? 'shadow-[0_0_30px_-5px_rgba(59,130,246,0.15)] border-blue-500/30' : ''}`}>
+                   <div className={`backdrop-blur-xl bg-slate-900/40 border border-white/10 p-6 rounded-3xl hover:border-blue-500/30 transition-all duration-300 group-hover:bg-slate-900/50 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.5),0_0_40px_-10px_rgba(59,130,246,0.15)] ${expandedId === index ? 'shadow-[0_12px_40px_rgba(0,0,0,0.5),0_0_40px_-10px_rgba(59,130,246,0.2)] border-blue-500/30' : ''}`}>
                       
                       <div className="flex flex-col mb-4 gap-2 items-start">
                         <div>

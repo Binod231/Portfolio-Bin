@@ -53,6 +53,12 @@ const certStyles: Record<string, { shadow: string; iconText: string; titleGroupT
     iconText: "text-purple-400",
     titleGroupText: "group-hover:text-purple-400",
     dateText: "text-purple-500/80"
+  },
+  pink: {
+    shadow: "hover:shadow-pink-900/20",
+    iconText: "text-pink-400",
+    titleGroupText: "group-hover:text-pink-400",
+    dateText: "text-pink-500/80"
   }
 };
 
@@ -81,9 +87,12 @@ export default function Certifications() {
               <RevealOnScroll key={index} delay={index * 100}>
                 {/* --- MODERN CERT CARD --- */}
                 <div className={`
-                  group relative h-full border border-slate-800 
+                  group relative h-full border border-white/10 
                   rounded-2xl p-6 flex flex-col items-start gap-4 transition-all duration-300
-                  ${cert.border} hover:shadow-2xl ${style.shadow}
+                  backdrop-blur-xl bg-slate-900/40
+                  shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)]
+                  hover:shadow-[0_16px_48px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.1)]
+                  ${cert.border} ${style.shadow}
                 `}>
 
                   {/* Card Background Gradient (Subtle) */}

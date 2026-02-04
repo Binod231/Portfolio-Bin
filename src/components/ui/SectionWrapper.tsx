@@ -27,13 +27,13 @@ export default function SectionWrapper({ children, id, className, delay = 0 }: S
         initial={{ opacity: 0, y: isMobile ? 10 : 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ 
-          once: false, 
-          margin: isMobile ? "0px" : "0px 0px -15% 0px",
-          amount: isMobile ? 0.1 : 0.2
+          once: true, 
+          margin: isMobile ? "0px" : "0px 0px -10% 0px",
+          amount: 0.2
         }}
         transition={{ 
-          duration: isMobile ? 0.3 : 0.6, // Fast on mobile, normal on desktop
-          delay: isMobile ? 0 : delay, // No delay on mobile
+          duration: isMobile ? 0.3 : 0.4, // Fast on mobile, snappy on desktop
+          delay: isMobile ? 0 : 0, // Minimize delay on desktop too
           ease: "easeOut" 
         }}
       >

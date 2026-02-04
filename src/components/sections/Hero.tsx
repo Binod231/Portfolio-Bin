@@ -29,7 +29,7 @@ export default function Hero() {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/50 border border-slate-800 text-blue-400 text-sm font-medium mb-8 backdrop-blur-sm">
               <ShieldCheck size={14} /> 2x AWS Certified 
@@ -39,7 +39,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: 0.4, delay: 0.05 }}
           >
             <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-6 leading-tight">
               Building Scalable <br/>
@@ -50,7 +50,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
           >
             <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
               I bridge the gap between application logic and infrastructure. 
@@ -61,7 +61,7 @@ export default function Hero() {
           <motion.div
              initial={{ opacity: 0, y: 20 }}
              animate={{ opacity: 1, y: 0 }}
-             transition={{ duration: 0.5, delay: 0.3 }}
+             transition={{ duration: 0.4, delay: 0.15 }}
           >
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button onClick={() => scrollTo('projects')} className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2 cursor-pointer">
@@ -77,7 +77,7 @@ export default function Hero() {
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1 }}
+            transition={{ delay: 0.8, duration: 1 }}
             className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-slate-600 cursor-pointer hover:text-blue-400 transition-colors"
             onClick={() => scrollTo('contact')}
         >

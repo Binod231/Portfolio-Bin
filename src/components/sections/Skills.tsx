@@ -72,8 +72,8 @@ export default function Skills() {
               }}
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: orbit * 0.2, duration: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ delay: orbit * 0.1, duration: 0.5 }}
             >
               {/* Orbit label - Always visible */}
               <div className="absolute -top-8 left-1/2 -translate-x-1/2">
@@ -126,21 +126,21 @@ export default function Skills() {
                       className="cursor-pointer w-full h-full"
                       initial={{ scale: 0, opacity: 0 }}
                       whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true }}
+                      viewport={{ once: true, amount: 0.2 }}
                       whileHover={{ scale: 1.3 }}
                       animate={!isCenter ? { rotate: -360 - tech.angle } : {}}
                       transition={
                         !isCenter
                           ? {
-                              scale: { delay: index * 0.1, type: "spring" },
-                              opacity: { delay: index * 0.1, type: "spring" },
+                              scale: { delay: index * 0.05, type: "spring" },
+                              opacity: { delay: index * 0.05, type: "spring" },
                               rotate: {
                                 duration: tech.speed,
                                 repeat: Infinity,
                                 ease: "linear",
                               },
                             }
-                          : { delay: index * 0.1, type: "spring" }
+                          : { delay: index * 0.05, type: "spring" }
                       }
                     >
                       {isCenter ? (

@@ -21,7 +21,8 @@ export default function About() {
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.4 }}
             className="flex items-center gap-4 mb-12"
           >
             <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-600/10 border border-blue-500/30 shadow-lg shadow-blue-500/20">
@@ -38,8 +39,8 @@ export default function About() {
             <motion.div 
                initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               transition={{ delay: 0.1 }}
+               viewport={{ once: true, amount: 0.2 }}
+               transition={{ duration: 0.4 }}
                className="lg:col-span-8 group relative h-full border border-slate-800 rounded-3xl p-6 hover:-translate-y-2 hover:border-blue-500/50 transition-all duration-300 overflow-hidden shadow-lg hover:shadow-blue-500/10"
             >
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -88,8 +89,8 @@ export default function About() {
               <motion.div 
                  initial={{ opacity: 0, y: 20 }}
                  whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ delay: 0.2 }}
+                 viewport={{ once: true, amount: 0.2 }}
+                 transition={{ duration: 0.4 }}
                  className="group relative border border-slate-800 p-6 rounded-3xl flex flex-col justify-center items-center text-center hover:-translate-y-2 hover:border-blue-500/50 transition-all duration-300 overflow-hidden shadow-lg hover:shadow-blue-500/10"
               >
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -108,8 +109,8 @@ export default function About() {
               <motion.div 
                  initial={{ opacity: 0, y: 20 }}
                  whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ delay: 0.3 }}
+                 viewport={{ once: true, amount: 0.2 }}
+                 transition={{ duration: 0.4, delay: 0.1 }}
                  className="group relative border border-slate-800 p-8 rounded-3xl flex items-center gap-4 hover:-translate-y-2 hover:border-purple-500/50 transition-all duration-300 overflow-hidden shadow-lg hover:shadow-purple-500/10"
               >
                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -129,8 +130,8 @@ export default function About() {
               <motion.div 
                  initial={{ opacity: 0, y: 20 }}
                  whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ delay: 0.4 }}
+                 viewport={{ once: true, amount: 0.2 }}
+                 transition={{ duration: 0.4, delay: 0.2 }}
                  className="group relative border border-slate-800 p-5 rounded-3xl flex items-center gap-4 hover:-translate-y-2 hover:border-emerald-500/50 transition-all duration-300 overflow-hidden shadow-lg hover:shadow-emerald-500/10"
               >
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>

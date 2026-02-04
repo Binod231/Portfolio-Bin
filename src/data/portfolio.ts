@@ -32,6 +32,7 @@ export const portfolio = {
       role: "Junior Backend / Cloud Engineer",
       period: "Jan 2026 – Present",
       type: "Remote",
+      tech: ["FastAPI", "AWS EC2", "Redis", "Docker", "PostgreSQL", "React", "AWS", "Laravel", "Cloud Architect"],
       impacts: [
         "Improved OAuth2 authentication performance by ~95% using Redis JWKS caching",
         "Built async backend services using FastAPI + Async SQLAlchemy",
@@ -98,6 +99,7 @@ export const portfolio = {
       role: "Data Science Intern",
       period: "Jun 2025 – Dec 2025",
       type: "Remote",
+      tech: ["Python", "LLMs", "RAG", "Vector DB", "Multi-Agent Systems", "LangChain", "LangGraph"],
       impacts: [
         "Developing an intelligent document analysis system with LLMs to automate processing of diverse document formats.",
         "Deployed a vector database supporting semantic search and high-accuracy RAG pipelines.",
@@ -142,6 +144,7 @@ export const portfolio = {
       role: "Backend Developer",
       period: "Freelance",
       type: "Remote",
+      tech: ["Flask", "SQLite", "JavaScript", "HTML/CSS"],
       impacts: [
         "Designed and developed a full-featured stock and billing system tailored to a client's bookstore business.",
         "Implemented real-time stock management with automatic inventory deduction during billing.",

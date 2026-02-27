@@ -12,6 +12,7 @@ const blogStyles: Record<string, {
     tag: string; 
     glow: string; 
     shadow: string; 
+    titleHover: string;
 }> = {
   blue: {
     border: "hover:border-blue-500/50",
@@ -19,7 +20,8 @@ const blogStyles: Record<string, {
     iconBg: "text-blue-400 group-hover:bg-blue-500/20 group-hover:text-blue-300 group-hover:ring-blue-500/30",
     tag: "group-hover:border-blue-500/30 group-hover:text-blue-300",
     glow: "bg-blue-600/10 group-hover:bg-blue-600/20",
-    shadow: "hover:shadow-blue-500/10"
+    shadow: "hover:shadow-blue-500/10",
+    titleHover: "group-hover:text-blue-400"
   },
   orange: {
     border: "hover:border-orange-500/50",
@@ -27,7 +29,8 @@ const blogStyles: Record<string, {
     iconBg: "text-orange-400 group-hover:bg-orange-500/20 group-hover:text-orange-300 group-hover:ring-orange-500/30",
     tag: "group-hover:border-orange-500/30 group-hover:text-orange-300",
     glow: "bg-orange-600/10 group-hover:bg-orange-600/20",
-    shadow: "hover:shadow-orange-500/10"
+    shadow: "hover:shadow-orange-500/10",
+    titleHover: "group-hover:text-orange-400"
   },
   emerald: {
     border: "hover:border-emerald-500/50",
@@ -35,7 +38,8 @@ const blogStyles: Record<string, {
     iconBg: "text-emerald-400 group-hover:bg-emerald-500/20 group-hover:text-emerald-300 group-hover:ring-emerald-500/30",
     tag: "group-hover:border-emerald-500/30 group-hover:text-emerald-300",
     glow: "bg-emerald-600/10 group-hover:bg-emerald-600/20",
-    shadow: "hover:shadow-emerald-500/10"
+    shadow: "hover:shadow-emerald-500/10",
+    titleHover: "group-hover:text-emerald-400"
   },
   amber: {
     border: "hover:border-amber-500/50",
@@ -43,7 +47,8 @@ const blogStyles: Record<string, {
     iconBg: "text-amber-400 group-hover:bg-amber-500/20 group-hover:text-amber-300 group-hover:ring-amber-500/30",
     tag: "group-hover:border-amber-500/30 group-hover:text-amber-300",
     glow: "bg-amber-600/10 group-hover:bg-amber-600/20",
-    shadow: "hover:shadow-amber-500/10"
+    shadow: "hover:shadow-amber-500/10",
+    titleHover: "group-hover:text-amber-400"
   },
   purple: {
     border: "hover:border-purple-500/50",
@@ -51,7 +56,17 @@ const blogStyles: Record<string, {
     iconBg: "text-purple-400 group-hover:bg-purple-500/20 group-hover:text-purple-300 group-hover:ring-purple-500/30",
     tag: "group-hover:border-purple-500/30 group-hover:text-purple-300",
     glow: "bg-purple-600/10 group-hover:bg-purple-600/20",
-    shadow: "hover:shadow-purple-500/10"
+    shadow: "hover:shadow-purple-500/10",
+    titleHover: "group-hover:text-purple-400"
+  },
+  violet: {
+    border: "hover:border-violet-500/50",
+    gradient: "from-transparent via-violet-500 to-transparent",
+    iconBg: "text-violet-400 group-hover:bg-violet-500/20 group-hover:text-violet-300 group-hover:ring-violet-500/30",
+    tag: "group-hover:border-violet-500/30 group-hover:text-violet-300",
+    glow: "bg-violet-600/10 group-hover:bg-violet-600/20",
+    shadow: "hover:shadow-violet-500/10",
+    titleHover: "group-hover:text-violet-400"
   }
 };
 
@@ -111,7 +126,7 @@ export default function Blog() {
                       </div>
                     </div>
                     
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors line-clamp-2">
+                    <h3 className={`text-xl font-bold text-white mb-3 ${style.titleHover} transition-colors line-clamp-2`}>
                       {blog.title}
                     </h3>
                     <p className="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3">

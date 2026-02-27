@@ -372,6 +372,14 @@ export const portfolio = {
   ],
   blogs: [
     {
+      title: "Architecting and Deploying a Scalable Asynchronous Virtual Try-On API on AWS",
+      description: "Virtual Try-On (VTO) is rapidly becoming a must-have feature for modern e-commerce platforms. However, integrating Generative AI models like Amazon Bedrock's Nova Canvas poses a unique architectural challenge: AI image generation is slow, while traditional web APIs expect responses in milliseconds. In this post, we explore the event-driven, asynchronous architecture required to solve this problem using AWS Serverless technologies.",
+      date: "February 27, 2026",
+      tags: ["AWS", "Serverless", "GenAI", "Architecture"],
+      url: "https://awspathway.com/blog/architecting-and-deploying-a-scalable-asynchronous-virtual-try-on-api-on-aws",
+      color: "violet"
+    },
+    {
       title: "Hands-On: Deploying a Backend Application on AWS EC2 (Beginner-Friendly)",
       description: "A step-by-step guide to deploying your first backend application on AWS EC2, covering setup, security groups, and deployment best practices.",
       date: "January 8, 2026",

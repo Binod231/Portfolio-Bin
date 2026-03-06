@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, ShieldCheck, ChevronRight } from "lucide-react";
+import { ArrowDown, ShieldCheck, ChevronRight, Award } from "lucide-react";
 
 export default function Hero() {
   const { scrollYProgress } = useScroll();
@@ -44,9 +44,13 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
+            className="flex flex-wrap items-center justify-center gap-3 mb-8"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/40 border border-white/10 text-blue-400 text-sm font-medium mb-8 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.05)]">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/40 border border-white/10 text-blue-400 text-sm font-medium backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.05)]">
               <ShieldCheck size={14} /> 2x AWS Certified 
+            </div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm font-medium backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.1)]">
+              <Award size={14} /> AWS Community Builder (Dev Tools '26)
             </div>
           </motion.div>
           

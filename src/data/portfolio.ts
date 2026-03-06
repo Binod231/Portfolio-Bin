@@ -12,7 +12,7 @@ export const portfolio = {
     },
     photo: "/portfoilo.jpeg",
     aboutCards: [
-      // { title: "Your Title", subtitle: "Your subtitle", icon: "cloud", theme: "blue" },
+      { title: "AWS Community Builder", subtitle: "Dev Tools (2026)", icon: "award", theme: "orange" },
     ],
   },
   skills: {

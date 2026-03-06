@@ -63,7 +63,7 @@ export default function About() {
                     </h3>
 
                     <p className="text-lg text-slate-400 leading-[1.7] mb-4 text-justify tracking-wide antialiased">
-                      I'm a <strong>DevOps-focused Cloud Engineer</strong> with hands-on experience designing secure, scalable backend systems on <strong>AWS</strong>. My work centers on bridging application development with reliable cloud infrastructure using <strong>Docker</strong>, <strong>CI/CD automation</strong>, and cloud-native best practices, ensuring high performance, availability, and maintainability in production environments.
+                      I'm a <strong>DevOps-focused Cloud Engineer</strong> and an <strong>AWS Community Builder (Dev Tools '26)</strong> with hands-on experience designing secure, scalable backend systems on <strong>AWS</strong>. My work centers on bridging application development with reliable cloud infrastructure using <strong>Docker</strong>, <strong>CI/CD automation</strong>, and cloud-native best practices, ensuring high performance, availability, and maintainability in production environments.
                     </p>
 
                     <p className="text-lg text-slate-400 leading-[1.7] mb-6 text-justify tracking-wide antialiased">
@@ -143,7 +143,7 @@ export default function About() {
               </motion.div>
 
               {/* Custom cards from portfolio.personal.aboutCards */}
-              {portfolio.personal.aboutCards?.map((card: AboutCard, idx: number) => {
+              {(portfolio.personal.aboutCards as AboutCard[])?.map((card: AboutCard, idx: number) => {
                 const iconMap = {
                   shield: ShieldCheck,
                   cloud: Cloud,

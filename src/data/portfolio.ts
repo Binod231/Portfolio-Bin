@@ -372,6 +372,21 @@ export const portfolio = {
   ],
   blogs: [
     {
+      title: "7 AWS Developer Tools That Supercharge Backend Engineering (Complete Technical Guide)",
+      description: "The contemporary backend engineering landscape is characterized by a fundamental shift away from manual infrastructure management toward automated, code-driven ecosystems. In this post, we explore seven AWS tools that can help you build and deploy backend applications more efficiently.",
+      date: "March 12, 2026",
+      tags: ["AWS", "Serverless", "Devtools", "Backend"],
+      url: "https://dev.to/binod_prasadjoshi_b591ca/7-aws-developer-tools-that-supercharge-backend-engineering-complete-technical-guide-38mo",
+      color: "red"
+    },
+    {
+      title: "Architecting the Far West: A Roadmap for Sudurpaschim as Nepal’s Regional AWS Cloud Hub",
+      description: "Sudurpaschim, Nepal’s Far West, is a region that has been historically marginalized and underdeveloped. However, with the advent of cloud computing, this region has the potential to become a regional hub for cloud services. In this post, we explore the potential of Sudurpaschim as a regional hub for cloud services and the steps required to make it a reality.",
+      tags: ["AWS", "awsbuilder", "Nepal", "Cloud"],
+      url: "https://dev.to/binod_prasadjoshi_b591ca/architecting-the-far-west-a-roadmap-for-sudurpaschim-as-nepals-regional-aws-cloud-hub-4lai",
+      color: "orange"
+    },
+    {
       title: "Architecting and Deploying a Scalable Asynchronous Virtual Try-On API on AWS",
       description: "Virtual Try-On (VTO) is rapidly becoming a must-have feature for modern e-commerce platforms. However, integrating Generative AI models like Amazon Bedrock's Nova Canvas poses a unique architectural challenge: AI image generation is slow, while traditional web APIs expect responses in milliseconds. In this post, we explore the event-driven, asynchronous architecture required to solve this problem using AWS Serverless technologies.",
       date: "February 27, 2026",

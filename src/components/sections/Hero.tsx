@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, ShieldCheck, ChevronRight, Award } from "lucide-react";
+import { ArrowDown, ShieldCheck, ChevronRight, Award, Globe } from "lucide-react";
 
 export default function Hero() {
   const { scrollYProgress } = useScroll();
@@ -40,20 +40,50 @@ export default function Hero() {
         </div>
 
         <div className="max-w-5xl mx-auto px-6 text-center z-10 relative">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
             className="flex flex-wrap items-center justify-center gap-3 mb-8"
           >
+            {/* 2x AWS Certified */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/40 border border-white/10 text-blue-400 text-sm font-medium backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.05)]">
-              <ShieldCheck size={14} /> 2x AWS Certified 
+              <ShieldCheck size={14} /> 2x AWS Certified
             </div>
+
+            {/* AWS Community Builder */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm font-medium backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.3),0_0_0_1px_rgba(249,115,22,0.1)]">
-              <Award size={14} /> AWS Community Builder (Dev Tools '26)
+              <Award size={14} /> AWS Community Builder (Dev Tools &apos;26)
+            </div>
+
+            {/* Google Student Ambassador */}
+            <div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium backdrop-blur-xl relative overflow-hidden"
+              style={{
+                background: "linear-gradient(135deg, rgba(66,133,244,0.15), rgba(52,168,83,0.15))",
+                border: "1px solid rgba(52,168,83,0.4)",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.3), 0 0 0 1px rgba(52,168,83,0.1)",
+              }}
+            >
+              <span
+                className="absolute inset-x-0 top-0 h-[2px]"
+                style={{ background: "linear-gradient(90deg, #EA4335, #FBBC05, #4285F4, #34A853)" }}
+              />
+              <Globe size={14} style={{ color: "#34A853" }} />
+              <span
+                style={{
+                  background: "linear-gradient(90deg, #4285F4, #34A853)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  fontWeight: 600,
+                }}
+              >
+                Google Student Ambassador
+              </span>
+              <span className="text-slate-400 text-xs font-medium">2026</span>
             </div>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -71,7 +101,7 @@ export default function Hero() {
             transition={{ duration: 0.4, delay: 0.1 }}
           >
             <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-              I bridge the gap between application logic and infrastructure. 
+              I bridge the gap between application logic and infrastructure.
               Specializing in backend security, distributed systems, and scalable AWS architectures.
             </p>
           </motion.div>
@@ -82,22 +112,22 @@ export default function Hero() {
              transition={{ duration: 0.4, delay: 0.15 }}
           >
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button onClick={() => scrollTo('projects')} className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2 cursor-pointer">
+              <button onClick={() => scrollTo("projects")} className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-all shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2 cursor-pointer">
                 View My Work <ChevronRight size={18} />
               </button>
-              <button onClick={() => scrollTo('about')} className="w-full sm:w-auto px-8 py-4 bg-slate-900/40 hover:bg-slate-800/80 text-white rounded-xl font-semibold transition-all border border-white/10 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.3)] cursor-pointer">
+              <button onClick={() => scrollTo("about")} className="w-full sm:w-auto px-8 py-4 bg-slate-900/40 hover:bg-slate-800/80 text-white rounded-xl font-semibold transition-all border border-white/10 backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.3)] cursor-pointer">
                 About Me
               </button>
             </div>
           </motion.div>
         </div>
 
-        <motion.div 
+        <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 1 }}
             className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-slate-600 cursor-pointer hover:text-blue-400 transition-colors"
-            onClick={() => scrollTo('contact')}
+            onClick={() => scrollTo("contact")}
         >
           <ArrowDown size={24} />
         </motion.div>

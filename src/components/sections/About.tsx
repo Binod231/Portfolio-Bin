@@ -63,7 +63,7 @@ export default function About() {
                     </h3>
 
                     <p className="text-lg text-slate-400 leading-[1.7] mb-4 text-justify tracking-wide antialiased">
-                      I'm a <strong>DevOps-focused Cloud Engineer</strong> and an <strong>AWS Community Builder (Dev Tools '26)</strong> with hands-on experience designing secure, scalable backend systems on <strong>AWS</strong>. My work centers on bridging application development with reliable cloud infrastructure using <strong>Docker</strong>, <strong>CI/CD automation</strong>, and cloud-native best practices, ensuring high performance, availability, and maintainability in production environments.
+                      I'm a <strong>DevOps-focused Cloud Engineer</strong>, an <strong>AWS Community Builder (Dev Tools '26)</strong>, and a proud <strong className="text-green-400">Google Student Ambassador 2026</strong> with hands-on experience designing secure, scalable backend systems on <strong>AWS</strong>. My work centers on bridging application development with reliable cloud infrastructure using <strong>Docker</strong>, <strong>CI/CD automation</strong>, and cloud-native best practices, ensuring high performance, availability, and maintainability in production environments.
                     </p>
 
                     <p className="text-lg text-slate-400 leading-[1.7] mb-6 text-justify tracking-wide antialiased">
@@ -161,6 +161,8 @@ export default function About() {
                   emerald: { border: "hover:border-emerald-500/50", gradient: "from-transparent via-emerald-500 to-transparent", iconBg: "bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20", titleHover: "group-hover:text-emerald-400", glow: "bg-emerald-600/10 group-hover:bg-emerald-600/20" },
                   amber: { border: "hover:border-amber-500/50", gradient: "from-transparent via-amber-500 to-transparent", iconBg: "bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/20", titleHover: "group-hover:text-amber-400", glow: "bg-amber-600/10 group-hover:bg-amber-600/20" },
                   cyan: { border: "hover:border-cyan-500/50", gradient: "from-transparent via-cyan-500 to-transparent", iconBg: "bg-cyan-500/10 text-cyan-400 ring-1 ring-cyan-500/20", titleHover: "group-hover:text-cyan-400", glow: "bg-cyan-600/10 group-hover:bg-cyan-600/20" },
+                  orange: { border: "hover:border-orange-500/50", gradient: "from-transparent via-orange-500 to-transparent", iconBg: "bg-orange-500/10 text-orange-400 ring-1 ring-orange-500/20", titleHover: "group-hover:text-orange-400", glow: "bg-orange-600/10 group-hover:bg-orange-600/20" },
+                  google: { border: "hover:border-green-500/50", gradient: "from-red-500 via-yellow-400 via-blue-500 to-green-500", iconBg: "bg-green-500/10 text-green-400 ring-1 ring-green-500/20", titleHover: "group-hover:text-green-400", glow: "bg-green-600/10 group-hover:bg-green-600/20" },
                 };
                 const t = themeClasses[card.theme || "blue"] || themeClasses.blue;
                 return (

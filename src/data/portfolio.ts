@@ -13,6 +13,7 @@ export const portfolio = {
     photo: "/portfoilo.jpeg",
     aboutCards: [
       { title: "AWS Community Builder", subtitle: "Dev Tools (2026)", icon: "award", theme: "orange" },
+      { title: "Google Student Ambassador", subtitle: "Google DSC (2026)", icon: "globe", theme: "google" },
     ],
   },
   skills: {
@@ -63,7 +64,7 @@ export const portfolio = {
             title: "Real-Time Interactions",
             details: "Leveraged WebSockets and Redis Pub/Sub to power live classroom polls and instant notifications. Implemented server-side timers resistant to client-side manipulation."
           },
-           {
+          {
             title: "'DocFlow' RAG Pipeline",
             details: "Developed a custom PDF processing pipeline to parse study materials, enabling users to highlight text and save notes. This serves as the structured data foundation for future AI tutoring agents."
           },
@@ -77,7 +78,7 @@ export const portfolio = {
             problem: "Handling High Concurrency",
             solution: "Used FastAPI with AsyncIO to handle thousands of concurrent exam sessions without blocking. Implemented Redis caching for question banks, reducing DB load by 60%."
           },
-           {
+          {
             problem: "Data Integrity & Schema Evolution",
             solution: "Managed 39+ database migrations using Alembic, ensuring zero-downtime schema updates for a rapidly evolving tailored application."
           },

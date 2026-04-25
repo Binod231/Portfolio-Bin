@@ -373,6 +373,14 @@ export const portfolio = {
   ],
   blogs: [
     {
+      title: "The Rise of AI Agents on AWS: From Chatbots to Autonomous Systems",
+      description: "In 2022, the world marveled at ChatGPT’s ability to hold a conversation. By 2024, enterprises were deploying AI systems that could browse the web, write code, execute workflows, and coordinate with other AI agents. Explore how to build production-grade autonomous agent architectures on AWS.",
+      date: "April 25, 2026",
+      tags: ["AWS", "Amazon Bedrock", "AI Agents", "Cloud Computing"],
+      url: "https://medium.com/@joshibinodprasad77/the-rise-of-ai-agents-on-aws-from-chatbots-to-autonomous-systems-cd9ede316bbc",
+      color: "cyan"
+    },
+    {
       title: "7 AWS Developer Tools That Supercharge Backend Engineering (Complete Technical Guide)",
       description: "The contemporary backend engineering landscape is characterized by a fundamental shift away from manual infrastructure management toward automated, code-driven ecosystems. In this post, we explore seven AWS tools that can help you build and deploy backend applications more efficiently.",
       date: "March 12, 2026",

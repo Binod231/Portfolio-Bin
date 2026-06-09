@@ -41,8 +41,16 @@ export interface ExperienceItem {
   role: string;
   period: string;
   type: string;
+  tech?: string[];
   impacts: string[];
   history?: { role: string; period: string }[];
+  caseStudy?: {
+    title: string;
+    overview: string;
+    features: { title: string; details: string }[];
+    challenges: { problem: string; solution: string }[];
+    results: string[];
+  };
 }
 
 export interface ProjectItem {

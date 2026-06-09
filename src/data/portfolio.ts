@@ -32,9 +32,70 @@ export const portfolio = {
   },
   experience: [
     {
+      company: "One Cloud Utopia",
+      role: "DevOps Consultant",
+      period: "May 2026 – Present",
+      type: "Remote (Contract)",
+      tech: [
+        "AWS (ECS Fargate, SAM, RDS, Cognito, Route53, WAF)",
+        "Docker & Compose",
+        "GitHub Actions",
+        "FastAPI",
+        "Next.js",
+        "PostgreSQL (Alembic)",
+        "Redis (ElastiCache)",
+        "Nginx",
+        "CloudWatch & X-Ray"
+      ],
+      impacts: [
+        "Led DevOps operations and backend optimization for 4 production applications (**Zyrona**, **Outfitmirror**, **Princika Traders**, and **MCQtest**), ensuring high availability, scalability, and operational excellence.",
+        "Analyzed system architectures, identified critical performance and security gaps, and implemented improvements across infrastructure and application layers.",
+        "Designed and maintained CI/CD pipelines, automated deployment workflows, monitored production environments, resolved complex incidents, and optimized backend services for enhanced performance and reliability.",
+        "Collaborated closely with cross-functional teams to streamline development and deployment processes.",
+        "Provided mentorship to junior engineers, fostering technical growth through hands-on guidance in DevOps practices, cloud technologies, backend development, troubleshooting, and production support."
+      ],
+      caseStudy: {
+        title: "Multi-App Cloud Modernization, AI Scaling & Automated Infrastructure",
+        overview: "Orchestrated infrastructure, security, and automated deployment pipelines for four production products: Zyrona (ASG-backed retail e-commerce), Outfitmirror (AI-powered virtual try-on using Amazon Bedrock), Princika Traders (Next.js/FastAPI inventory monorepo), and MCQtest (concurrency-sensitive, high-availability online testing engine). Bridged development workflows and AWS environments to maximize release speed and system reliability.",
+        features: [
+          {
+            title: "MCQtest: Secure, Multi-AZ ECS Fargate Infrastructure",
+            details: "Built a 12-stack CloudFormation architecture featuring public/private VPC subnets, ECS Fargate, Multi-AZ RDS PostgreSQL, Multi-AZ ElastiCache Redis, and AWS WAF rate-limiting to support heavy concurrent test-taking spikes."
+          },
+          {
+            title: "Outfitmirror: Serverless AI Integration with AWS SAM",
+            details: "Developed a serverless VTO pipeline using AWS SAM, integrating Bedrock Nova Canvas models for asynchronous image generation, secure AWS Cognito Hosted UI auth pools, and media storage on Amazon S3."
+          },
+          {
+            title: "Zyrona: Cost-Optimized Compute & Search Infrastructure",
+            details: "Configured zero-downtime rolling updates via EC2 Launch Templates and ASG instance refreshes. Migrated search functionality from expensive OpenSearch instances to database query filters, achieving a ~30% cost reduction."
+          },
+          {
+            title: "Princika Traders: Monorepo Dockerization & Database Migrations",
+            details: "Standardized multi-container workflows with Docker Compose, configured Nginx reverse proxy routes, and integrated Alembic schema migrations into automated GitHub Actions pipelines."
+          }
+        ],
+        challenges: [
+          {
+            problem: "Slow AI Model Generations & API Timeouts (Outfitmirror)",
+            solution: "Decoupled the generation pipeline using asynchronous worker queues and Amazon S3 pre-signed URLs, keeping API response times consistent and cost-effective."
+          },
+          {
+            problem: "Exam Leak Prevention & Security Compliance (MCQtest)",
+            solution: "Isolated compute/database layers in private subnets, applied least-privilege security groups, activated AWS Config monitoring, and deployed AWS Backup vaults for daily automated backups."
+          }
+        ],
+        results: [
+          "🏆 **High Availability**: Maintained **~99.9% uptime** across all four production applications.",
+          "⚡ **CI/CD Speed**: Reduced deployment pipeline duration by **~50%** via multi-stage Docker build cache strategies.",
+          "💰 **Cost Optimization**: Achieved a **~30% reduction** in monthly AWS costs by rightsizing compute and replacing OpenSearch with optimized PostgreSQL queries."
+        ]
+      }
+    },
+    {
       company: "Karnovation Inc",
       role: "Junior Backend / Cloud Engineer",
-      period: "Jan 2026 – Present",
+      period: "Jan 2026 – may 2026",
       type: "Remote",
       tech: ["FastAPI", "AWS EC2", "Redis", "Docker", "PostgreSQL", "React", "AWS", "Laravel", "Cloud Architect"],
       impacts: [

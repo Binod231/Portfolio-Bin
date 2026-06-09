@@ -29,11 +29,11 @@ export default function SectionWrapper({ children, id, className, delay = 0 }: S
         viewport={{ 
           once: true, 
           margin: isMobile ? "0px" : "0px 0px -10% 0px",
-          amount: 0.2
+          amount: "some"
         }}
         transition={{ 
           duration: isMobile ? 0.3 : 0.4, // Fast on mobile, snappy on desktop
-          delay: isMobile ? 0 : 0, // Minimize delay on desktop too
+          delay: 0, 
           ease: "easeOut" 
         }}
       >

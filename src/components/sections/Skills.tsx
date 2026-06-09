@@ -72,7 +72,7 @@ export default function Skills() {
               }}
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: true, amount: "some" }}
               transition={{ delay: orbit * 0.1, duration: 0.5 }}
             >
               {/* Orbit label - Always visible */}
@@ -126,7 +126,7 @@ export default function Skills() {
                       className="cursor-pointer w-full h-full"
                       initial={{ scale: 0, opacity: 0 }}
                       whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true, amount: 0.2 }}
+                      viewport={{ once: true, amount: "some" }}
                       whileHover={!isCenter ? { scale: 1.3 } : {}}
                       animate={!isCenter ? { rotate: -360 - tech.angle } : {}}
                       transition={

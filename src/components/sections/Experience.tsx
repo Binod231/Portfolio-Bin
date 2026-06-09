@@ -79,7 +79,7 @@ export default function Experience() {
                 <motion.div 
                   initial={{ scale: 0, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
-                  viewport={{ once: true, amount: 0.5 }}
+                  viewport={{ once: true, amount: "some" }}
                   transition={{ duration: 0.3 }}
                   className="absolute left-4 md:left-1/2 top-0 md:top-6 md:-translate-y-1/2 w-10 h-10 rounded-full border-4 border-slate-950 bg-slate-900 flex items-center justify-center shadow-[0_0_0_4px_rgba(30,41,59,0.5)] group-hover:scale-110 group-hover:border-purple-500/50 transition-all duration-300 z-20 md:-translate-x-1/2 -translate-x-1/2"
                 >
@@ -90,7 +90,7 @@ export default function Experience() {
                 <motion.div 
                   initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
+                  viewport={{ once: true, amount: "some" }}
                   transition={{ duration: 0.4 }}
                   className={`w-full md:w-[45%] pl-12 md:pl-0 relative z-10 text-left`}
                 >

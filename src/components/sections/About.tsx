@@ -23,7 +23,7 @@ export default function About() {
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
+            viewport={{ once: true, amount: "some" }}
             transition={{ duration: 0.4 }}
             className="flex items-center gap-4 mb-12"
           >
@@ -41,7 +41,7 @@ export default function About() {
             <motion.div 
                initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true, amount: 0.2 }}
+               viewport={{ once: true, amount: "some" }}
                transition={{ duration: 0.4 }}
                className="lg:col-span-8 group relative h-full border border-white/10 rounded-3xl p-6 backdrop-blur-xl bg-slate-900/40 hover:border-blue-500/50 transition-all duration-300 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05),inset_0_1px_0_rgba(255,255,255,0.05)] hover:shadow-[0_16px_48px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.1),0_0_60px_-15px_rgba(56,189,248,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]"
             >
@@ -86,7 +86,7 @@ export default function About() {
               <motion.div 
                  initial={{ opacity: 0, y: 20 }}
                  whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true, amount: 0.2 }}
+                 viewport={{ once: true, amount: "some" }}
                  transition={{ duration: 0.4 }}
                  className="group relative border border-white/10 p-6 rounded-3xl flex flex-col justify-center items-center text-center backdrop-blur-xl bg-slate-900/40 hover:-translate-y-1 hover:border-blue-500/50 transition-all duration-300 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.5),0_0_40px_-10px_rgba(56,189,248,0.15)]"
               >
@@ -107,7 +107,7 @@ export default function About() {
               <motion.div 
                  initial={{ opacity: 0, y: 20 }}
                  whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true, amount: 0.2 }}
+                 viewport={{ once: true, amount: "some" }}
                  transition={{ duration: 0.4 }}
                  className="group relative border border-white/10 p-6 rounded-3xl backdrop-blur-xl bg-slate-900/40 hover:-translate-y-1 hover:border-blue-500/50 transition-all duration-300 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.5),0_0_40px_-10px_rgba(56,189,248,0.15)]"
               >
@@ -170,7 +170,7 @@ export default function About() {
                     key={idx}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
+                    viewport={{ once: true, amount: "some" }}
                     transition={{ duration: 0.4, delay: (idx + 2) * 0.1 }}
                     className={`group relative border border-white/10 p-6 rounded-3xl flex items-center gap-4 backdrop-blur-xl bg-slate-900/40 hover:-translate-y-1 ${t.border} transition-all duration-300 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.5),0_0_40px_-10px_rgba(56,189,248,0.15)]`}
                   >

@@ -434,6 +434,14 @@ export const portfolio = {
   ],
   blogs: [
     {
+      title: "How AWS Kiro, AgentCore, and Transform Are Reshaping DevOps in 2026",
+      description: "This article explores building secure, production-grade applications by replacing unreliable natural language prompting with deterministic engineering guardrails using the latest AWS agentic framework ecosystem. It details how to implement these frameworks to ensure reliability and security in AI-driven workflows.",
+      date: "June 8, 2026",
+      tags: ["AWS", "DevOps", "Agentic AI", "Serverless"],
+      url: "https://builder.aws.com/content/3Eqi77PpIgEVNgU9VJipjNMEPFC/how-aws-kiro-agentcore-and-transform-are-reshaping-devops-in-2026",
+      color: "orange"
+    },
+    {
       title: "The Rise of AI Agents on AWS: From Chatbots to Autonomous Systems",
       description: "In 2022, the world marveled at ChatGPT’s ability to hold a conversation. By 2024, enterprises were deploying AI systems that could browse the web, write code, execute workflows, and coordinate with other AI agents. Explore how to build production-grade autonomous agent architectures on AWS.",
       date: "April 25, 2026",

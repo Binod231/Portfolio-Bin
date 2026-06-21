@@ -2,7 +2,7 @@
 
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import { portfolio } from "@/data/portfolio";
-import { BookOpen, ExternalLink, Calendar, Tag } from "lucide-react";
+import { BookOpen, ExternalLink, Calendar, Tag, Award } from "lucide-react";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
 const blogStyles: Record<string, { 
@@ -73,6 +73,13 @@ const blogStyles: Record<string, {
 export default function Blog() {
   const { blogs } = portfolio;
 
+  // Spotlight blogs always appear first
+  const sortedBlogs = [...blogs].sort((a, b) => {
+    const aSpot = 'spotlight' in a ? 1 : 0;
+    const bSpot = 'spotlight' in b ? 1 : 0;
+    return bSpot - aSpot;
+  });
+
   return (
     <SectionWrapper id="blog" delay={0.6} className="py-24 px-6">
       <div className="max-w-6xl mx-auto">
@@ -89,7 +96,7 @@ export default function Blog() {
         </RevealOnScroll>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogs.map((blog, index) => {
+          {sortedBlogs.map((blog, index) => {
              const style = blogStyles[blog.color || 'blue'] || blogStyles.blue;
              return (
               <RevealOnScroll key={index} delay={index * 100}>
@@ -109,6 +116,20 @@ export default function Blog() {
                 >
                   {/* Top Gradient Line */}
                   <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${style.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+
+                  {/* Spotlight Badge */}
+                  {blog.spotlight && (
+                     <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-yellow-500/20 border border-amber-400/40 backdrop-blur-md shadow-lg shadow-amber-500/10">
+                       <span className="relative flex h-2 w-2">
+                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                         <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
+                       </span>
+                       <Award size={12} className="text-amber-300" />
+                       <span className="text-[9px] font-bold uppercase tracking-wider text-amber-200/90">
+                         {blog.spotlight}
+                       </span>
+                     </div>
+                   )}
 
                   <div className="mb-6 relative z-10">
                     <div className="flex justify-between items-start mb-4">

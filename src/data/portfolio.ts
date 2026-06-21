@@ -439,7 +439,17 @@ export const portfolio = {
       date: "June 8, 2026",
       tags: ["AWS", "DevOps", "Agentic AI", "Serverless"],
       url: "https://builder.aws.com/content/3Eqi77PpIgEVNgU9VJipjNMEPFC/how-aws-kiro-agentcore-and-transform-are-reshaping-devops-in-2026",
-      color: "orange"
+      color: "orange",
+      spotlight: "AWS Builder Center"
+    },
+    {
+      title: "Part 2: Hands-On with AWS Kiro, AgentCore, and Transform—Building the 2026 Agentic DevOps Stack",
+      description: "A practical, code-first tutorial breaking down how to write deterministic EARS specifications in AWS Kiro, manage persistent session state with Bedrock AgentCore, and execute structural AST code rewrites using ATX blueprints.",
+      date: "June 17, 2026",
+      tags: ["AWS", "DevOps", "Agentic AI", "Serverless", "Generative AI"],
+      url: "https://builder.aws.com/content/3Eqi77PpIgEVNgU9VJipjNMEPFC/part-2-hands-on-with-aws-kiro-agentcore-and-transform-building-the-2026-agentic-devops-stack",
+      color: "orange",
+      // spotlight: "AWS Builder Center"
     },
     {
       title: "The Rise of AI Agents on AWS: From Chatbots to Autonomous Systems",

@@ -438,7 +438,7 @@ export const portfolio = {
       description: "Design a high-performance global network with the Kiro fabric. This reference architecture explores building a resilient multi-region infrastructure using AWS Direct Connect (BFD-tuned), Transit Gateway, and Global Accelerator. Learn to achieve 900ms hybrid failovers and automated symmetric security via GWLB. Backed by 30-day production staging metrics, we dive into critical lessons on TGW Appliance Mode, route propagation complexity, and high-fidelity observability using VPC Flow Logs v5.",
       date: "June 23, 2026",
       tags: ["AWS", "Networking", "Security", "Architecture"],
-      url: "https://builder.aws.com/content/3Eqi77PpIgEVNgU9VJipjNMEPFC/designing-a-global-enterprise-network-fabric-the-kiro-fabric-architecture",
+      url: "https://builder.aws.com/content/3FWhiwOsUlxYVBu47eGpNBSAp0w/designing-a-global-enterprise-network-fabric-the-kiro-fabric-architecture",
       color: "blue"
     },
     {
@@ -455,8 +455,8 @@ export const portfolio = {
       description: "A practical, code-first tutorial breaking down how to write deterministic EARS specifications in AWS Kiro, manage persistent session state with Bedrock AgentCore, and execute structural AST code rewrites using ATX blueprints.",
       date: "June 17, 2026",
       tags: ["AWS", "DevOps", "Agentic AI", "Serverless", "Generative AI"],
-      url: "https://builder.aws.com/content/3Eqi77PpIgEVNgU9VJipjNMEPFC/part-2-hands-on-with-aws-kiro-agentcore-and-transform-building-the-2026-agentic-devops-stack",
-      color: "orange",
+      url: "https://builder.aws.com/content/3F1lruEifPtXhGJK5rbAyfiajhE/part-2-hands-on-with-aws-kiro-agentcore-and-transformbuilding-the-2026-agentic-devops-stack",
+      color: "Yellow",
       // spotlight: "AWS Builder Center"
     },
     {

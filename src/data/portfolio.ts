@@ -434,6 +434,14 @@ export const portfolio = {
   ],
   blogs: [
     {
+      title: "Designing a Global Enterprise Network Fabric: The Kiro Fabric Architecture",
+      description: "Design a high-performance global network with the Kiro fabric. This reference architecture explores building a resilient multi-region infrastructure using AWS Direct Connect (BFD-tuned), Transit Gateway, and Global Accelerator. Learn to achieve 900ms hybrid failovers and automated symmetric security via GWLB. Backed by 30-day production staging metrics, we dive into critical lessons on TGW Appliance Mode, route propagation complexity, and high-fidelity observability using VPC Flow Logs v5.",
+      date: "June 23, 2026",
+      tags: ["AWS", "Networking", "Security", "Architecture"],
+      url: "https://builder.aws.com/content/3Eqi77PpIgEVNgU9VJipjNMEPFC/designing-a-global-enterprise-network-fabric-the-kiro-fabric-architecture",
+      color: "blue"
+    },
+    {
       title: "How AWS Kiro, AgentCore, and Transform Are Reshaping DevOps in 2026",
       description: "This article explores building secure, production-grade applications by replacing unreliable natural language prompting with deterministic engineering guardrails using the latest AWS agentic framework ecosystem. It details how to implement these frameworks to ensure reliability and security in AI-driven workflows.",
       date: "June 8, 2026",

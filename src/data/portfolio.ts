@@ -439,7 +439,8 @@ export const portfolio = {
       date: "June 23, 2026",
       tags: ["AWS", "Networking", "Security", "Architecture"],
       url: "https://builder.aws.com/content/3FWhiwOsUlxYVBu47eGpNBSAp0w/designing-a-global-enterprise-network-fabric-the-kiro-fabric-architecture",
-      color: "blue"
+      color: "blue",
+      spotlight: "AWS Builder Center"
     },
     {
       title: "How AWS Kiro, AgentCore, and Transform Are Reshaping DevOps in 2026",

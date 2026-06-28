@@ -106,26 +106,36 @@ export default function Blog() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`
-                    group relative h-full border border-white/10 rounded-2xl p-6 
-                    backdrop-blur-xl bg-slate-900/40
-                    hover:-translate-y-1 ${style.border} transition-all duration-300 overflow-hidden
-                    shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)]
-                    hover:shadow-[0_16px_48px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.1)]
-                    ${style.shadow} block
+                    group relative h-full border rounded-2xl p-6 
+                    backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 block
+                    ${blog.spotlight 
+                      ? 'border-amber-500/30 bg-gradient-to-b from-slate-900/60 to-amber-500/5 shadow-[0_8px_32px_rgba(245,158,11,0.08),0_0_0_1px_rgba(245,158,11,0.1)] hover:shadow-[0_16px_48px_rgba(245,158,11,0.2),0_0_0_1px_rgba(245,158,11,0.25)] hover:border-amber-400/50' 
+                      : `border-white/10 bg-slate-900/40 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] hover:shadow-[0_16px_48px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.1)] ${style.border} ${style.shadow}`
+                    }
                   `}
                 >
                   {/* Top Gradient Line */}
-                  <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${style.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                  <div className={`
+                    absolute top-0 left-0 w-full h-1 rounded-t-2xl transition-opacity duration-500
+                    ${blog.spotlight 
+                      ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 opacity-60 group-hover:opacity-100' 
+                      : `bg-gradient-to-r ${style.gradient} opacity-0 group-hover:opacity-100`
+                    }
+                  `}></div>
 
                   {/* Spotlight Badge */}
                   {blog.spotlight && (
-                     <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-yellow-500/20 border border-amber-400/40 backdrop-blur-md shadow-lg shadow-amber-500/10">
+                     <div className="absolute -top-3 left-6 z-20 flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 border border-amber-400/60 shadow-lg shadow-amber-500/25">
                        <span className="relative flex h-2 w-2">
-                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                         <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
+                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                         <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
                        </span>
-                       <Award size={12} className="text-amber-300" />
-                       <span className="text-[9px] font-bold uppercase tracking-wider text-amber-200/90">
+                       <Award size={12} className="text-white animate-pulse" />
+                       <span className="text-[9px] font-black uppercase tracking-widest text-white">
+                         SPOTLIGHT
+                       </span>
+                       <span className="text-white/40 text-[9px] font-light">|</span>
+                       <span className="text-[9px] font-bold uppercase tracking-wider text-amber-100">
                          {blog.spotlight}
                        </span>
                      </div>
@@ -178,7 +188,7 @@ export default function Blog() {
                   <div className={`
                     absolute -bottom-10 -right-10 w-32 h-32 
                     rounded-full blur-3xl transition-all duration-500
-                    ${style.glow}
+                    ${blog.spotlight ? 'bg-amber-600/10 group-hover:bg-amber-600/20' : style.glow}
                   `}></div>
                 </a>
               </RevealOnScroll>

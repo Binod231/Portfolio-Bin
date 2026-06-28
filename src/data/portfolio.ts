@@ -434,6 +434,15 @@ export const portfolio = {
   ],
   blogs: [
     {
+      title: "Stop Vibe Coding: Build Deterministic AI Infrastructure with AWS Blocks",
+      description: "Explore why AI-generated Infrastructure as Code needs deterministic composition, type-safe backend capabilities, and policy-aware validation. Discover how AWS Blocks shifts infrastructure validation earlier in the development lifecycle to ensure security and architectural correctness.",
+      date: "June 28, 2026",
+      tags: ["AWS", "IaC", "Generative AI", "DevOps", "Security"],
+      url: "https://builder.aws.com/content/3FlFKUUccesUcVX2E9osFo1rR5r/stop-vibe-coding-build-deterministic-ai-infrastructure-with-aws-blocks",
+      color: "purple",
+      // spotlight: "AWS Builder Center"
+    },
+    {
       title: "Designing a Global Enterprise Network Fabric: The Kiro Fabric Architecture",
       description: "Design a high-performance global network with the Kiro fabric. This reference architecture explores building a resilient multi-region infrastructure using AWS Direct Connect (BFD-tuned), Transit Gateway, and Global Accelerator. Learn to achieve 900ms hybrid failovers and automated symmetric security via GWLB. Backed by 30-day production staging metrics, we dive into critical lessons on TGW Appliance Mode, route propagation complexity, and high-fidelity observability using VPC Flow Logs v5.",
       date: "June 23, 2026",

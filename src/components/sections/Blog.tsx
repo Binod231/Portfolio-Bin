@@ -2,17 +2,17 @@
 
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import { portfolio } from "@/data/portfolio";
-import { BookOpen, ExternalLink, Calendar, Tag, Award } from "lucide-react";
+import { BookOpen, ExternalLink, Calendar, Award } from "lucide-react";
 import RevealOnScroll from "@/components/ui/RevealOnScroll";
 
-const blogStyles: Record<string, { 
-    border: string; 
-    gradient: string; 
-    iconBg: string; 
-    tag: string; 
-    glow: string; 
-    shadow: string; 
-    titleHover: string;
+const blogStyles: Record<string, {
+  border: string;
+  gradient: string;
+  iconBg: string;
+  tag: string;
+  glow: string;
+  shadow: string;
+  titleHover: string;
 }> = {
   blue: {
     border: "hover:border-blue-500/50",
@@ -118,7 +118,6 @@ export default function Blog() {
     };
     const rankDiff = rank(b) - rank(a);
     if (rankDiff !== 0) return rankDiff;
-    // Same rank → sort by date descending
     const dateA = 'date' in a && a.date ? new Date(a.date).getTime() : 0;
     const dateB = 'date' in b && b.date ? new Date(b.date).getTime() : 0;
     return dateB - dateA;
@@ -128,7 +127,6 @@ export default function Blog() {
     <SectionWrapper id="blog" delay={0.6} className="py-24 px-6">
       <div className="max-w-6xl mx-auto">
         <RevealOnScroll>
-          {/* --- MODERN HEADER: BLOG (Indigo/Purple) --- */}
           <div className="flex items-center gap-4 mb-12">
             <div className="p-3 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-600/10 border border-indigo-500/30 shadow-lg shadow-indigo-500/20">
               <BookOpen size={32} className="text-indigo-400" />
@@ -139,183 +137,161 @@ export default function Blog() {
           </div>
         </RevealOnScroll>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortedBlogs.map((blog, index) => {
             const isWinner = 'winner' in blog && blog.winner;
             const isSpotlight = !isWinner && 'spotlight' in blog && blog.spotlight;
             const style = blogStyles[blog.color || 'blue'] || blogStyles.blue;
 
-            /* ============================================================
-               🏆  4x4 WINNER CARD — full-width hero, green-gold gradient
-            ============================================================ */
+            /* ── 🏆 WINNER: compact full-width banner ─────────────────── */
             if (isWinner) {
               return (
                 <div key={index} className="lg:col-span-3 md:col-span-2">
-                <RevealOnScroll delay={0}>
-                  <a
-                    href={blog.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group relative block overflow-hidden rounded-3xl border border-emerald-500/40
-                      bg-gradient-to-br from-[#0d1f17] via-slate-900 to-[#0d1a2a]
-                      shadow-[0_0_0_1px_rgba(52,211,153,0.15),0_20px_60px_rgba(16,185,129,0.12)]
-                      hover:shadow-[0_0_0_1px_rgba(52,211,153,0.4),0_30px_80px_rgba(16,185,129,0.25)]
-                      hover:-translate-y-1 transition-all duration-500"
-                  >
-                    {/* Animated top border */}
-                    <div className="absolute top-0 left-0 w-full h-[3px] rounded-t-3xl
-                      bg-gradient-to-r from-emerald-400 via-green-300 to-yellow-400 opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                  <RevealOnScroll delay={0}>
+                    <a
+                      href={blog.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group relative block rounded-2xl border border-emerald-500/25
+                        bg-slate-900/55 backdrop-blur-xl p-5
+                        shadow-[0_2px_20px_rgba(16,185,129,0.08)]
+                        hover:shadow-[0_6px_32px_rgba(16,185,129,0.18)]
+                        hover:border-emerald-400/45 hover:-translate-y-0.5
+                        transition-all duration-300"
+                    >
+                      {/* Thin top line */}
+                      <div className="absolute top-0 left-0 w-full h-[2px] rounded-t-2xl
+                        bg-gradient-to-r from-emerald-400 via-green-300 to-yellow-400
+                        opacity-60 group-hover:opacity-100 transition-opacity duration-400" />
 
-                    {/* Corner glows */}
-                    <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full
-                      bg-emerald-500/10 blur-3xl group-hover:bg-emerald-500/20 transition-all duration-700" />
-                    <div className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full
-                      bg-yellow-500/8 blur-3xl group-hover:bg-yellow-500/15 transition-all duration-700" />
+                      {/* Subtle bg glow */}
+                      <div className="absolute -bottom-12 -right-12 w-40 h-40 rounded-full
+                        bg-emerald-500/5 blur-3xl group-hover:bg-emerald-500/10
+                        transition-all duration-700 pointer-events-none" />
 
-                    <div className="relative z-10 p-8 md:flex md:gap-8 md:items-start">
-                      {/* Left column */}
-                      <div className="flex-1 min-w-0">
-                        {/* 🏆 WINNER BANNER */}
-                        <div className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-2xl
-                          bg-gradient-to-r from-emerald-500/20 via-green-400/15 to-yellow-500/10
-                          border border-emerald-400/40 shadow-lg shadow-emerald-500/20">
-                          <span className="text-lg">🏆</span>
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-300">
-                            AWS Data 4×4 Winner
-                          </span>
-                          <span className="text-emerald-500/40">·</span>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-yellow-300">
-                            $100 AWS Credits
-                          </span>
-                          <span className="relative flex h-2 w-2 ml-1">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-                          </span>
+                      <div className="relative z-10 flex flex-col md:flex-row md:items-center md:gap-6">
+                        {/* Left */}
+                        <div className="flex-1 min-w-0">
+                          {/* Winner pill */}
+                          <div className="inline-flex items-center gap-1.5 mb-3 px-3 py-1 rounded-full
+                            bg-emerald-500/10 border border-emerald-500/25">
+                            <span className="text-base leading-none">🏆</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-emerald-300">
+                              AWS Data 4×4 Winner
+                            </span>
+                            <span className="text-emerald-600/50 mx-0.5">·</span>
+                            <span className="text-[10px] font-semibold text-yellow-400/80">$100 AWS Credits</span>
+                            <span className="relative flex h-1.5 w-1.5 ml-0.5">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-70" />
+                              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400" />
+                            </span>
+                          </div>
+
+                          <h3 className="text-lg md:text-xl font-bold text-white mb-1.5
+                            group-hover:text-emerald-300 transition-colors duration-300 leading-snug">
+                            {blog.title}
+                          </h3>
+                          <p className="text-slate-400 text-sm leading-relaxed line-clamp-2 mb-3 max-w-3xl">
+                            {blog.description}
+                          </p>
+
+                          <div className="flex flex-wrap gap-1.5">
+                            {blog.tags.map((tag, i) => (
+                              <span key={i} className="text-[10px] uppercase font-bold tracking-wider
+                                px-2 py-0.5 rounded border border-emerald-600/20 text-emerald-500/70
+                                group-hover:border-emerald-500/35 group-hover:text-emerald-300/90 transition-colors">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
                         </div>
 
-                        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-3
-                          group-hover:text-emerald-300 transition-colors duration-300 leading-tight">
-                          {blog.title}
-                        </h3>
-                        <p className="text-slate-400 text-sm md:text-base leading-relaxed mb-5 max-w-3xl">
-                          {blog.description}
-                        </p>
-
-                        {/* Date + Read Now */}
-                        <div className="flex flex-wrap items-center gap-4 mb-5">
-                          <div className="flex items-center gap-2 text-xs text-slate-500">
-                            <Calendar size={13} />
+                        {/* Right: date + link */}
+                        <div className="flex md:flex-col items-center md:items-end gap-3 mt-4 md:mt-0 shrink-0">
+                          <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                            <Calendar size={11} />
                             <span>{blog.date}</span>
                           </div>
-                          <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400
-                            group-hover:text-emerald-300 transition-colors">
-                            Read on AWS Builder Center
-                            <ExternalLink size={12} />
+                          <span className="flex items-center gap-1 text-xs font-semibold
+                            text-emerald-400 group-hover:text-emerald-300 transition-colors whitespace-nowrap">
+                            Read Article <ExternalLink size={11} />
                           </span>
                         </div>
-
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-2">
-                          {blog.tags.map((tag, i) => (
-                            <span key={i} className="text-[10px] uppercase font-bold tracking-wider
-                              px-3 py-1.5 rounded-lg border border-emerald-500/25 text-emerald-400/80
-                              group-hover:border-emerald-400/50 group-hover:text-emerald-300 transition-colors">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
                       </div>
-
-                      {/* Right: trophy visual */}
-                      <div className="hidden md:flex flex-col items-center justify-center gap-3 pl-6
-                        border-l border-emerald-500/20 min-w-[140px]">
-                        <div className="w-20 h-20 rounded-2xl
-                          bg-gradient-to-br from-emerald-500/20 to-yellow-500/10
-                          border border-emerald-400/30 flex items-center justify-center
-                          shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/40
-                          transition-all duration-500 group-hover:scale-110">
-                          <span className="text-4xl select-none">🏆</span>
-                        </div>
-                        <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-emerald-500 text-center">
-                          Community Pick
-                        </span>
-                      </div>
-                    </div>
-                  </a>
-                </RevealOnScroll>
+                    </a>
+                  </RevealOnScroll>
                 </div>
               );
             }
 
-            /* ============================================================
-               ⭐  SPOTLIGHT CARD — amber, slightly wider feel
-            ============================================================ */
+            /* ── ⭐ SPOTLIGHT: amber card, badge inline ────────────────── */
             if (isSpotlight) {
               return (
-                <RevealOnScroll key={index} delay={index * 100}>
+                <RevealOnScroll key={index} delay={index * 80}>
                   <a
                     href={blog.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative h-full block overflow-hidden rounded-2xl
-                      border border-amber-500/25
-                      bg-gradient-to-b from-slate-900/70 to-amber-950/20
-                      shadow-[0_8px_32px_rgba(245,158,11,0.08),0_0_0_1px_rgba(245,158,11,0.08)]
-                      hover:shadow-[0_16px_56px_rgba(245,158,11,0.22),0_0_0_1px_rgba(245,158,11,0.3)]
-                      hover:border-amber-400/50 hover:-translate-y-1 transition-all duration-400"
+                    className="group relative h-full flex flex-col rounded-2xl
+                      border border-amber-500/18 bg-slate-900/50 backdrop-blur-xl p-5
+                      shadow-[0_2px_16px_rgba(245,158,11,0.06)]
+                      hover:shadow-[0_8px_32px_rgba(245,158,11,0.15)]
+                      hover:border-amber-400/35 hover:-translate-y-0.5
+                      transition-all duration-300"
                   >
-                    {/* Animated top stripe */}
+                    {/* Top stripe */}
                     <div className="absolute top-0 left-0 w-full h-[2px] rounded-t-2xl
                       bg-gradient-to-r from-amber-500 via-orange-400 to-yellow-400
-                      opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+                      opacity-35 group-hover:opacity-80 transition-opacity duration-400" />
 
-                    {/* Glow orb */}
-                    <div className="absolute -bottom-12 -right-12 w-40 h-40 rounded-full
-                      bg-amber-600/8 blur-3xl group-hover:bg-amber-600/18 transition-all duration-700" />
+                    {/* Bg glow */}
+                    <div className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full
+                      bg-amber-600/5 blur-3xl group-hover:bg-amber-600/12
+                      transition-all duration-700 pointer-events-none" />
 
-                    {/* SPOTLIGHT BADGE */}
-                    <div className="absolute -top-3 left-5 z-20 flex items-center gap-1.5
-                      px-3 py-1 rounded-full
-                      bg-gradient-to-r from-amber-500 to-orange-500
-                      border border-amber-400/50 shadow-md shadow-amber-500/20">
-                      <Award size={10} className="text-white" />
-                      <span className="text-[9px] font-black uppercase tracking-widest text-white">Spotlight</span>
-                      <span className="text-white/30 text-[9px]">|</span>
-                      <span className="text-[9px] font-semibold text-amber-100">{blog.spotlight}</span>
-                    </div>
-
-                    <div className="relative z-10 p-6 flex flex-col h-full">
-                      <div className="flex justify-between items-start mb-4 mt-2">
-                        <div className="p-3 rounded-xl transition-all duration-300 ring-1 ring-amber-700/30
-                          text-amber-400 group-hover:bg-amber-500/15 group-hover:text-amber-300
-                          group-hover:ring-amber-500/30">
-                          <BookOpen size={22} />
+                    <div className="relative z-10 flex flex-col h-full">
+                      {/* Header */}
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className="p-2.5 rounded-xl ring-1 ring-amber-700/25
+                            text-amber-400 group-hover:bg-amber-500/12
+                            group-hover:ring-amber-500/35 transition-all duration-300">
+                            <BookOpen size={17} />
+                          </div>
+                          {/* Inline spotlight pill */}
+                          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full
+                            bg-amber-500/8 border border-amber-500/20">
+                            <Award size={8} className="text-amber-400" />
+                            <span className="text-[8.5px] font-black uppercase tracking-widest text-amber-300/90">
+                              Spotlight
+                            </span>
+                          </div>
                         </div>
-                        <div className="opacity-40 group-hover:opacity-100 transition-opacity">
-                          <div className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
-                            <ExternalLink size={16} />
+                        <div className="opacity-35 group-hover:opacity-100 transition-opacity">
+                          <div className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+                            <ExternalLink size={14} />
                           </div>
                         </div>
                       </div>
 
-                      <h3 className="text-lg font-bold text-white mb-2
+                      <h3 className="text-base font-bold text-white mb-2
                         group-hover:text-amber-300 transition-colors duration-300 line-clamp-2">
                         {blog.title}
                       </h3>
-                      <p className="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3 flex-1">
+                      <p className="text-slate-400 text-sm leading-relaxed line-clamp-3 flex-1 mb-3">
                         {blog.description}
                       </p>
 
-                      <div className="flex items-center gap-2 text-xs text-slate-500 mb-4">
-                        <Calendar size={13} />
+                      <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-3">
+                        <Calendar size={11} />
                         <span>{blog.date}</span>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 mt-auto">
+                      <div className="flex flex-wrap gap-1.5 mt-auto">
                         {blog.tags.map((tag, i) => (
-                          <span key={i} className="text-[10px] uppercase font-bold tracking-wider
-                            px-3 py-1.5 rounded-lg border border-amber-700/30 text-slate-400
-                            group-hover:border-amber-500/40 group-hover:text-amber-300 transition-colors">
+                          <span key={i} className="text-[9.5px] uppercase font-bold tracking-wider
+                            px-2 py-0.5 rounded border border-amber-700/20 text-slate-400
+                            group-hover:border-amber-500/30 group-hover:text-amber-300/75 transition-colors">
                             {tag}
                           </span>
                         ))}
@@ -326,63 +302,57 @@ export default function Blog() {
               );
             }
 
-            /* ============================================================
-               📄  REGULAR CARD — existing themed design
-            ============================================================ */
+            /* ── 📄 REGULAR CARD ──────────────────────────────────────── */
             return (
-              <RevealOnScroll key={index} delay={index * 100}>
+              <RevealOnScroll key={index} delay={index * 80}>
                 <a
                   href={blog.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`
-                    group relative h-full border rounded-2xl p-6
-                    backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 block
-                    border-white/10 bg-slate-900/40
-                    shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)]
-                    hover:shadow-[0_16px_48px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.1)]
+                    group relative h-full border rounded-2xl p-5
+                    backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 block
+                    border-white/8 bg-slate-900/40
+                    shadow-[0_4px_20px_rgba(0,0,0,0.35)]
+                    hover:shadow-[0_10px_36px_rgba(0,0,0,0.45)]
                     ${style.border} ${style.shadow}
                   `}
                 >
-                  {/* Top Gradient Line */}
                   <div className={`
-                    absolute top-0 left-0 w-full h-1 rounded-t-2xl transition-opacity duration-500
+                    absolute top-0 left-0 w-full h-[2px] rounded-t-2xl transition-opacity duration-400
                     bg-gradient-to-r ${style.gradient} opacity-0 group-hover:opacity-100
                   `} />
 
-                  <div className="mb-6 relative z-10">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className={`
-                        p-3 rounded-xl transition-all duration-300 ring-1 ring-slate-700/50
-                        ${style.iconBg}
-                      `}>
-                        <BookOpen size={24} />
+                  <div className="mb-5 relative z-10">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className={`p-2.5 rounded-xl transition-all duration-300 ring-1 ring-slate-700/50 ${style.iconBg}`}>
+                        <BookOpen size={20} />
                       </div>
-                      <div className="flex gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
-                        <div className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
-                          <ExternalLink size={18} />
+                      <div className="opacity-40 group-hover:opacity-100 transition-opacity">
+                        <div className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+                          <ExternalLink size={15} />
                         </div>
                       </div>
                     </div>
 
-                    <h3 className={`text-xl font-bold text-white mb-3 ${style.titleHover} transition-colors line-clamp-2`}>
+                    <h3 className={`text-base font-bold text-white mb-2 ${style.titleHover} transition-colors line-clamp-2`}>
                       {blog.title}
                     </h3>
-                    <p className="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3">
+                    <p className="text-slate-400 text-sm leading-relaxed mb-3 line-clamp-3">
                       {blog.description}
                     </p>
 
-                    <div className="flex items-center gap-2 text-xs text-slate-500 mb-4">
-                      <Calendar size={14} />
+                    <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-3">
+                      <Calendar size={12} />
                       <span>{blog.date}</span>
                     </div>
                   </div>
 
-                  <div className="mt-auto flex flex-wrap gap-2 relative z-10">
+                  <div className="mt-auto flex flex-wrap gap-1.5 relative z-10">
                     {blog.tags.map((tag, i) => (
                       <span key={i} className={`
-                        text-[10px] uppercase font-bold tracking-wider px-3 py-1.5 rounded-lg
-                        text-slate-400 border border-slate-700
+                        text-[9.5px] uppercase font-bold tracking-wider px-2 py-0.5 rounded
+                        text-slate-400 border border-slate-700/70
                         ${style.tag} transition-colors
                       `}>
                         {tag}
@@ -391,8 +361,8 @@ export default function Blog() {
                   </div>
 
                   <div className={`
-                    absolute -bottom-10 -right-10 w-32 h-32
-                    rounded-full blur-3xl transition-all duration-500 ${style.glow}
+                    absolute -bottom-8 -right-8 w-28 h-28
+                    rounded-full blur-3xl transition-all duration-500 pointer-events-none ${style.glow}
                   `} />
                 </a>
               </RevealOnScroll>

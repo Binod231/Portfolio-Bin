@@ -265,6 +265,10 @@ export default function Blog() {
                             <span className="text-[8.5px] font-black uppercase tracking-widest text-amber-300/90">
                               Spotlight
                             </span>
+                            <span className="text-amber-500/40 text-[8px]">·</span>
+                            <span className="text-[8.5px] font-semibold text-amber-200/70">
+                              {blog.spotlight}
+                            </span>
                           </div>
                         </div>
                         <div className="opacity-35 group-hover:opacity-100 transition-opacity">

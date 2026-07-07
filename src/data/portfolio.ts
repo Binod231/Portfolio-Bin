@@ -434,6 +434,15 @@ export const portfolio = {
   ],
   blogs: [
     {
+      title: "I Broke Production With Vector Search. Here's the Autopsy.",
+      description: "Our RAG app returned confident, fluent, completely wrong answers, and no error ever fired. Here's the full autopsy: what killed it, why, and how to fix it before it happens to you. Featured in AWS Data 4x4 — recognized alongside AWS Community picks for databases and analytics.",
+      date: "July 3, 2026",
+      tags: ["AWS", "Vector Search", "RAG", "PostgreSQL", "Databases"],
+      url: "https://builder.aws.com/content/3FzaBq9Z6bVE5eGEwV0QdVbPIaI/i-broke-production-with-vector-search-heres-the-autopsy",
+      color: "green",
+      spotlight: "AWS Data 4x4 · $100 AWS Credits Winner"
+    },
+    {
       title: "Stop Vibe Coding: Build Deterministic AI Infrastructure with AWS Blocks",
       description: "Explore why AI-generated Infrastructure as Code needs deterministic composition, type-safe backend capabilities, and policy-aware validation. Discover how AWS Blocks shifts infrastructure validation earlier in the development lifecycle to ensure security and architectural correctness.",
       date: "June 28, 2026",

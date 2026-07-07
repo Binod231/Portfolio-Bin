@@ -67,6 +67,42 @@ const blogStyles: Record<string, {
     glow: "bg-violet-600/10 group-hover:bg-violet-600/20",
     shadow: "hover:shadow-violet-500/10",
     titleHover: "group-hover:text-violet-400"
+  },
+  green: {
+    border: "hover:border-green-500/50",
+    gradient: "from-transparent via-green-500 to-transparent",
+    iconBg: "text-green-400 group-hover:bg-green-500/20 group-hover:text-green-300 group-hover:ring-green-500/30",
+    tag: "group-hover:border-green-500/30 group-hover:text-green-300",
+    glow: "bg-green-600/10 group-hover:bg-green-600/20",
+    shadow: "hover:shadow-green-500/10",
+    titleHover: "group-hover:text-green-400"
+  },
+  cyan: {
+    border: "hover:border-cyan-500/50",
+    gradient: "from-transparent via-cyan-500 to-transparent",
+    iconBg: "text-cyan-400 group-hover:bg-cyan-500/20 group-hover:text-cyan-300 group-hover:ring-cyan-500/30",
+    tag: "group-hover:border-cyan-500/30 group-hover:text-cyan-300",
+    glow: "bg-cyan-600/10 group-hover:bg-cyan-600/20",
+    shadow: "hover:shadow-cyan-500/10",
+    titleHover: "group-hover:text-cyan-400"
+  },
+  red: {
+    border: "hover:border-red-500/50",
+    gradient: "from-transparent via-red-500 to-transparent",
+    iconBg: "text-red-400 group-hover:bg-red-500/20 group-hover:text-red-300 group-hover:ring-red-500/30",
+    tag: "group-hover:border-red-500/30 group-hover:text-red-300",
+    glow: "bg-red-600/10 group-hover:bg-red-600/20",
+    shadow: "hover:shadow-red-500/10",
+    titleHover: "group-hover:text-red-400"
+  },
+  pink: {
+    border: "hover:border-pink-500/50",
+    gradient: "from-transparent via-pink-500 to-transparent",
+    iconBg: "text-pink-400 group-hover:bg-pink-500/20 group-hover:text-pink-300 group-hover:ring-pink-500/30",
+    tag: "group-hover:border-pink-500/30 group-hover:text-pink-300",
+    glow: "bg-pink-600/10 group-hover:bg-pink-600/20",
+    shadow: "hover:shadow-pink-500/10",
+    titleHover: "group-hover:text-pink-400"
   }
 };
 

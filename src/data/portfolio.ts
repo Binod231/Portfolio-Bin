@@ -440,7 +440,8 @@ export const portfolio = {
       tags: ["AWS", "Vector Search", "RAG", "PostgreSQL", "Databases"],
       url: "https://builder.aws.com/content/3FzaBq9Z6bVE5eGEwV0QdVbPIaI/i-broke-production-with-vector-search-heres-the-autopsy",
       color: "green",
-      spotlight: "AWS Data 4x4 · $100 AWS Credits Winner"
+      spotlight: "AWS Data 4x4 · $100 AWS Credits Winner",
+      winner: true
     },
     {
       title: "Stop Vibe Coding: Build Deterministic AI Infrastructure with AWS Blocks",

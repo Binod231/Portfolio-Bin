@@ -150,7 +150,8 @@ export default function Blog() {
             ============================================================ */
             if (isWinner) {
               return (
-                <RevealOnScroll key={index} delay={0} className="lg:col-span-3 md:col-span-2">
+                <div key={index} className="lg:col-span-3 md:col-span-2">
+                <RevealOnScroll delay={0}>
                   <a
                     href={blog.url}
                     target="_blank"
@@ -242,6 +243,7 @@ export default function Blog() {
                     </div>
                   </a>
                 </RevealOnScroll>
+                </div>
               );
             }
 

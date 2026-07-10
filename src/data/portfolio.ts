@@ -450,7 +450,7 @@ export const portfolio = {
       tags: ["AWS", "IaC", "Generative AI", "DevOps", "Security"],
       url: "https://builder.aws.com/content/3FlFKUUccesUcVX2E9osFo1rR5r/stop-vibe-coding-build-deterministic-ai-infrastructure-with-aws-blocks",
       color: "purple",
-      // spotlight: "AWS Builder Center"
+      spotlight: "AWS Builder Center"
     },
     {
       title: "Designing a Global Enterprise Network Fabric: The Kiro Fabric Architecture",
@@ -476,8 +476,7 @@ export const portfolio = {
       date: "June 17, 2026",
       tags: ["AWS", "DevOps", "Agentic AI", "Serverless", "Generative AI"],
       url: "https://builder.aws.com/content/3F1lruEifPtXhGJK5rbAyfiajhE/part-2-hands-on-with-aws-kiro-agentcore-and-transformbuilding-the-2026-agentic-devops-stack",
-      color: "Yellow",
-      // spotlight: "AWS Builder Center"
+      color: "Yellow"
     },
     {
       title: "The Rise of AI Agents on AWS: From Chatbots to Autonomous Systems",

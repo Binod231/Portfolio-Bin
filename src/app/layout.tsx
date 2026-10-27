@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Inter, Newsreader, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import GlobeBackground from "@/components/ui/GlobeBackground";
 import Navbar from "@/components/ui/Navbar";
 import StructuredData from "@/components/StructuredData";
 
@@ -10,35 +9,36 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Binod Prasad Joshi - AWS Certified Cloud Engineer",
+    default: "Binod Prasad Joshi | Cloud & DevOps Consultant | Solutions Architect",
     template: "%s | Binod Prasad Joshi"
   },
-  description: "Binod Portfolio - Official portfolio of Binod Prasad Joshi. AWS Certified Solutions Architect & Developer Associate specializing in cloud architecture, FastAPI, and Docker.",
+  description: "Official portfolio of Binod Prasad Joshi. Cloud & DevOps Consultant, 2x AWS Certified Solutions Architect, and AWS Community Builder. Specializing in AWS infrastructure modernization, zero-downtime CI/CD automation, and cloud-native systems.",
   keywords: [
-    "Binod Portfolio",
-    "Binod Prasad Joshi Portfolio",
-    "Binod Nepal Portfolio",
     "Binod Prasad Joshi",
-    "AWS Certified",
-    "Cloud Engineer",
-    "Backend Developer",
-    "Solutions Architect",
-    "FastAPI",
-    "Python Developer",
-    "Docker",
+    "DevOps Consultant",
+    "Cloud Consultant",
+    "AWS Certified Solutions Architect",
+    "AWS Community Builder",
     "Cloud Architecture",
-    "Nepal Developer",
-    "AWS Solutions Architect",
-    "AWS Developer Associate",
-    "Cloud Native Security",
-    "Backend Engineering"
+    "Docker & ECS Fargate",
+    "CI/CD Automation",
+    "FastAPI & Python",
+    "PostgreSQL & Redis",
+    "DevSecOps",
+    "FinOps Cost Optimization"
   ],
   authors: [{ name: "Binod Prasad Joshi", url: "https://github.com/Binod231" }],
   creator: "Binod Prasad Joshi",
@@ -56,22 +56,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://binodprasadjoshi.com.np",
-    title: "Binod Prasad Joshi | AWS Certified Cloud & Backend Engineer",
-    description: "Portfolio showcasing cloud engineering expertise, AWS certifications, and backend development projects. Specializing in FastAPI, Docker, and cloud-native solutions.",
-    siteName: "Binod Prasad Joshi Portfolio",
+    title: "Binod Prasad Joshi | Cloud & DevOps Consultant | Solutions Architect",
+    description: "Cloud & DevOps Consultant and AWS Community Builder. Architecting resilient cloud systems, automated CI/CD pipelines, and cost-optimized infrastructure.",
+    siteName: "Binod Prasad Joshi - Cloud & DevOps Consultant",
     images: [
       {
         url: "/portfoilo.jpeg",
         width: 1200,
         height: 630,
-        alt: "Binod Prasad Joshi - Cloud & Backend Engineer",
+        alt: "Binod Prasad Joshi - Cloud & DevOps Consultant",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Binod Prasad Joshi | AWS Certified Cloud & Backend Engineer",
-    description: "AWS Certified Solutions Architect & Developer. Specializing in cloud architecture, FastAPI, and backend development.",
+    title: "Binod Prasad Joshi | Cloud & DevOps Consultant | Solutions Architect",
+    description: "AWS Certified Solutions Architect & Developer Associate. DevOps Consultant & AWS Community Builder.",
     images: ["/portfoilo.jpeg"],
     creator: "@binodprasadjoshi",
   },
@@ -100,23 +100,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.setAttribute('data-theme', 'dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                  document.documentElement.setAttribute('data-theme', 'light');
+                }
+              } catch (_) {}
+            `,
+          }}
+        />
+      </head>
       <body
         suppressHydrationWarning={true}
-        className={`${inter.variable} ${outfit.variable} antialiased text-foreground font-sans relative selection:bg-primary/20 selection:text-primary`}
+        className={`${inter.variable} ${newsreader.variable} ${jetbrainsMono.variable} antialiased text-neutral-900 dark:text-neutral-100 font-sans relative selection:bg-neutral-200 dark:selection:bg-neutral-800 bg-white dark:bg-[#111418] transition-colors duration-200`}
       >
         <StructuredData />
-        {/* Solid Background Layer */}
-        <div className="fixed inset-0 bg-background z-[-2]" />
-
-        {/* Interactive Canvas Layer - Globe Background */}
-        <div className="fixed inset-0 z-[-1]">
-          <GlobeBackground />
-        </div>
-
         <Navbar />
-
-        {/* Content */}
         {children}
       </body>
     </html>

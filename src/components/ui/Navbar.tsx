@@ -1,242 +1,168 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Terminal, Github, Linkedin, FileText } from "lucide-react";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/Button";
+import { Sun, Moon, Menu, X, ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 import { portfolio } from "@/data/portfolio";
 
-const navItems = [
-  { name: "About", href: "#about" },
-  { name: "Skills", href: "#skills" },
-  { name: "Experience", href: "#experience" },
+const navLinks = [
+  { name: "Case Studies", href: "#case-studies" },
+  { name: "Services", href: "#services" },
+  { name: "Blogs", href: "#blogs", count: portfolio.blogs.length },
   { name: "Projects", href: "#projects" },
-  { name: "Blog", href: "#blog" },
   { name: "Certifications", href: "#certifications" },
   { name: "Contact", href: "#contact" },
 ];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+  const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Handle scroll effect for background styling
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrolled(currentScrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    setMounted(true);
+    const root = document.documentElement;
+    const isDarkNow = root.classList.contains("dark") || root.getAttribute("data-theme") === "dark";
+    setIsDark(isDarkNow);
   }, []);
 
-  // Update active section based on scroll position
-  useEffect(() => {
-    const handleScrollForActive = () => {
-      // Get all sections
-      const sectionIds = ['hero', ...navItems.map(item => item.href.replace("#", ""))];
+  const toggleTheme = () => {
+    const root = document.documentElement;
+    const isCurrentlyDark = root.classList.contains("dark") || root.getAttribute("data-theme") === "dark";
+    if (isCurrentlyDark) {
+      root.classList.remove("dark");
+      root.setAttribute("data-theme", "light");
+      try {
+        localStorage.setItem("theme", "light");
+      } catch (_) {}
+      setIsDark(false);
+    } else {
+      root.classList.add("dark");
+      root.setAttribute("data-theme", "dark");
+      try {
+        localStorage.setItem("theme", "dark");
+      } catch (_) {}
+      setIsDark(true);
+    }
+  };
 
-      // Bottom of page check
-      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50) {
-        setActiveSection(sectionIds[sectionIds.length - 1]);
-        return;
-      }
-
-      let currentSection = sectionIds[0];
-      const scrollY = window.scrollY;
-
-      // Check each section
-      for (const sectionId of sectionIds) {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          const elementTop = rect.top + scrollY;
-
-          // If we've scrolled past this section's top (with small offset), it's active
-          if (scrollY >= elementTop - 200) {
-            currentSection = sectionId;
-          }
-        }
-      }
-
-      setActiveSection(currentSection);
-    };
-
-    window.addEventListener("scroll", handleScrollForActive);
-    handleScrollForActive(); // Run once on mount
-
-    return () => window.removeEventListener("scroll", handleScrollForActive);
-  }, []);
-
-  const scrollToSection = (href: string) => {
+  const scrollTo = (href: string) => {
     setIsOpen(false);
     const element = document.querySelector(href);
     if (element) {
-      element.scrollIntoView({
+      const topOffset = element.getBoundingClientRect().top + window.scrollY - 30;
+      window.scrollTo({
+        top: topOffset,
         behavior: "smooth",
       });
     }
   };
 
   return (
-    <nav
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled
-          ? "bg-slate-950/60 backdrop-blur-2xl border-b border-white/10 py-3 shadow-[0_4px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.05)]"
-          : "bg-transparent py-5"
-      )}
-    >
-      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-
-        {/* Logo */}
-        <div
-          className="flex items-center gap-2 cursor-pointer group"
-          onClick={() => scrollToSection("#hero")}
+    <header className="w-full border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-[#111418]/90 backdrop-blur-sm sticky top-0 z-50">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        
+        {/* Brand / Name Logo in Signature Italic Serif */}
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className="group flex flex-col"
         >
-          <div className="flex items-center gap-3 md:gap-4">
-            <div className="relative flex items-center justify-center shrink-0">
-               <Image 
-                src="/favicon.ico" 
-                alt="Logo" 
-                width={48} 
-                height={48} 
-                className="w-12 h-12 md:w-14 md:h-14 object-contain invert" 
-              />
-            </div>
-            <div className="font-bold text-lg sm:text-xl md:text-3xl tracking-tight whitespace-nowrap">
-              Binod<span className="text-blue-500"> Prasad</span><span className="tracking-tight whitespace-nowrap"> Joshi</span>
-            </div>
-          </div>
-        </div>
+          <span className="text-xl sm:text-2xl font-serif italic font-bold tracking-tight text-neutral-900 dark:text-neutral-100 group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors">
+            {portfolio.personal.name}
+          </span>
+          <span className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400">
+            cloud &amp; devops consultant
+          </span>
+        </a>
 
-        <div className="hidden lg:flex items-center gap-1 bg-slate-900/50 p-1 rounded-full border border-white/5 backdrop-blur-sm">
-          {navItems.map((item) => (
+        {/* Desktop Navigation Links (arpitbhayani.me clean text style) */}
+        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+          {navLinks.map((link) => (
             <button
-              key={item.name}
-              onClick={() => scrollToSection(item.href)}
-              className={cn(
-                "px-3 xl:px-4 py-2 text-xs xl:text-sm font-medium rounded-full transition-colors relative z-10 whitespace-nowrap",
-                activeSection === item.href.substring(1)
-                  ? "text-white"
-                  : "text-slate-400 hover:text-white"
-              )}
+              key={link.name}
+              onClick={() => scrollTo(link.href)}
+              className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors cursor-pointer flex items-center gap-1.5"
             >
-              {item.name}
-              {activeSection === item.href.substring(1) && (
-                <motion.div
-                  layoutId="navbar-pill"
-                  className="absolute inset-0 bg-blue-600 rounded-full -z-10 shadow-lg shadow-blue-900/20"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
+              <span>{link.name}</span>
+              {link.count && (
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700">
+                  {link.count}
+                </span>
               )}
             </button>
           ))}
-        </div>
 
-        {/* Desktop Social/CTA */}
-        <div className="hidden lg:flex items-center gap-2 ml-2">
-          <a 
-            href={portfolio.personal.links.github} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            aria-label="GitHub Profile"
-            className="p-2 text-slate-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full border border-transparent hover:border-white/10"
+          {/* Theme Toggle Button */}
+          <button
+            id="theme-toggle-btn"
+            onClick={toggleTheme}
+            aria-label="Toggle dark/light theme"
+            className="p-1.5 text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer ml-1"
           >
-            <Github className="w-5 h-5" />
-          </a>
-          <a 
-            href={portfolio.personal.links.linkedin} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            aria-label="LinkedIn Profile"
-            className="p-2 text-slate-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 rounded-full border border-transparent hover:border-white/10"
-          >
-            <Linkedin className="w-5 h-5" />
-          </a>
-          <Button size="sm" className="ml-2 bg-white text-slate-900 hover:bg-slate-200" asChild>
-            <a href={portfolio.personal.links.resume} target="_blank" rel="noopener noreferrer">
-              Resume
-            </a>
-          </Button>
-        </div>
+            {mounted ? (
+              isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
+            ) : (
+              <span className="w-4 h-4 block" />
+            )}
+          </button>
+        </nav>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          className="lg:hidden p-2 text-white bg-white/5 rounded-lg border border-white/10"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X /> : <Menu />}
-        </button>
+        {/* Mobile Menu & Theme Toggle */}
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            id="mobile-theme-toggle-btn"
+            onClick={toggleTheme}
+            aria-label="Toggle dark/light theme"
+            className="p-2 text-neutral-600 dark:text-neutral-300 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
+          >
+            {mounted ? (
+              isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-neutral-700 dark:text-neutral-300" />
+            ) : (
+              <span className="w-4 h-4 block" />
+            )}
+          </button>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle Navigation Menu"
+            className="p-2 text-neutral-600 dark:text-neutral-300 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
+          >
+            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-slate-950/95 backdrop-blur-xl border-t border-white/5 overflow-hidden"
-          >
-            <div className="flex flex-col p-4 space-y-2">
-              {navItems.map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => {
-                    setIsOpen(false);
-                    setTimeout(() => {
-                      const element = document.querySelector(item.href);
-                      if (element) {
-                        const offsetTop = element.getBoundingClientRect().top + window.scrollY - 85;
-                        window.scrollTo({
-                          top: offsetTop,
-                          behavior: "smooth",
-                        });
-                      }
-                    }, 300);
-                  }}
-                  className={cn(
-                    "w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-colors block",
-                    activeSection === item.href.substring(1)
-                      ? "text-blue-400 bg-blue-500/10 border border-blue-500/20"
-                      : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent"
-                  )}
-                >
-                  {item.name}
-                </button>
-              ))}
-              <div className="flex items-center gap-4 mt-2 pt-4 border-t border-white/10 px-2 justify-center">
-                <a 
-                  href={portfolio.personal.links.github} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  aria-label="GitHub Profile"
-                  className="p-2 text-slate-400 hover:text-white bg-white/5 rounded-full"
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-                <a 
-                  href={portfolio.personal.links.linkedin} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  aria-label="LinkedIn Profile"
-                  className="p-2 text-slate-400 hover:text-white bg-white/5 rounded-full"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <Button size="sm" className="ml-2 bg-blue-600 hover:bg-blue-500 text-white border-none" asChild>
-                  <a href={portfolio.personal.links.resume} target="_blank" rel="noopener noreferrer">Resume</a>
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
+      {/* Mobile Dropdown */}
+      {isOpen && (
+        <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800 px-4 py-4 bg-white dark:bg-[#111418] space-y-2">
+          {navLinks.map((link) => (
+            <button
+              key={link.name}
+              onClick={() => scrollTo(link.href)}
+              className="w-full text-left py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white flex items-center justify-between"
+            >
+              <span>{link.name}</span>
+              {link.count && (
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
+                  {link.count} articles
+                </span>
+              )}
+            </button>
+          ))}
+          <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs font-mono text-neutral-500">
+            <span>Available for Consulting</span>
+            <a
+              href={`mailto:${portfolio.personal.email}`}
+              className="text-neutral-900 dark:text-neutral-100 underline"
+            >
+              {portfolio.personal.email}
+            </a>
+          </div>
+        </div>
+      )}
+    </header>
   );
 }

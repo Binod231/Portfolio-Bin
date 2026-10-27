@@ -1,9 +1,22 @@
 export interface PortfolioData {
   personal: PersonalInfo;
+  services: ConsultingService[];
   skills: Skills;
   experience: ExperienceItem[];
   projects: ProjectItem[];
+  blogs: BlogItem[];
   certifications: CertificationItem[];
+}
+
+export interface ConsultingService {
+  id: string;
+  title: string;
+  shortDesc: string;
+  description: string;
+  icon: "cloud" | "terminal" | "shield" | "cpu" | "dollar";
+  deliverables: string[];
+  technologies: string[];
+  metrics: string;
 }
 
 export interface AboutCard {
@@ -63,6 +76,20 @@ export interface ProjectItem {
   color?: string;
 }
 
+export interface BlogItem {
+  title: string;
+  description: string;
+  date?: string;
+  tags: string[];
+  url: string;
+  color?: string;
+  spotlight?: string;
+  winner?: boolean;
+  platform?: string;
+  readTime?: string;
+  category?: string;
+}
+
 export interface CertificationItem {
   title: string;
   issuer: string;
@@ -75,3 +102,4 @@ export interface CertificationItem {
   gradient?: string;
   link?: string;
 }
+

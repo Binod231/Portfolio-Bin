@@ -1,172 +1,91 @@
 "use client";
 
-import SectionWrapper from "@/components/ui/SectionWrapper";
+import { Star, Github, ArrowUpRight } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
-import { Terminal, Github, ExternalLink } from "lucide-react";
-import RevealOnScroll from "@/components/ui/RevealOnScroll";
-import ThreeDTiltCard from "@/components/ui/ThreeDTiltCard";
-
-const projectStyles: Record<string, {
-  border: string;
-  gradient: string;
-  iconBg: string;
-  tech: string;
-  glow: string;
-  shadow: string;
-}> = {
-  emerald: {
-    border: "hover:border-emerald-500/50",
-    gradient: "from-transparent via-emerald-500 to-transparent",
-    iconBg: "text-emerald-400 group-hover:bg-emerald-500/20 group-hover:text-emerald-300 group-hover:ring-emerald-500/30",
-    tech: "group-hover:border-emerald-500/30 group-hover:text-emerald-300",
-    glow: "bg-emerald-600/10 group-hover:bg-emerald-600/20",
-    shadow: "hover:shadow-emerald-500/10"
-  },
-  blue: {
-    border: "hover:border-blue-500/50",
-    gradient: "from-transparent via-blue-500 to-transparent",
-    iconBg: "text-blue-400 group-hover:bg-blue-500/20 group-hover:text-blue-300 group-hover:ring-blue-500/30",
-    tech: "group-hover:border-blue-500/30 group-hover:text-blue-300",
-    glow: "bg-blue-600/10 group-hover:bg-blue-600/20",
-    shadow: "hover:shadow-blue-500/10"
-  },
-  amber: {
-    border: "hover:border-amber-500/50",
-    gradient: "from-transparent via-amber-500 to-transparent",
-    iconBg: "text-amber-400 group-hover:bg-amber-500/20 group-hover:text-amber-300 group-hover:ring-amber-500/30",
-    tech: "group-hover:border-amber-500/30 group-hover:text-amber-300",
-    glow: "bg-amber-600/10 group-hover:bg-amber-600/20",
-    shadow: "hover:shadow-amber-500/10"
-  },
-  pink: {
-    border: "hover:border-pink-500/50",
-    gradient: "from-transparent via-pink-500 to-transparent",
-    iconBg: "text-pink-400 group-hover:bg-pink-500/20 group-hover:text-pink-300 group-hover:ring-pink-500/30",
-    tech: "group-hover:border-pink-500/30 group-hover:text-pink-300",
-    glow: "bg-pink-600/10 group-hover:bg-pink-600/20",
-    shadow: "hover:shadow-pink-500/10"
-  },
-  cyan: {
-    border: "hover:border-cyan-500/50",
-    gradient: "from-transparent via-cyan-500 to-transparent",
-    iconBg: "text-cyan-400 group-hover:bg-cyan-500/20 group-hover:text-cyan-300 group-hover:ring-cyan-500/30",
-    tech: "group-hover:border-cyan-500/30 group-hover:text-cyan-300",
-    glow: "bg-cyan-600/10 group-hover:bg-cyan-600/20",
-    shadow: "hover:shadow-cyan-500/10"
-  },
-  red: {
-    border: "hover:border-red-500/50",
-    gradient: "from-transparent via-red-500 to-transparent",
-    iconBg: "text-red-400 group-hover:bg-red-500/20 group-hover:text-red-300 group-hover:ring-red-500/30",
-    tech: "group-hover:border-red-500/30 group-hover:text-red-300",
-    glow: "bg-red-600/10 group-hover:bg-red-600/20",
-    shadow: "hover:shadow-red-500/10"
-  },
-  violet: {
-    border: "hover:border-violet-500/50",
-    gradient: "from-transparent via-violet-500 to-transparent",
-    iconBg: "text-violet-400 group-hover:bg-violet-500/20 group-hover:text-violet-300 group-hover:ring-violet-500/30",
-    tech: "group-hover:border-violet-500/30 group-hover:text-violet-300",
-    glow: "bg-violet-600/10 group-hover:bg-violet-600/20",
-    shadow: "hover:shadow-violet-500/10"
-  }
-};
 
 export default function Projects() {
   const { projects } = portfolio;
 
   return (
-    <SectionWrapper id="projects" delay={0.5} className="py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        <RevealOnScroll>
-          {/* --- MODERN HEADER: PROJECTS (Emerald/Teal) --- */}
-          <div className="flex items-center gap-4 mb-12">
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-600/10 border border-emerald-500/30 shadow-lg shadow-emerald-500/20">
-              <Terminal size={32} className="text-emerald-400" />
-            </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-teal-400 to-emerald-600">
-              Featured Projects
-            </h2>
-          </div>
-        </RevealOnScroll>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => {
-            const style = projectStyles[project.color || 'emerald'] || projectStyles.emerald;
-            return (
-              <RevealOnScroll key={index} delay={index * 100}>
-                <ThreeDTiltCard intensity={8} className="h-full">
-                {/* --- GLASSMORPHISM + 3D PROJECT CARD --- */}
-                <div className={`
-                  group relative h-full min-h-[280px] border border-white/10 rounded-2xl p-6 
-                  backdrop-blur-xl bg-slate-900/40 
-                  transition-all duration-300 overflow-hidden
-                  shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05),inset_0_1px_0_rgba(255,255,255,0.05)]
-                  hover:shadow-[0_16px_48px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.1),0_0_60px_-15px_rgba(56,189,248,0.15),inset_0_1px_0_rgba(255,255,255,0.08)]
-                  ${style.border} ${style.shadow}
-                `}>
-                  {/* Top Gradient Line */}
-                  <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${style.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-
-                  <div className="mb-6 relative z-10">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className={`
-                        p-3 rounded-xl 
-                        transition-all duration-300 ring-1 ring-slate-700/50
-                        ${style.iconBg}
-                      `}>
-                        <Terminal size={24} />
-                      </div>
-                      <div className="flex gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
-                        {project.repo && (
-                          <a
-                            href={project.repo}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={project.repo.includes("github.com") ? "View Source Code" : "View Project"}
-                            className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-                          >
-                            {project.repo.includes("github.com") ? <Github size={18} /> : <ExternalLink size={18} />}
-                          </a>
-                        )}
-                        {/* Placeholder for live link */}
-                      </div>
-                    </div>
-
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-slate-400 text-sm leading-relaxed mb-4">
-                      {project.desc}
-                    </p>
-                  </div>
-
-                  {/* Tech Stack Pills */}
-                  <div className="mt-auto flex flex-wrap gap-2 relative z-10">
-                    {project.tech.map((t, i) => (
-                      <span key={i} className={`
-                        text-[10px] uppercase font-bold tracking-wider px-3 py-1.5 rounded-lg
-                        text-slate-400 border border-slate-700
-                        ${style.tech} transition-colors
-                      `}>
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Background Glow Effect */}
-                  <div className={`
-                    absolute -bottom-10 -right-10 w-32 h-32 
-                    rounded-full blur-3xl transition-all duration-500
-                    ${style.glow}
-                  `}></div>
-                </div>
-                </ThreeDTiltCard>
-              </RevealOnScroll>
-            );
-          })}
+    <section id="projects" className="w-full py-10 md:py-12 border-t border-neutral-200 dark:border-neutral-800">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        
+        {/* Section Header (arpitbhayani.me exact style) */}
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-2">
+          <h2 className="text-2xl sm:text-3xl font-serif italic font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
+            Side Projects &amp; Open Source
+          </h2>
+          <a
+            href={portfolio.personal.links.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors inline-flex items-center gap-1"
+          >
+            <span>All projects on GitHub ➔</span>
+          </a>
         </div>
+
+        <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mb-8 font-normal">
+          Developer utilities, security analyzers, and cloud infrastructure systems I maintain in the open.
+        </p>
+
+        {/* Project List (Matching Arpit Bhayani's editorial list style) */}
+        <div className="space-y-6">
+          {projects.map((project) => (
+            <div
+              key={project.title}
+              className="group border-b border-neutral-100 dark:border-neutral-800/80 pb-6 last:border-b-0"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-1.5">
+                {/* Star / Badge indicator */}
+                <div className="flex items-center gap-1 text-xs font-mono text-neutral-500 dark:text-neutral-400 shrink-0">
+                  <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500/20" />
+                  <span className="font-semibold">{project.type}</span>
+                  <span className="text-neutral-400 dark:text-neutral-600 mx-1">·</span>
+                </div>
+
+                {/* Project Title with link */}
+                <a
+                  href={project.repo || portfolio.personal.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-base sm:text-lg font-serif italic font-bold text-neutral-900 dark:text-neutral-100 hover:text-neutral-600 dark:hover:text-neutral-300 hover:underline transition-colors inline-flex items-center gap-1"
+                >
+                  <span>{project.title}</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-neutral-400 opacity-70 group-hover:opacity-100 transition-opacity" />
+                </a>
+
+                {/* Tech Pills */}
+                <div className="flex flex-wrap items-center gap-1.5 sm:ml-auto">
+                  {project.tech.map((t) => (
+                    <span
+                      key={t}
+                      className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed font-normal mb-2">
+                {project.desc}
+              </p>
+
+              {/* Key Architecture Highlights */}
+              {project.highlights && project.highlights.length > 0 && (
+                <ul className="text-xs text-neutral-600 dark:text-neutral-400 space-y-1 list-disc list-inside ml-1">
+                  {project.highlights.map((hl, i) => (
+                    <li key={i}>{hl}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+
       </div>
-    </SectionWrapper>
+    </section>
   );
 }

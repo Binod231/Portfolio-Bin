@@ -1,198 +1,146 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ShieldCheck, Code, Cloud, Database, Terminal, User, BookOpen, Globe, Briefcase, Award } from "lucide-react";
-import SectionWrapper from "@/components/ui/SectionWrapper";
+import { Award, Briefcase, Globe, CheckCircle2, ShieldCheck } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
-import type { AboutCard } from "@/types";
-import ThreeDPhoto from "@/components/ui/ThreeDPhoto";
-
-const AWS_BADGES = ["4fe1dc98-121e-41ed-a1b1-0d611ef6b6ac", "f31fbcf5-1fdc-4f17-9f1b-41d7a1973d5c", "399aee65-8615-4184-8e2e-936079480423", "f3b317af-3010-4168-a35d-57019fab009e", "fab8bca5-d14d-4327-a2d6-8cff3e8e205a"];
-
-const skills = [
-  { name: "Python", color: "bg-blue-500/10 text-blue-400 border-blue-500/20", icon: <Code size={14} /> },
-  { name: "AWS", color: "bg-orange-500/10 text-orange-400 border-orange-500/20", icon: <Cloud size={14} /> },
-  { name: "FastAPI", color: "bg-teal-500/10 text-teal-400 border-teal-500/20", icon: <Terminal size={14} /> },
-  { name: "Docker", color: "bg-blue-600/10 text-blue-400 border-blue-600/20", icon: <Database size={14} /> },
-];
 
 export default function About() {
+  const principles = [
+    "Deterministic Infrastructure as Code over vibe coding",
+    "Shift-Left Security & least-privilege IAM by default",
+    "Zero-downtime rolling deployments as an operational baseline",
+    "Continuous FinOps rightsizing before scaling compute",
+    "Decoupled asynchronous worker queues for long-running AI models",
+    "High-fidelity distributed observability with CloudWatch & X-Ray",
+  ];
+
   return (
-    <SectionWrapper id="about" className="py-24 px-6 relative">
-        <div className="max-w-6xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: "some" }}
-            transition={{ duration: 0.4 }}
-            className="flex items-center gap-4 mb-12"
-          >
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-600/10 border border-blue-500/30 shadow-lg shadow-blue-500/20">
-              <User size={32} className="text-blue-400" />
-            </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-cyan-400 to-blue-600 font-heading tracking-tight">
-              About Me
-            </h2>
-          </motion.div>
+    <section id="about" className="w-full py-10 md:py-14 border-t border-neutral-200 dark:border-neutral-800">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
-            {/* Main Narrative Card - Glassmorphism */}
-            <motion.div 
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true, amount: "some" }}
-               transition={{ duration: 0.4 }}
-               className="lg:col-span-8 group relative h-full border border-white/10 rounded-3xl p-6 backdrop-blur-xl bg-slate-900/40 hover:border-blue-500/50 transition-all duration-300 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05),inset_0_1px_0_rgba(255,255,255,0.05)] hover:shadow-[0_16px_48px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.1),0_0_60px_-15px_rgba(56,189,248,0.2),inset_0_1px_0_rgba(255,255,255,0.08)]"
-            >
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full blur-3xl transition-all duration-500 bg-blue-600/10 group-hover:bg-blue-600/20"></div>
 
-                <div className="relative z-10">
-                    {/* 3D Profile Photo Centered */}
-                    <div className="w-full flex justify-center mb-6">
-                       <ThreeDPhoto 
-                        src={portfolio.personal.photo} 
-                        alt="Binod Prasad Joshi" 
-                        className="w-36 h-36 md:w-45 md:h-45"
-                       />
-                    </div>
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-2">
+          <h2 className="text-2xl sm:text-3xl font-serif italic font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
+            About &amp; Engineering Ethos
+          </h2>
+          <span className="text-xs font-mono text-neutral-500 dark:text-neutral-400">
+            Background &amp; Principles
+          </span>
+        </div>
 
-                    <h3 className="text-2xl font-bold text-white mb-4 font-heading tracking-tight">
-                      Hello, I'm Binod Prasad Joshi.
-                    </h3>
+        <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mb-8 font-normal">
+          An engineering philosophy centered on automation, failure domain isolation, and lean cloud economics.
+        </p>
 
-                    <p className="text-lg text-slate-400 leading-[1.7] mb-4 text-justify tracking-wide antialiased">
-                      I'm a <strong>DevOps-focused Cloud Engineer</strong>, an <strong>AWS Community Builder (Dev Tools '26)</strong>, and a proud <strong className="text-green-400">Google Student Ambassador 2026</strong> with hands-on experience designing secure, scalable backend systems on <strong>AWS</strong>. My work centers on bridging application development with reliable cloud infrastructure using <strong>Docker</strong>, <strong>CI/CD automation</strong>, and cloud-native best practices, ensuring high performance, availability, and maintainability in production environments.
-                    </p>
+        {/* 2-Column Split: Narrative on Left, Status & Principles on Right */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
 
-                    <p className="text-lg text-slate-400 leading-[1.7] mb-6 text-justify tracking-wide antialiased">
-                      Currently at <strong className="text-white">Karnovation Inc.</strong>, I manage cloud infrastructure while optimizing backend and database performance, with a strong focus on <strong>Shift-Left Security</strong>—integrating security early in the development lifecycle. I'm a final-year B.Tech student graduating in May 2026, with growing interests in infrastructure automation, AI/ML-ready cloud systems, and building resilient distributed architectures for long-term professional and research growth.
-                    </p>
+          {/* Main Narrative (7 cols on desktop) */}
+          <div className="md:col-span-7 space-y-4 text-sm sm:text-base text-neutral-700 dark:text-neutral-300 leading-relaxed font-normal text-justify">
+            <p className="text-justify leading-relaxed">
+              I believe great cloud architecture is about reducing accidental complexity. In an ecosystem where spinning up managed cloud services is trivial, the actual engineering craft lies in designing deterministic systems that don&apos;t fail unexpectedly under traffic spikes or burn through budgets unchecked.
+            </p>
 
-                    <div className="flex flex-wrap gap-2 mt-6">
-                      {skills.map((skill, idx) => (
-                        <span key={idx} className={`px-3 py-1.5 rounded-lg border text-sm font-medium flex items-center gap-1.5 tracking-wide ${skill.color}`}>
-                          {skill.icon} {skill.name}
-                        </span>
-                      ))}
-                    </div>
+            <p className="text-justify leading-relaxed">
+              Currently, I am working as a <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">DevOps Consultant at Glovion Consulting Private Limited</strong>, managing and modernizing their <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">private on-premise data center operations and dedicated Nepali server infrastructure</strong>. My focus spans bare-metal system architecture, virtualized compute pools (KVM), local traffic routing with Nginx &amp; HAProxy, self-hosted automated CI/CD runners, and strict sovereign data residency compliance.
+            </p>
+
+            <p className="text-justify leading-relaxed">
+              Previously, I served as a DevOps Consultant at <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">One Cloud Utopia</strong>, where I took end-to-end ownership of cloud operations for four production applications—including e-commerce platforms (<em>Zyrona</em>), AI virtual try-on engines using Amazon Bedrock (<em>Outfitmirror</em>), inventory monorepos (<em>Princika Traders</em>), and high-concurrency online test engines (<em>MCQtest</em>). Earlier, at <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">Karnovation Inc</strong>, I engineered high-throughput async backends in FastAPI and optimized OAuth2 authentication latency by ~95% using Redis JWKS caching.
+            </p>
+
+            <p className="text-justify leading-relaxed">
+              As an <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">AWS Community Builder (2026)</strong>, I actively contribute back to the software community. I author in-depth architectural breakdowns covering multi-region enterprise network fabrics, deterministic agentic DevOps frameworks, and database persistence internals across{" "}
+              <a
+                href="https://builder.aws.com/community/@binodprasadjoshi?tab=articles"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-neutral-900 dark:hover:text-neutral-100 font-medium"
+              >
+                AWS Builder Center (34+ articles)
+              </a>
+              ,{" "}
+              <a
+                href="https://dev.to/binod_prasadjoshi_b591ca"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-neutral-900 dark:hover:text-neutral-100 font-medium"
+              >
+                Dev.to
+              </a>
+              , and{" "}
+              <a
+                href="https://medium.com/@joshibinodprasad77"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-neutral-900 dark:hover:text-neutral-100 font-medium"
+              >
+                Medium
+              </a>
+              —winning recognition including the AWS Data 4x4 Technical Challenge.
+            </p>
+          </div>
+
+          {/* Right Column: Status & Maxims (5 cols on desktop) */}
+          <div className="md:col-span-5 space-y-4">
+
+            {/* Current Position & Track Record Box */}
+            <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15191f] p-5">
+              <div className="text-xs font-mono uppercase tracking-wider text-neutral-500 font-semibold mb-2">
+                Current Position
+              </div>
+              <div className="font-serif italic font-bold text-lg text-neutral-900 dark:text-neutral-100 mb-1">
+                DevOps Consultant
+              </div>
+              <div className="text-xs font-mono text-neutral-600 dark:text-neutral-400 mb-4">
+                Glovion Consulting Private Limited
+              </div>
+
+              <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800/80 space-y-1.5 text-xs text-neutral-600 dark:text-neutral-400">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-neutral-400">Focus:</span>
+                  <span className="font-medium text-neutral-800 dark:text-neutral-200">Data Center &amp; Nepali Servers</span>
                 </div>
-            </motion.div>
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-neutral-400">Previous:</span>
+                  <span className="font-medium text-neutral-800 dark:text-neutral-200">One Cloud Utopia</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-neutral-400">Earlier:</span>
+                  <span className="font-medium text-neutral-800 dark:text-neutral-200">Karnovation Inc</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-neutral-400">Community:</span>
+                  <span className="font-medium text-amber-600 dark:text-amber-400">AWS Community Builder</span>
+                </div>
+              </div>
+            </div>
 
-            {/* Stats Column - AWS Badges */}
-            <div className="lg:col-span-4 space-y-6">
-              {/* 2x AWS Certified - Summary Card */}
-              <motion.div 
-                 initial={{ opacity: 0, y: 20 }}
-                 whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true, amount: "some" }}
-                 transition={{ duration: 0.4 }}
-                 className="group relative border border-white/10 p-6 rounded-3xl flex flex-col justify-center items-center text-center backdrop-blur-xl bg-slate-900/40 hover:-translate-y-1 hover:border-blue-500/50 transition-all duration-300 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.5),0_0_40px_-10px_rgba(56,189,248,0.15)]"
-              >
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full blur-3xl transition-all duration-500 bg-blue-600/10 group-hover:bg-blue-600/20"></div>
-                  
-                  <div className="relative z-10 w-full flex flex-col items-center">
-                      <div className="w-20 h-20 bg-blue-600/20 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-blue-500/20 ring-1 ring-blue-500/30">
-                        <ShieldCheck size={32} className="text-blue-400" />
-                      </div>
-                      <div className="text-3xl font-bold text-white mb-1 font-heading tracking-tight">2x</div>
-                      <div className="text-sm text-blue-400 uppercase tracking-widest font-semibold">AWS Certified</div>
-                      <div className="mt-4 text-sm text-slate-500 leading-relaxed">Solutions Architect Assoc. & Cloud Practitioner</div>
+            {/* Engineering Maxims Card */}
+            <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15191f] p-5">
+              <h3 className="text-base font-serif italic font-bold text-neutral-900 dark:text-neutral-100 mb-3">
+                Engineering Maxims
+              </h3>
+
+              <div className="space-y-2.5 text-xs text-neutral-700 dark:text-neutral-300 font-normal">
+                {principles.map((principle, idx) => (
+                  <div key={idx} className="flex items-start gap-2">
+                    <span className="text-neutral-400 dark:text-neutral-500 font-mono mt-0.5">•</span>
+                    <span className="leading-snug">{principle}</span>
                   </div>
-              </motion.div>
+                ))}
+              </div>
 
-              {/* Badge Images Card - images only, no names */}
-              <motion.div 
-                 initial={{ opacity: 0, y: 20 }}
-                 whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true, amount: "some" }}
-                 transition={{ duration: 0.4 }}
-                 className="group relative border border-white/10 p-6 rounded-3xl backdrop-blur-xl bg-slate-900/40 hover:-translate-y-1 hover:border-blue-500/50 transition-all duration-300 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.5),0_0_40px_-10px_rgba(56,189,248,0.15)]"
-              >
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full blur-3xl transition-all duration-500 bg-blue-600/10 group-hover:bg-blue-600/20"></div>
-                  
-                  <div className="relative z-10 grid grid-cols-2 gap-4">
-                    {AWS_BADGES.map((badgeId) => {
-                      const cert = portfolio.certifications.find((c) => "badgeId" in c && c.badgeId === badgeId);
-                      if (!cert) return null;
-                      const credlyBadgeId = "badgeId" in cert ? cert.badgeId : null;
-                      const imgSrc = cert.image ?? (credlyBadgeId ? `https://images.credly.com/size/340x340/badges/${credlyBadgeId}.png` : "");
-                      if (!imgSrc) return null;
-                      return (
-                        <a
-                          key={cert.id}
-                          href={cert.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center p-2 rounded-xl hover:bg-slate-800/50 transition-colors"
-                          title={`${cert.title} - ${cert.date}`}
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={imgSrc}
-                            alt={cert.title}
-                            className="w-16 h-16 object-contain"
-                          />
-                        </a>
-                      );
-                    })}
-                  </div>
-              </motion.div>
-
-              {/* Custom cards from portfolio.personal.aboutCards */}
-              {(portfolio.personal.aboutCards as AboutCard[])?.map((card: AboutCard, idx: number) => {
-                const iconMap = {
-                  shield: ShieldCheck,
-                  cloud: Cloud,
-                  code: Code,
-                  database: Database,
-                  book: BookOpen,
-                  globe: Globe,
-                  briefcase: Briefcase,
-                  award: Award,
-                };
-                const Icon = iconMap[card.icon as keyof typeof iconMap] || ShieldCheck;
-                const themeClasses: Record<string, { border: string; gradient: string; iconBg: string; titleHover: string; glow: string }> = {
-                  blue: { border: "hover:border-blue-500/50", gradient: "from-transparent via-blue-500 to-transparent", iconBg: "bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20", titleHover: "group-hover:text-blue-400", glow: "bg-blue-600/10 group-hover:bg-blue-600/20" },
-                  purple: { border: "hover:border-purple-500/50", gradient: "from-transparent via-purple-500 to-transparent", iconBg: "bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20", titleHover: "group-hover:text-purple-400", glow: "bg-purple-600/10 group-hover:bg-purple-600/20" },
-                  emerald: { border: "hover:border-emerald-500/50", gradient: "from-transparent via-emerald-500 to-transparent", iconBg: "bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20", titleHover: "group-hover:text-emerald-400", glow: "bg-emerald-600/10 group-hover:bg-emerald-600/20" },
-                  amber: { border: "hover:border-amber-500/50", gradient: "from-transparent via-amber-500 to-transparent", iconBg: "bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/20", titleHover: "group-hover:text-amber-400", glow: "bg-amber-600/10 group-hover:bg-amber-600/20" },
-                  cyan: { border: "hover:border-cyan-500/50", gradient: "from-transparent via-cyan-500 to-transparent", iconBg: "bg-cyan-500/10 text-cyan-400 ring-1 ring-cyan-500/20", titleHover: "group-hover:text-cyan-400", glow: "bg-cyan-600/10 group-hover:bg-cyan-600/20" },
-                  orange: { border: "hover:border-orange-500/50", gradient: "from-transparent via-orange-500 to-transparent", iconBg: "bg-orange-500/10 text-orange-400 ring-1 ring-orange-500/20", titleHover: "group-hover:text-orange-400", glow: "bg-orange-600/10 group-hover:bg-orange-600/20" },
-                  google: { border: "hover:border-green-500/50", gradient: "from-red-500 via-yellow-400 via-blue-500 to-green-500", iconBg: "bg-green-500/10 text-green-400 ring-1 ring-green-500/20", titleHover: "group-hover:text-green-400", glow: "bg-green-600/10 group-hover:bg-green-600/20" },
-                };
-                const t = themeClasses[card.theme || "blue"] || themeClasses.blue;
-                return (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: "some" }}
-                    transition={{ duration: 0.4, delay: (idx + 2) * 0.1 }}
-                    className={`group relative border border-white/10 p-6 rounded-3xl flex items-center gap-4 backdrop-blur-xl bg-slate-900/40 hover:-translate-y-1 ${t.border} transition-all duration-300 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.5),0_0_40px_-10px_rgba(56,189,248,0.15)]`}
-                  >
-                    <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${t.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                    <div className={`absolute -bottom-10 -right-10 w-32 h-32 rounded-full blur-3xl transition-all duration-500 ${t.glow}`} />
-                    <div className="relative z-10 flex items-center gap-4">
-                      <div className={`p-3 rounded-xl ring-1 ${t.iconBg}`}>
-                        <Icon size={24} />
-                      </div>
-                      <div>
-                        <div className={`text-white font-bold ${t.titleHover} transition-colors font-heading tracking-tight`}>{card.title}</div>
-                        <div className="text-sm text-slate-500 leading-relaxed">{card.subtitle}</div>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-
+              <div className="mt-5 pt-4 border-t border-neutral-100 dark:border-neutral-800 text-[11px] font-mono text-neutral-500 dark:text-neutral-400 flex items-center justify-between">
+                <span>Nepal (UTC+5:45)</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-medium">● Available for Consulting</span>
+              </div>
             </div>
 
           </div>
+
         </div>
-    </SectionWrapper>
+
+      </div>
+    </section>
   );
 }

@@ -1,13 +1,13 @@
 export const portfolio = {
   personal: {
     name: "Binod Prasad Joshi",
-    role: "2x AWS Certified",
-    location: "Nepal / India (Remote-friendly)",
-    tagline: "Building scalable, secure, and reliable cloud-native backend systems.",
-    email: "joshibinodprasad77@gmail.com", // Placeholder, will need user to confirm or use generic
+    role: "Cloud & DevOps Consultant | 2x AWS Certified | AWS Community Builder",
+    location: "Remote-friendly (UTC+5:45)",
+    tagline: "Architecting resilient, cost-optimized cloud infrastructure & automated DevOps pipelines.",
+    email: "joshibinodprasad77@gmail.com",
     links: {
-      github: "https://github.com/Binod231", // Placeholder
-      linkedin: "https://www.linkedin.com/in/binod-prasad-joshi-549067281", // Placeholder
+      github: "https://github.com/Binod231",
+      linkedin: "https://www.linkedin.com/in/binod-prasad-joshi-549067281",
       resume: "https://drive.google.com/file/d/1QdJ0GqlDd9ft0moKAfKePkIh_cKaUklA/view?usp=sharing",
     },
     photo: "/portfoilo.jpeg",
@@ -16,6 +16,83 @@ export const portfolio = {
       { title: "Google Student Ambassador", subtitle: "Google DSC (2026)", icon: "globe", theme: "google" },
     ],
   },
+  services: [
+    {
+      id: "cloud-architecture",
+      title: "Cloud Architecture & Modernization",
+      shortDesc: "Resilient, scalable AWS foundations tailored for production.",
+      description: "Design and implement high-availability cloud infrastructure on AWS. Specializing in Multi-AZ VPC network isolation, ECS Fargate serverless containers, zero-downtime rolling deploys, and automated disaster recovery.",
+      icon: "cloud" as const,
+      deliverables: [
+        "Multi-AZ VPC & Subnet topology design",
+        "ECS Fargate & Docker container orchestration",
+        "High-Availability RDS PostgreSQL & MySQL clustering",
+        "Route 53 DNS, CloudFront CDN & WAF edge protection"
+      ],
+      technologies: ["AWS VPC", "ECS Fargate", "RDS Multi-AZ", "Route 53", "CloudFormation"],
+      metrics: "99.9% Uptime SLA Architecture"
+    },
+    {
+      id: "devops-cicd",
+      title: "DevOps & Automated CI/CD Pipelines",
+      shortDesc: "Rapid, deterministic deployments with zero-downtime rollouts.",
+      description: "Build robust continuous integration and continuous deployment pipelines that eliminate deployment anxiety. Implement multi-stage Docker build caching, automated testing gates, and seamless production rollouts.",
+      icon: "terminal" as const,
+      deliverables: [
+        "GitHub Actions enterprise CI/CD workflows",
+        "Multi-stage Docker caching (~50% build time cut)",
+        "Zero-downtime rolling updates via ASG instance refresh",
+        "Alembic automated database schema migrations"
+      ],
+      technologies: ["GitHub Actions", "Docker", "Docker Compose", "Alembic", "Linux / Bash"],
+      metrics: "~50% Faster Pipeline Execution"
+    },
+    {
+      id: "finops-optimization",
+      title: "Cloud FinOps & Cost Optimization",
+      shortDesc: "Eliminate overprovisioned spend without sacrificing performance.",
+      description: "Conduct thorough cloud infrastructure audits to identify compute waste, idle resources, and inefficient queries. Right-size workloads and architect efficient persistence layers to drastically reduce monthly AWS expenditure.",
+      icon: "dollar" as const,
+      deliverables: [
+        "CloudWatch compute & memory rightsizing audit",
+        "High-cost service replacement (e.g. OpenSearch to optimized PostgreSQL)",
+        "S3 Intelligent-Tiering & Lifecycle archiving policies",
+        "Database query indexing & caching with Redis"
+      ],
+      technologies: ["AWS Cost Explorer", "CloudWatch", "Redis ElastiCache", "PostgreSQL Indexing"],
+      metrics: "~30% Monthly Cloud Bill Reduction"
+    },
+    {
+      id: "devsecops-security",
+      title: "DevSecOps & Shift-Left Security",
+      shortDesc: "Hardening cloud infrastructure and APIs from the ground up.",
+      description: "Embed enterprise security early into development and deployment cycles. Implement granular least-privilege IAM policies, WAF rate-limiting rules against DDoS/scraping, and automated static application security testing.",
+      icon: "shield" as const,
+      deliverables: [
+        "AWS WAF rules, rate-limiting & IP reputation lists",
+        "Least-privilege IAM policies & private subnet isolation",
+        "Static Application Security Testing (SAST) in CI/CD",
+        "Automated backup vaults with AWS Backup & AWS Config"
+      ],
+      technologies: ["AWS WAF", "IAM", "AWS Config", "Taint Analysis SAST", "OAuth2 / JWT"],
+      metrics: "Zero Security Incident Track Record"
+    },
+    {
+      id: "ai-infrastructure",
+      title: "Generative AI & RAG Infrastructure",
+      shortDesc: "Production-ready architectures for LLMs and Vector Search.",
+      description: "Bridge the gap between slow, unpredictable AI models and snappy, responsive web applications. Decouple long-running LLM inference via asynchronous task queues, resilient S3 pre-signed workflows, and grounded vector search.",
+      icon: "cpu" as const,
+      deliverables: [
+        "Asynchronous task queues for slow AI model inference",
+        "Amazon Bedrock Nova Canvas & LLM integration",
+        "Vector database pipelines (pgvector, ChromaDB)",
+        "Grounded RAG to eliminate hallucination in production"
+      ],
+      technologies: ["Amazon Bedrock", "AWS SAM", "FastAPI Async", "pgvector", "ChromaDB"],
+      metrics: "<100ms API Response for Core Workflows"
+    }
+  ],
   skills: {
     cloud: ["AWS (EC2, S3, RDS, IAM, CloudWatch)"],
     devops: ["Docker", "GitHub Actions (CI/CD)", "Linux", "Redis"],
@@ -32,10 +109,63 @@ export const portfolio = {
   },
   experience: [
     {
+      company: "Glovion Consulting Private Limited",
+      role: "DevOps Consultant",
+      period: "Oct 2026 - Present",
+      type: "Data Center & On-Premises",
+      tech: [
+        "Private Data Center Infrastructure",
+        "Nepali Server Architecture",
+        "Linux Bare-Metal & Virtualization (KVM)",
+        "Docker & Container Orchestration",
+        "Self-Hosted CI/CD Pipelines",
+        "Nginx & HAProxy Load Balancing",
+        "Local Network Topologies & Firewalls",
+        "PostgreSQL & Storage Clusters",
+        "Prometheus & Grafana Observability"
+      ],
+      impacts: [
+        "Managing and modernizing Glovion's dedicated private data center operations and on-premise Nepali server infrastructure for high-security enterprise systems.",
+        "Architecting bare-metal and virtualized server environments, implementing containerized deployment pipelines, and ensuring continuous production uptime.",
+        "Configuring local network routing, reverse proxy load balancers (Nginx/HAProxy), and strict firewall boundaries to guarantee low domestic latency and data sovereignty.",
+        "Engineering automated backup replication, bare-metal provisioning scripts, and 24/7 observability suites using Prometheus and Grafana.",
+        "Bridging local on-premise compute with cloud-native workflows, providing reliable technical advisory and incident management to client engineering teams."
+      ],
+      caseStudy: {
+        title: "Private Data Center Operations, Local Sovereign Infrastructure & High-Availability Networking",
+        overview: "Engineering resilient infrastructure within Glovion's dedicated private data centers in Nepal. Ensuring low-latency network performance, strict data residency compliance, automated self-hosted deployments, and continuous system reliability on local bare-metal and virtualized servers.",
+        features: [
+          {
+            title: "On-Premise Virtualization & Compute Topology",
+            details: "Configured resilient bare-metal clusters and virtualized compute pools to maximize hardware utilization, resource isolation, and system uptime."
+          },
+          {
+            title: "Local Traffic Routing & HAProxy/Nginx Load Balancing",
+            details: "Implemented reverse proxy clusters and Layer 4/Layer 7 traffic routing optimized for Nepali domestic ISP networks and edge traffic."
+          },
+          {
+            title: "Self-Hosted Deployment Pipelines & Storage Replication",
+            details: "Built automated CI/CD runners and local backup synchronization mechanisms ensuring reliable zero-downtime rollouts without reliance on external SaaS."
+          }
+        ],
+        challenges: [
+          {
+            problem: "Sovereign Data Compliance & Local Network Latency",
+            solution: "Architected isolated on-premise network segments with strict firewall ACLs, keeping all core data residency compliant and ensuring sub-10ms domestic latency."
+          }
+        ],
+        results: [
+          " **Data Sovereignty**: 100% compliant local data residency hosted entirely within Nepal's domestic data centers.",
+          " **Low Latency**: Achieved minimal internal latency across local ISP peering and enterprise backbones.",
+          " **High Availability**: Maintained continuous production uptime across on-premise bare-metal and virtualized compute nodes."
+        ]
+      }
+    },
+    {
       company: "One Cloud Utopia",
       role: "DevOps Consultant",
-      period: "May 2026 – Present",
-      type: "Remote (Contract)",
+      period: "May 2026 - June 2026",
+      type: "Remote",
       tech: [
         "AWS (ECS Fargate, SAM, RDS, Cognito, Route53, WAF)",
         "Docker & Compose",
@@ -86,9 +216,9 @@ export const portfolio = {
           }
         ],
         results: [
-          "🏆 **High Availability**: Maintained **~99.9% uptime** across all four production applications.",
-          "⚡ **CI/CD Speed**: Reduced deployment pipeline duration by **~50%** via multi-stage Docker build cache strategies.",
-          "💰 **Cost Optimization**: Achieved a **~30% reduction** in monthly AWS costs by rightsizing compute and replacing OpenSearch with optimized PostgreSQL queries."
+          " **High Availability**: Maintained **~99.9% uptime** across all four production applications.",
+          " **CI/CD Speed**: Reduced deployment pipeline duration by **~50%** via multi-stage Docker build cache strategies.",
+          " **Cost Optimization**: Achieved a **~30% reduction** in monthly AWS costs by rightsizing compute and replacing OpenSearch with optimized PostgreSQL queries."
         ]
       }
     },
@@ -149,9 +279,9 @@ export const portfolio = {
           }
         ],
         results: [
-          "🏆 **Scalability**: Successfully scales to support enterprise-level traffic via Docker Compose.",
-          "⚡ **Performance**: Achieved <100ms API response times for core exam actions.",
-          "✅ **Reliability**: Established a comprehensive Pytest suite covering critical business logic."
+          " **Scalability**: Successfully scales to support enterprise-level traffic via Docker Compose.",
+          " **Performance**: Achieved <100ms API response times for core exam actions.",
+          " **Reliability**: Established a comprehensive Pytest suite covering critical business logic."
         ]
       },
       history: [
@@ -198,59 +328,13 @@ export const portfolio = {
           }
         ],
         results: [
-          "📉 **Efficiency**: Reduced manual document review time by **~70%**.",
-          "🎯 **Accuracy**: Achieved **high precision** in semantic retrieval for complex queries.",
-          "🚀 **Scalability**: Successfully deployed a scalable **RAG pipeline** supporting multiple document types."
+          " **Efficiency**: Reduced manual document review time by **~70%**.",
+          " **Accuracy**: Achieved **high precision** in semantic retrieval for complex queries.",
+          " **Scalability**: Successfully deployed a scalable **RAG pipeline** supporting multiple document types."
         ]
       },
     },
-    {
-      company: "Freelance Backend Developer",
-      role: "Backend Developer",
-      period: "Freelance",
-      type: "Remote",
-      tech: ["Flask", "SQLite", "JavaScript", "HTML/CSS"],
-      impacts: [
-        "Designed and developed a full-featured stock and billing system tailored to a client's bookstore business.",
-        "Implemented real-time stock management with automatic inventory deduction during billing.",
-        "Developed daily, monthly, and yearly sales reporting for actionable business insights.",
-        "Built an interactive dashboard showing top-selling books and frequent buyers.",
-        "Integrated secure admin login with role-based access to manage the system.",
-      ],
-      caseStudy: {
-        title: "End-to-End Business Inventory System",
-        overview: "A comprehensive, tailored full-stack solution designed to modernize a bookstore's operations. The system replaced manual record-keeping with a digital platform for managing stock, processing billing, and generating actionable business analytics.",
-        features: [
-          {
-            title: "Real-time Inventory Management",
-            details: "Engineered automatic stock deduction logic that triggers immediately upon billing, preventing overselling and ensuring accurate inventory counts."
-          },
-          {
-            title: "Analytics Dashboard",
-            details: "Built an interactive dashboard providing visualizations for daily, monthly, and yearly sales, helping the owner identify top-selling items and trends."
-          },
-          {
-            title: "Role-Based Access Control",
-            details: "Implemented secure admin and staff portals with differentiated permissions to protect sensitive financial data."
-          }
-        ],
-        challenges: [
-          {
-            problem: "Data Consistency in High Volume",
-            solution: "Implemented database transactions to ensure atomic updates for billing and stock adjustments, preventing data corruption during concurrent sales."
-          },
-          {
-            problem: "Complex Reporting Queries",
-            solution: "Optimized SQL queries and added database indexing to enable fast generation of detailed sales reports."
-          }
-        ],
-        results: [
-          "⏱️ **Efficiency**: Streamlined the billing process, reducing checkout time by **~40%**.",
-          "📊 **Insights**: Provided **real-time insights** into business performance and inventory levels.",
-          "✅ **Accuracy**: Eliminated manual stock tracking errors and billing discrepancies."
-        ]
-      },
-    },
+
   ],
   projects: [
     {
@@ -434,112 +518,391 @@ export const portfolio = {
   ],
   blogs: [
     {
+      title: "The Agentic AI Era on AWS: What’s Trending in 2026 and How to Build Production-Ready Agents",
+      description: "Discover the top AWS agentic AI trends in 2026 and learn how to build production-ready agents with Bedrock AgentCore, deterministic guardrails, and real code.",
+      date: "September 2026",
+      tags: ["AWS", "Agentic AI", "Bedrock AgentCore", "Generative AI", "DevOps"],
+      url: "https://builder.aws.com/content/3JFung63VfYEKbYHIUuaJWred3l/the-agentic-ai-era-on-aws-whats-trending-in-2026-and-how-to-build-production-ready-agents",
+      color: "orange",
+      platform: "AWS Builder Center",
+      readTime: "8 min read",
+      category: "Generative AI & Bedrock",
+    },
+    {
+      title: "Your AI Agent Has God-Mode IAM. Here's the Proxy I Built to Take It Away.",
+      description: "An AI agent with broad IAM can hallucinate its way into disaster. I built a fail-closed proxy that scopes permissions to the task, live.",
+      date: "September 2026",
+      tags: ["AWS", "IAM", "DevSecOps", "AI Security", "Least Privilege"],
+      url: "https://builder.aws.com/content/3IwFRy6vy2DF9gviMgbX1J3uqrq/your-ai-agent-has-god-mode-iam-heres-the-proxy-i-built-to-take-it-away",
+      color: "red",
+      platform: "AWS Builder Center",
+      readTime: "7 min read",
+      category: "DevSecOps & Security",
+    },
+    {
+      title: "The Digital Fast-Pass: Building a Low-Latency Global Application on AWS",
+      description: "A hands-on Terraform walkthrough of Route 53, CloudFront, Global Accelerator, ALB/NLB, WAF, Shield, and PrivateLink organized around three distinct traffic patterns, not one blended chain.",
+      date: "August 2026",
+      tags: ["AWS", "Route 53", "CloudFront", "Global Accelerator", "Terraform", "Networking"],
+      url: "https://builder.aws.com/content/3IGUEDK1H3yBfsV4W9XvVsCNZpA/the-digital-fast-pass-building-a-low-latency-global-application-on-aws",
+      color: "blue",
+      platform: "AWS Builder Center",
+      readTime: "9 min read",
+      category: "AWS Architecture",
+    },
+    {
+      title: "I Gave AI Its Own AWS Machine: Then Destroyed It",
+      description: "Building an isolated, ephemeral AI code-execution sandbox with AWS Lambda MicroVMs and Firecracker to safely execute untrusted generative AI output without host contamination.",
+      date: "August 2026",
+      tags: ["AWS Lambda", "MicroVM", "Firecracker", "Sandboxing", "Security"],
+      url: "https://builder.aws.com/content/3Hth5GJ7ehZ6rJnmRaEiEWegoaO/i-gave-ai-its-own-aws-machine-then-destroyed-it",
+      color: "violet",
+      platform: "AWS Builder Center",
+      readTime: "6 min read",
+      category: "Generative AI & Bedrock",
+    },
+    {
+      title: "Petabyte AI Pipelines: Apache Pig Meets Amazon Bedrock",
+      description: "AWS pipeline: Apache Pig on EMR (Graviton, Tez) handles ETL; Amazon Bedrock enriches and structures data before model training.",
+      date: "August 2026",
+      tags: ["AWS EMR", "Apache Pig", "Amazon Bedrock", "Big Data", "ETL", "Graviton"],
+      url: "https://builder.aws.com/content/3HXH38b8XDsPBealUK4SfPygwLI/petabyte-ai-pipelines-apache-pig-meets-amazon-bedrock",
+      color: "amber",
+      platform: "AWS Builder Center",
+      readTime: "9 min read",
+      category: "Databases & RAG",
+    },
+    {
+      title: "Everyone Wanted Spark. We Kept Apache Pig and Won Anyway.",
+      description: "How we kept 15-year-old Apache Pig scripts alive on AWS with EMR, cut costs by a third, and automated deploys with GitHub Actions and OIDC.",
+      date: "August 2026",
+      tags: ["AWS EMR", "Apache Pig", "Cost Optimization", "GitHub Actions", "OIDC"],
+      url: "https://builder.aws.com/content/3HJnLkHKc3wjIuL5kDYLi1mO58p/everyone-wanted-spark-we-kept-apache-pig-and-won-anyway",
+      color: "emerald",
+      platform: "AWS Builder Center",
+      readTime: "8 min read",
+      category: "DevOps & IaC",
+    },
+    {
+      title: "Stop Reviewing PRs: Let AWS Bedrock Do It",
+      description: "Stop manual code reviews! Build a serverless AI pipeline with AWS Bedrock, CodeBuild & CDK that automatically audits PRs and posts fixes.",
+      date: "July 2026",
+      tags: ["Amazon Bedrock", "CodeBuild", "AWS CDK", "CI/CD", "Automated Review"],
+      url: "https://builder.aws.com/content/3HCa4ZqPprwVZM7mfDRBIdrjRNC/stop-reviewing-prs-let-aws-bedrock-do-it",
+      color: "cyan",
+      platform: "AWS Builder Center",
+      readTime: "7 min read",
+      category: "DevOps & IaC",
+    },
+    {
+      title: "Stop Fighting Your CI/CD Pipeline: Build a Blazing-Fast Deployment Workflow with AWS DevTools",
+      description: "How to stop treating deployments as a stressful event and turn them into a predictable, automated workflow using AWS Developer Tools.",
+      date: "July 2026",
+      tags: ["AWS DevTools", "CodePipeline", "CodeBuild", "CI/CD", "DevOps"],
+      url: "https://builder.aws.com/content/3H9zgHZTP3rEAAIttUYFDYuGHeS/stop-fighting-your-cicd-pipeline-build-a-blazing-fast-deployment-workflow-with-aws-devtools",
+      color: "blue",
+      platform: "AWS Builder Center",
+      readTime: "7 min read",
+      category: "DevOps & IaC",
+    },
+    {
+      title: "Beyond Auto-Healing: Building a Safe, Closed-Loop Cloud Operations Control Plane on AWS",
+      description: "Building a Safe, Closed-Loop Cloud Operations Control Plane on AWS to detect anomalies and apply remediations without human intervention.",
+      date: "July 2026",
+      tags: ["AWS Architecture", "Systems Manager", "EventBridge", "CloudWatch", "Self-Healing"],
+      url: "https://builder.aws.com/content/3LBOl3P5XRRvgDjKnrBiGGfu2sM/beyond-auto-healing-building-a-safe-closed-loop-cloud-operations-control-plane-on-aws",
+      color: "teal",
+      platform: "AWS Builder Center",
+      readTime: "8 min read",
+      category: "AWS Architecture",
+    },
+    {
+      title: "Engineering Low-Latency, Resilient AWS Architectures: Nitro Enclaves, ENA Express, Aurora Limitless, and Route 53 ARC",
+      description: "Deep dive into sub-millisecond networking, confidential compute with Nitro Enclaves, distributed Aurora Limitless shards, and cross-region Application Recovery Controller.",
+      date: "July 2026",
+      tags: ["Nitro Enclaves", "ENA Express", "Aurora Limitless", "Route 53 ARC", "High Availability"],
+      url: "https://builder.aws.com/content/3L7im9sqEG85IrvvdSneUC9KYWM/engineering-low-latency-resilient-aws-architectures-nitro-enclaves-ena-express-aurora-limitless-and-route-53-arc",
+      color: "purple",
+      platform: "AWS Builder Center",
+      readTime: "10 min read",
+      category: "AWS Architecture",
+    },
+    {
+      title: "Architecting a Zero-Trust Enterprise RAG Gateway on AWS: Multi-Tenant Vector Retrieval, Cedar Policy Enforcement, and Bedrock with Terraform",
+      description: "Architecting a Zero-Trust Enterprise RAG Gateway on AWS enforcing fine-grained Cedar authorization policies, multi-tenant vector isolation, and Amazon Bedrock models with Terraform.",
+      date: "July 2026",
+      tags: ["Zero-Trust", "Cedar Policy", "Amazon Bedrock", "OpenSearch", "Terraform", "RAG"],
+      url: "https://builder.aws.com/content/3KiXkWYt4CtP9CdJalw18h5WBKI/architecting-a-zero-trust-enterprise-rag-gateway-on-aws-multi-tenant-vector-retrieval-cedar-policy-enforcement-and-bedrock-with-terraform",
+      color: "emerald",
+      platform: "AWS Builder Center",
+      readTime: "11 min read",
+      category: "Databases & RAG",
+    },
+    {
+      title: "Codebase Welcome Guide: an agent that reads a repository so you don't have to start cold",
+      description: "An autonomous developer onboarding agent on AWS that inspects AST trees, parses dependency maps, and generates tailored architectural walk-throughs for new codebases.",
+      date: "July 2026",
+      tags: ["AI Agents", "Developer Productivity", "Bedrock", "Code Analysis", "Tooling"],
+      url: "https://builder.aws.com/content/3KX3wE95u013K9Jp0J0MMjXUZUT/codebase-welcome-guide-an-agent-that-reads-a-repository-so-you-dont-have-to-start-cold",
+      color: "sky",
+      platform: "AWS Builder Center",
+      readTime: "6 min read",
+      category: "Generative AI & Bedrock",
+    },
+    {
+      title: "Secure by Design, Cheap by Architecture: Mastering AWS Networking for Security & Cost Wins in 2026",
+      description: "Mastering AWS Networking for Security & Cost Wins in 2026: eliminating unnecessary NAT gateway charges and cross-AZ data fees while elevating VPC isolation and PrivateLink.",
+      date: "June 2026",
+      tags: ["AWS Networking", "NAT Gateway", "VPC Endpoints", "Cost Optimization", "Security"],
+      url: "https://builder.aws.com/content/3KGdPSxiNg8wzC9SAtXa9T7TcVX/secure-by-design-cheap-by-architecture-mastering-aws-networking-for-security-and-cost-wins-in-2026",
+      color: "green",
+      platform: "AWS Builder Center",
+      readTime: "9 min read",
+      category: "AWS Architecture",
+    },
+    {
+      title: "When the WAF Is the Outage: Diagnosing and Tuning AWS Managed Rules Without Giving Up Protection",
+      description: "Diagnosing and tuning AWS Managed Rules to stop false positives from breaking production checkout flows while maintaining defense-in-depth against SQLi and XSS.",
+      date: "June 2026",
+      tags: ["AWS WAF", "Managed Rules", "False Positives", "CloudWatch Logs", "Security Tuning"],
+      url: "https://builder.aws.com/content/3K7bzvJFXWVZarA2UoMJYFiKwWc/when-the-waf-is-the-outage-diagnosing-and-tuning-aws-managed-rules-without-giving-up-protection",
+      color: "rose",
+      platform: "AWS Builder Center",
+      readTime: "8 min read",
+      category: "DevSecOps & Security",
+    },
+    {
+      title: "Building a Governed Multi-Account AWS Landing Zone with Organizations, Control Tower, and CDK",
+      description: "Building a Governed Multi-Account AWS Landing Zone with Organizations, Control Tower, and CDK for automated account vending, SCP guardrails, and centralized logging.",
+      date: "June 2026",
+      tags: ["Control Tower", "AWS Organizations", "AWS CDK", "Governance", "Multi-Account"],
+      url: "https://builder.aws.com/content/3JzFoT107dZDrCP1Rx8Up3MoNxu/building-a-governed-multi-account-aws-landing-zone-with-organizations-control-tower-and-cdk",
+      color: "purple",
+      platform: "AWS Builder Center",
+      readTime: "10 min read",
+      category: "DevOps & IaC",
+    },
+    {
+      title: "The Cloud Reaches Home: What AWS Could Mean for Healthcare in Sudurpaschim",
+      description: "What AWS Could Mean for Healthcare in Sudurpaschim: exploring hybrid cloud topologies, edge compute, and satellite backhauls to deliver telemedicine to remote districts in Nepal.",
+      date: "June 2026",
+      tags: ["Nepal", "Sudurpaschim", "Healthcare", "Edge Computing", "Telemedicine"],
+      url: "https://builder.aws.com/content/3H2WcwpJFNK3hdw1hTDtdETHzMA/the-cloud-reaches-home-what-aws-could-mean-for-healthcare-in-sudurpaschim",
+      color: "amber",
+      platform: "AWS Builder Center",
+      readTime: "7 min read",
+      category: "AWS Architecture",
+    },
+    {
+      title: "Beyond the IDE: Amazon Quick Desktop as the Planning Layer for AI-Assisted Development",
+      description: "Amazon Quick Desktop as the Planning Layer for AI-Assisted Development: structuring AI development workflows with project blueprints before letting agents touch source code.",
+      date: "June 2026",
+      tags: ["AI Development", "Amazon Quick", "Software Engineering", "Productivity"],
+      url: "https://builder.aws.com/content/3GvmjRhwGkqwy5kp0kFvz8dVa3Q/beyond-the-ide-amazon-quick-desktop-as-the-planning-layer-for-ai-assisted-development",
+      color: "blue",
+      platform: "AWS Builder Center",
+      readTime: "6 min read",
+      category: "Generative AI & Bedrock",
+    },
+    {
+      title: "The Architecture of an Un-Bribable System: Designing for a World Where Humans Can Be Bought",
+      description: "Designing for a World Where Humans Can Be Bought: zero-trust systems leveraging cryptographic provenance, multi-party consensus, and append-only audit ledgers.",
+      date: "June 2026",
+      tags: ["Zero-Trust", "Cryptographic Proofs", "Immutable Audit", "QLDB", "AWS Security"],
+      url: "https://builder.aws.com/content/3Gvhob1eTNHJZDNTnFk3zGcHWUb/the-architecture-of-an-un-bribable-system-designing-for-a-world-where-humans-can-be-bought",
+      color: "neutral",
+      platform: "AWS Builder Center",
+      readTime: "8 min read",
+      category: "AWS Architecture",
+    },
+    {
+      title: "Zero-Touch Migration: The Hype vs. What Actually Ships",
+      description: "The Hype vs. What Actually Ships: a pragmatic teardown of automated cloud migration tools, real-world database replication gotchas, and cutover strategies.",
+      date: "June 2026",
+      tags: ["Cloud Migration", "AWS MGN", "DMS", "Enterprise Modernization", "IaC"],
+      url: "https://builder.aws.com/content/3Gq3nGXGrOWkQ43u3Cbl69Hdonm/zero-touch-migration-the-hype-vs-what-actually-ships",
+      color: "indigo",
+      platform: "AWS Builder Center",
+      readTime: "7 min read",
+      category: "DevOps & IaC",
+    },
+    {
+      title: "Why AWS Kiro Might Quietly Kill Your Team's Cursor Subscription?",
+      description: "Why AWS Kiro Might Quietly Kill Your Team's Cursor Subscription: native cloud telemetry integration, AWS API orchestration, and deterministic spec-driven code authoring.",
+      date: "June 2026",
+      tags: ["AWS Kiro", "AI IDE", "Developer Productivity", "DevOps Tools"],
+      url: "https://builder.aws.com/content/3GfizSatLbdg1h9vUQMi7m0quti/why-aws-kiro-might-quietly-kill-your-teams-cursor-subscription",
+      color: "emerald",
+      platform: "AWS Builder Center",
+      readTime: "6 min read",
+      category: "DevOps & IaC",
+    },
+    {
+      title: "Why Your Serverless Architecture Becomes Monolithic Without You Noticing",
+      description: "Why Your Serverless Architecture Becomes Monolithic Without You Noticing: how shared databases, synchronous Lambda chains, and coupled EventBridge schemas recreate distributed monoliths.",
+      date: "June 2026",
+      tags: ["Serverless", "Event-Driven", "AWS Lambda", "Distributed Systems", "Microservices"],
+      url: "https://builder.aws.com/content/3GZEysm5rWjPLAoinSb0q1lTgSp/why-your-serverless-architecture-becomes-monolithic-without-you-noticing",
+      color: "red",
+      platform: "AWS Builder Center",
+      readTime: "7 min read",
+      category: "AWS Architecture",
+    },
+    {
+      title: "Fitintelligence: The Engineering Ecosystem behind AI Biomechanics & Gym Operations",
+      description: "The Engineering Ecosystem behind AI Biomechanics & Gym Operations: processing edge video streams, calculating joint angles, and generating adaptive workout corrections.",
+      date: "May 2026",
+      tags: ["Computer Vision", "Bedrock", "Edge AI", "IoT", "Biomechanics"],
+      url: "https://builder.aws.com/content/3GJ3GX7cm9bTNd22Hd5vhk2bc1c/fitelligence-the-engineering-ecosystem-behind-ai-biomechanics-and-gym-operations",
+      color: "purple",
+      platform: "AWS Builder Center",
+      readTime: "8 min read",
+      category: "Generative AI & Bedrock",
+    },
+    {
+      title: "The Ghost in Your AWS Account: Why Your AI Agent Is the New Insider Threat",
+      description: "Why Your AI Agent Is the New Insider Threat: autonomous agents with write permissions representing unpredictable vectors for privilege escalation, and how to stop them.",
+      date: "May 2026",
+      tags: ["DevSecOps", "AI Security", "IAM", "Threat Modeling", "Auditability"],
+      url: "https://builder.aws.com/content/3GG8aq9RZ76KGVBSIokeEALNfu6/the-ghost-in-your-aws-account-why-your-ai-agent-is-the-new-insider-threat",
+      color: "rose",
+      platform: "AWS Builder Center",
+      readTime: "7 min read",
+      category: "DevSecOps & Security",
+    },
+    {
       title: "I Broke Production With Vector Search. Here's the Autopsy.",
       description: "Our RAG app returned confident, fluent, completely wrong answers, and no error ever fired. Here's the full autopsy: what killed it, why, and how to fix it before it happens to you. Featured in AWS Data 4x4 — recognized alongside AWS Community picks for databases and analytics.",
-      date: "July 3, 2026",
-      tags: ["AWS", "Vector Search", "RAG", "PostgreSQL", "Databases"],
+      date: "May 2026",
+      tags: ["AWS", "Vector Search", "RAG", "PostgreSQL", "pgvector", "Databases"],
       url: "https://builder.aws.com/content/3FzaBq9Z6bVE5eGEwV0QdVbPIaI/i-broke-production-with-vector-search-heres-the-autopsy",
       color: "green",
       spotlight: "AWS Data 4x4 · $100 AWS Credits Winner",
-      winner: true
+      winner: true,
+      platform: "AWS Builder Center",
+      readTime: "8 min read",
+      category: "Databases & RAG",
     },
     {
       title: "Stop Vibe Coding: Build Deterministic AI Infrastructure with AWS Blocks",
-      description: "Explore why AI-generated Infrastructure as Code needs deterministic composition, type-safe backend capabilities, and policy-aware validation. Discover how AWS Blocks shifts infrastructure validation earlier in the development lifecycle to ensure security and architectural correctness.",
-      date: "June 28, 2026",
-      tags: ["AWS", "IaC", "Generative AI", "DevOps", "Security"],
+      description: "Build Deterministic AI Infrastructure with AWS Blocks: explore why AI-generated Infrastructure as Code needs deterministic composition, type-safe backend capabilities, and policy-aware validation.",
+      date: "May 2026",
+      tags: ["AWS", "IaC", "Generative AI", "DevOps", "AWS Blocks", "Security"],
       url: "https://builder.aws.com/content/3FlFKUUccesUcVX2E9osFo1rR5r/stop-vibe-coding-build-deterministic-ai-infrastructure-with-aws-blocks",
       color: "purple",
-      spotlight: "AWS Builder Center"
+      platform: "AWS Builder Center",
+      readTime: "6 min read",
+      category: "DevOps & IaC",
+    },
+    {
+      title: "Woke Up to a $10,000 AWS Bill? How to Stop Runaway Amazon Bedrock Agent Loops Before They Drain Your Wallet",
+      description: "How to Stop Runaway Amazon Bedrock Agent Loops Before They Drain Your Wallet: how recursive tool calling blows up token budgets overnight, and automated AWS Budgets + Lambda circuit breakers.",
+      date: "May 2026",
+      tags: ["AWS Cost Optimization", "Amazon Bedrock", "Agent Loops", "Budgets", "FinOps"],
+      url: "https://builder.aws.com/content/3FemiD2KFjeKbKBfOuXWze0ILIF/woke-up-to-a-dollar10000-aws-bill-how-to-stop-runaway-amazon-bedrock-agent-loops-before-they-drain-your-wallet",
+      color: "orange",
+      platform: "AWS Builder Center",
+      readTime: "7 min read",
+      category: "DevOps & IaC",
     },
     {
       title: "Designing a Global Enterprise Network Fabric: The Kiro Fabric Architecture",
-      description: "Design a high-performance global network with the Kiro fabric. This reference architecture explores building a resilient multi-region infrastructure using AWS Direct Connect (BFD-tuned), Transit Gateway, and Global Accelerator. Learn to achieve 900ms hybrid failovers and automated symmetric security via GWLB. Backed by 30-day production staging metrics, we dive into critical lessons on TGW Appliance Mode, route propagation complexity, and high-fidelity observability using VPC Flow Logs v5.",
-      date: "June 23, 2026",
-      tags: ["AWS", "Networking", "Security", "Architecture"],
+      description: "Designing a Global Enterprise Network Fabric: The Kiro Fabric Architecture. Building a resilient multi-region infrastructure using AWS Direct Connect (BFD-tuned), Transit Gateway, and Global Accelerator.",
+      date: "May 2026",
+      tags: ["AWS", "Networking", "Security", "Architecture", "Direct Connect"],
       url: "https://builder.aws.com/content/3FWhiwOsUlxYVBu47eGpNBSAp0w/designing-a-global-enterprise-network-fabric-the-kiro-fabric-architecture",
       color: "blue",
-      spotlight: "AWS Builder Center"
-    },
-    {
-      title: "How AWS Kiro, AgentCore, and Transform Are Reshaping DevOps in 2026",
-      description: "This article explores building secure, production-grade applications by replacing unreliable natural language prompting with deterministic engineering guardrails using the latest AWS agentic framework ecosystem. It details how to implement these frameworks to ensure reliability and security in AI-driven workflows.",
-      date: "June 8, 2026",
-      tags: ["AWS", "DevOps", "Agentic AI", "Serverless"],
-      url: "https://builder.aws.com/content/3Eqi77PpIgEVNgU9VJipjNMEPFC/how-aws-kiro-agentcore-and-transform-are-reshaping-devops-in-2026",
-      color: "orange",
-      spotlight: "AWS Builder Center"
+      platform: "AWS Builder Center",
+      readTime: "11 min read",
+      category: "AWS Architecture",
     },
     {
       title: "Part 2: Hands-On with AWS Kiro, AgentCore, and Transform—Building the 2026 Agentic DevOps Stack",
-      description: "A practical, code-first tutorial breaking down how to write deterministic EARS specifications in AWS Kiro, manage persistent session state with Bedrock AgentCore, and execute structural AST code rewrites using ATX blueprints.",
-      date: "June 17, 2026",
-      tags: ["AWS", "DevOps", "Agentic AI", "Serverless", "Generative AI"],
+      description: "Part 2: Hands-On with AWS Kiro, AgentCore, and Transform. A practical tutorial breaking down how to write deterministic EARS specifications in AWS Kiro and manage persistent session state.",
+      date: "May 2026",
+      tags: ["AWS Kiro", "AgentCore", "Transform", "DevOps", "Agentic AI"],
       url: "https://builder.aws.com/content/3F1lruEifPtXhGJK5rbAyfiajhE/part-2-hands-on-with-aws-kiro-agentcore-and-transformbuilding-the-2026-agentic-devops-stack",
-      color: "Yellow"
+      color: "amber",
+      platform: "AWS Builder Center",
+      readTime: "9 min read",
+      category: "DevOps & IaC",
+    },
+    {
+      title: "How AWS Kiro, AgentCore, and Transform Are Reshaping DevOps in 2026",
+      description: "How AWS Kiro, AgentCore, and Transform Are Reshaping DevOps in 2026. Replacing unreliable natural language prompting with deterministic engineering guardrails using AWS frameworks.",
+      date: "April 2026",
+      tags: ["AWS", "DevOps", "Agentic AI", "Serverless"],
+      url: "https://builder.aws.com/content/3Eqi77PpIgEVNgU9VJipjNMEPFC/how-aws-kiro-agentcore-and-transform-are-reshaping-devops-in-2026",
+      color: "orange",
+      platform: "AWS Builder Center",
+      readTime: "7 min read",
+      category: "DevOps & IaC",
     },
     {
       title: "The Rise of AI Agents on AWS: From Chatbots to Autonomous Systems",
-      description: "In 2022, the world marveled at ChatGPT’s ability to hold a conversation. By 2024, enterprises were deploying AI systems that could browse the web, write code, execute workflows, and coordinate with other AI agents. Explore how to build production-grade autonomous agent architectures on AWS.",
-      date: "April 25, 2026",
+      description: "The Rise of AI Agents on AWS: From Chatbots to Autonomous Systems. Explore how to build production-grade autonomous agent architectures on AWS with Amazon Bedrock.",
+      date: "April 2026",
       tags: ["AWS", "Amazon Bedrock", "AI Agents", "Cloud Computing"],
-      url: "https://medium.com/@joshibinodprasad77/the-rise-of-ai-agents-on-aws-from-chatbots-to-autonomous-systems-cd9ede316bbc",
-      color: "cyan"
-    },
-    {
-      title: "7 AWS Developer Tools That Supercharge Backend Engineering (Complete Technical Guide)",
-      description: "The contemporary backend engineering landscape is characterized by a fundamental shift away from manual infrastructure management toward automated, code-driven ecosystems. In this post, we explore seven AWS tools that can help you build and deploy backend applications more efficiently.",
-      date: "March 12, 2026",
-      tags: ["AWS", "Serverless", "Devtools", "Backend"],
-      url: "https://dev.to/binod_prasadjoshi_b591ca/7-aws-developer-tools-that-supercharge-backend-engineering-complete-technical-guide-38mo",
-      color: "red"
+      url: "https://builder.aws.com/content/3DQcxknxGQ5BM9N4akSSXQyra0L/the-rise-of-ai-agents-on-aws-from-chatbots-to-autonomous-systems",
+      color: "cyan",
+      platform: "AWS Builder Center",
+      readTime: "6 min read",
+      category: "Generative AI & Bedrock",
     },
     {
       title: "Architecting the Far West: A Roadmap for Sudurpaschim as Nepal’s Regional AWS Cloud Hub",
-      description: "Sudurpaschim, Nepal’s Far West, is a region that has been historically marginalized and underdeveloped. However, with the advent of cloud computing, this region has the potential to become a regional hub for cloud services. In this post, we explore the potential of Sudurpaschim as a regional hub for cloud services and the steps required to make it a reality.",
-      tags: ["AWS", "awsbuilder", "Nepal", "Cloud"],
-      url: "https://dev.to/binod_prasadjoshi_b591ca/architecting-the-far-west-a-roadmap-for-sudurpaschim-as-nepals-regional-aws-cloud-hub-4lai",
-      color: "orange"
+      description: "Architecting the Far West: A Roadmap for Sudurpaschim as Nepal’s Regional AWS Cloud Hub. A technical blueprint for edge computing, local micro data centers, and regional connectivity in Nepal.",
+      date: "March 2026",
+      tags: ["AWS", "Nepal", "Sudurpaschim", "Cloud Infrastructure"],
+      url: "https://builder.aws.com/content/3AmvfQXYYNw3iO2f3IUKFKeyqdS/architecting-the-far-west-a-roadmap-for-sudurpaschim-as-nepals-regional-aws-cloud-hub",
+      color: "orange",
+      platform: "AWS Builder Center",
+      readTime: "7 min read",
+      category: "AWS Architecture",
     },
     {
-      title: "Architecting and Deploying a Scalable Asynchronous Virtual Try-On API on AWS",
-      description: "Virtual Try-On (VTO) is rapidly becoming a must-have feature for modern e-commerce platforms. However, integrating Generative AI models like Amazon Bedrock's Nova Canvas poses a unique architectural challenge: AI image generation is slow, while traditional web APIs expect responses in milliseconds. In this post, we explore the event-driven, asynchronous architecture required to solve this problem using AWS Serverless technologies.",
-      date: "February 27, 2026",
-      tags: ["AWS", "Serverless", "GenAI", "Architecture"],
-      url: "https://awspathway.com/blog/architecting-and-deploying-a-scalable-asynchronous-virtual-try-on-api-on-aws",
-      color: "violet"
-    },
-    {
-      title: "Hands-On: Deploying a Backend Application on AWS EC2 (Beginner-Friendly)",
-      description: "A step-by-step guide to deploying your first backend application on AWS EC2, covering setup, security groups, and deployment best practices.",
-      date: "January 8, 2026",
-      tags: ["AWS", "EC2", "Tutorial", "DevOps"],
-      url: "https://awspathway.com/blog/hands-on-deploying-a-backend-application-on-aws-ec2-beginner-friendly",
-      color: "blue"
-    },
-    {
-      title: "AWS re:Invent 2025 Recap: The 5 Biggest Announcements Shaping the Cloud",
-      description: "An in-depth analysis of the most impactful announcements from AWS re:Invent 2025 and their implications for cloud engineering.",
-      date: "December 15, 2025",
-      tags: ["AWS", "re:Invent", "Cloud News"],
-      url: "https://awspathway.com/blog/aws-re-invent-2025-recap-the-5-biggest-announcements-shaping-the-cloud",
-      color: "orange"
+      title: "7 AWS Developer Tools That Supercharge Backend Engineering (Complete Technical Guide)",
+      description: "The contemporary backend engineering landscape is characterized by a fundamental shift away from manual infrastructure management toward automated, code-driven ecosystems.",
+      date: "March 2026",
+      tags: ["AWS", "Serverless", "DevTools", "Backend"],
+      url: "https://dev.to/binod_prasadjoshi_b591ca/7-aws-developer-tools-that-supercharge-backend-engineering-complete-technical-guide-38mo",
+      color: "red",
+      platform: "Dev.to",
+      readTime: "8 min read",
+      category: "AWS Architecture",
     },
     {
       title: "The Definitive Guide to AWS RDS: Architecting Persistence for Modern Backends",
-      description: "In the modern cloud ecosystem, \"stateless\" is the goal for compute, but \"stateful\" is the reality for business logic. Every user session, every transaction, and every inventory update needs a home. While spinning up an EC2 instance or a Lambda function is trivial, architecting a production-ready, highly available, and secure database layer remains one of the most challenging tasks for a Backend Engineer. This is not a quick-start guide. This is an architectural deep dive. We are going to deconstruct the Amazon Relational Database Service (RDS), dissect the networking principles that secure it, and build a robust environment using the \"Least Privilege\" security model. We will move beyond the Management Console and verify our infrastructure using the command line, just as a DevOps engineer would in a real-world scenario.",
-      date: "October 18, 2025",
+      description: "An architectural deep dive into Amazon Relational Database Service (RDS), networking principles, and the Least Privilege security model for mission-critical persistence.",
+      date: "October 2025",
       tags: ["AWS", "RDS", "Database", "Architecture", "Security"],
       url: "https://awspathway.com/blog/build-your-db-server-and-interact-with-your-db-using-an-app",
-      color: "amber"
+      color: "amber",
+      platform: "AWS Pathway",
+      readTime: "10 min read",
+      category: "Databases & RAG",
+    },
+    {
+      title: "AWS re:Invent 2025 Recap: The 5 Biggest Announcements Shaping the Cloud",
+      description: "An in-depth analysis of the most impactful announcements from AWS re:Invent 2025 and their implications for enterprise cloud engineering.",
+      date: "December 2025",
+      tags: ["AWS", "re:Invent", "Cloud News"],
+      url: "https://awspathway.com/blog/aws-re-invent-2025-recap-the-5-biggest-announcements-shaping-the-cloud",
+      color: "orange",
+      platform: "AWS Pathway",
+      readTime: "6 min read",
+      category: "AWS Architecture",
     },
     {
       title: "AWS Amplify Deployment & Security Guide for Next.js (Production-Ready)",
-      description: "Deploying a modern web application is not just about pushing code to the cloud; it's about leveraging the cloud's capabilities to deliver a seamless user experience. A production-ready deployment requires a robust DNS strategy and secure edge protection.",
-      date: "September 15, 2025",
+      description: "Deploying a modern web application is not just about pushing code to the cloud; it's about leveraging the cloud's capabilities to deliver a seamless user experience with edge security.",
+      date: "September 2025",
       tags: ["AWS Amplify", "Next.js", "Security", "Deployment"],
       url: "https://awspathway.com/blog/aws-amplify-deployment-security-guide-for-next-js-production-ready",
-      color: "purple"
+      color: "purple",
+      platform: "AWS Pathway",
+      readTime: "6 min read",
+      category: "DevOps & IaC",
     },
   ],
 };

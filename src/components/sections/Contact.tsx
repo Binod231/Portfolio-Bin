@@ -189,7 +189,7 @@ export default function Contact() {
               </li>
               <li>
                 <a href={links.linkedin} target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100">
-                  LinkedIn (2k+ Network)
+                  LinkedIn
                 </a>
               </li>
               <li>

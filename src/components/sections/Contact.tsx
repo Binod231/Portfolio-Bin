@@ -144,22 +144,22 @@ export default function Contact() {
             </h4>
             <ul className="space-y-2 text-neutral-600 dark:text-neutral-400">
               <li>
-                <a href="https://www.credly.com/users/binod-prasad-joshi" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100">
+                <a href="https://www.credly.com/badges/4fe1dc98-121e-41ed-a1b1-0d611ef6b6ac" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100">
                   AWS Solutions Architect (SAA)
                 </a>
               </li>
               <li>
-                <a href="https://www.credly.com/users/binod-prasad-joshi" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100">
+                <a href="https://www.credly.com/badges/fc355697-7765-4b3f-9b4e-709540f48d8f" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100">
                   AWS Cloud Practitioner (CLF)
                 </a>
               </li>
               <li>
-                <a href="https://builder.aws.com/content/3FlFKUUccesUcVX2E9osFo1rR5r/stop-vibe-coding-build-deterministic-ai-infrastructure-with-aws-blocks" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100">
+                <a href="https://builder.aws.com/community/@binodprasadjoshi" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100">
                   AWS Community Builder (2026)
                 </a>
               </li>
               <li>
-                <a href="https://www.credly.com/users/binod-prasad-joshi" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100">
+                <a href="https://www.credly.com/users/binod-prasad-joshi.69a505f6/badges/credly" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100">
                   8 Credly Badges Profile
                 </a>
               </li>

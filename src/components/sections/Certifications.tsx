@@ -17,7 +17,7 @@ export default function Certifications() {
             Certifications &amp; Accreditations
           </h2>
           <a
-            href="https://www.credly.com/users/binod-prasad-joshi"
+            href="https://www.credly.com/users/binod-prasad-joshi.69a505f6/badges/credly"
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors inline-flex items-center gap-1"

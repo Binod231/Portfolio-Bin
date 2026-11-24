@@ -56,7 +56,7 @@ export default function About() {
                 rel="noopener noreferrer"
                 className="underline hover:text-neutral-900 dark:hover:text-neutral-100 font-medium"
               >
-                AWS Builder Center (34+ articles)
+                AWS Builder Center
               </a>
               ,{" "}
               <a

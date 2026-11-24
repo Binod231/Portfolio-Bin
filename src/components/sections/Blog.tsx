@@ -62,8 +62,8 @@ export default function Blog() {
                 key={category}
                 onClick={() => setSelectedCategory(category)}
                 className={`px-3 py-1 text-xs font-medium rounded-full transition-colors cursor-pointer ${selectedCategory === category
-                    ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
-                    : "bg-neutral-100 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
+                  ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
+                  : "bg-neutral-100 dark:bg-neutral-800/80 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
                   }`}
               >
                 {category}
@@ -146,7 +146,7 @@ export default function Blog() {
         {/* View on AWS Builder Center Link */}
         <div className="mt-10 pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
           <span className="text-neutral-500 dark:text-neutral-400">
-            All 34+ technical articles verified &amp; syndicated across AWS Builder Center.
+            All technical articles verified &amp; syndicated across AWS Builder Center.
           </span>
           <a
             href="https://builder.aws.com/community/@binodprasadjoshi?tab=articles"

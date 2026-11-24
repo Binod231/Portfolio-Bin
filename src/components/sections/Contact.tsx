@@ -82,7 +82,7 @@ export default function Contact() {
               </li>
               <li>
                 <a href="https://builder.aws.com/community/@binodprasadjoshi?tab=articles" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100">
-                  AWS Builder Center (34+ Articles)
+                  AWS Builder Center
                 </a>
               </li>
               <li>
@@ -160,7 +160,7 @@ export default function Contact() {
               </li>
               <li>
                 <a href="https://www.credly.com/users/binod-prasad-joshi.69a505f6/badges/credly" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100">
-                  8 Credly Badges Profile
+                  Credly Profile
                 </a>
               </li>
               <li>

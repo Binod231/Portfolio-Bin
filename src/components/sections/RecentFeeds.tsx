@@ -10,9 +10,9 @@ export default function RecentFeeds() {
   const caseStudies = [
     {
       date: "2026",
-      title: "Glovion: On-Premise Data Center Operations & Local Nepali Servers",
-      subtitle: "Bare-metal virtualization, HAProxy traffic routing & sovereign data hosting",
-      metric: "Data Center",
+      title: "Glovion: ERP (Odoo), Private Cloud & Multi-Data Center Server Operations",
+      subtitle: "Odoo deployment & monitoring, legacy server upkeep & private cloud services",
+      metric: "ERP & Cloud",
       link: "#experience",
     },
     {

@@ -33,7 +33,7 @@ export default function Hero() {
             <div className="space-y-4 text-base text-neutral-700 dark:text-neutral-300 leading-relaxed font-normal text-justify">
               <p className="text-justify leading-relaxed">
                 I am a software engineer and DevOps consultant passionate about resilient cloud architecture, automated infrastructure, and applied AI. Currently, I am a DevOps Consultant at{" "}
-                <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">Glovion Consulting Private Limited</strong>, managing on-premise private data center operations, bare-metal virtualization, and dedicated Nepali server infrastructure. Previously at{" "}
+                <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">Glovion Consulting Private Limited</strong>, deploying and maintaining production ERP (Odoo) systems, provisioning new services on our proprietary private cloud, maintaining legacy server infrastructure, and managing 24/7 monitoring across multi-data center environments. Previously at{" "}
                 <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">One Cloud Utopia</strong>, I led DevOps operations and zero-downtime rollouts across four production platforms on AWS:{" "}
                 <em className="text-neutral-900 dark:text-neutral-200 font-medium not-italic">Zyrona</em>,{" "}
                 <em className="text-neutral-900 dark:text-neutral-200 font-medium not-italic">Outfitmirror</em>,{" "}
@@ -81,16 +81,16 @@ export default function Hero() {
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 text-neutral-800 dark:text-neutral-200 hover:border-neutral-500 dark:hover:border-neutral-500 transition-colors"
               >
                 <Award className="w-3.5 h-3.5 text-amber-500" />
-                <span>AWS Builder Center (34+ Articles)</span>
+                <span>AWS Builder Center</span>
               </a>
 
               <a
-                href="https://www.credly.com/users/binod-prasad-joshi"
+                href="https://www.credly.com/users/binod-prasad-joshi.69a505f6/badges/credly"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 text-neutral-800 dark:text-neutral-200 hover:border-neutral-500 dark:hover:border-neutral-500 transition-colors"
               >
-                <span>Credly (8 Badges)</span>
+                <span>Credly </span>
               </a>
 
               <a
@@ -122,9 +122,8 @@ export default function Hero() {
                 alt={isSpeakingMain ? "Binod Prasad Joshi speaking at AWS Event" : "Binod Prasad Joshi - DevOps Consultant"}
                 fill
                 priority
-                className={`object-cover transition-all duration-300 ${
-                  isSpeakingMain ? "object-top" : "object-center"
-                }`}
+                className={`object-cover transition-all duration-300 ${isSpeakingMain ? "object-top" : "object-center"
+                  }`}
                 sizes="(max-width: 768px) 340px, 360px"
               />
 

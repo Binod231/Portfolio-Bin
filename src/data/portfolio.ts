@@ -112,52 +112,57 @@ export const portfolio = {
       company: "Glovion Consulting Private Limited",
       role: "DevOps Consultant",
       period: "Oct 2026 - Present",
-      type: "Data Center & On-Premises",
+      type: "Private Cloud & Multi-Data Center",
       tech: [
-        "Private Data Center Infrastructure",
-        "Nepali Server Architecture",
-        "Linux Bare-Metal & Virtualization (KVM)",
-        "Docker & Container Orchestration",
-        "Self-Hosted CI/CD Pipelines",
-        "Nginx & HAProxy Load Balancing",
-        "Local Network Topologies & Firewalls",
-        "PostgreSQL & Storage Clusters",
-        "Prometheus & Grafana Observability"
+        "ERP (Odoo) Deployment & Monitoring",
+        "Private Cloud Infrastructure",
+        "Legacy Server Maintenance",
+        "Multi-Data Center Monitoring",
+        "Linux Server Administration (Ubuntu/Debian)",
+        "Docker & Containerization",
+        "PostgreSQL & Database Optimization",
+        "Nginx Reverse Proxy & Load Balancing",
+        "Prometheus & Grafana Observability",
+        "Automated Backup & Disaster Recovery"
       ],
       impacts: [
-        "Managing and modernizing Glovion's dedicated private data center operations and on-premise Nepali server infrastructure for high-security enterprise systems.",
-        "Architecting bare-metal and virtualized server environments, implementing containerized deployment pipelines, and ensuring continuous production uptime.",
-        "Configuring local network routing, reverse proxy load balancers (Nginx/HAProxy), and strict firewall boundaries to guarantee low domestic latency and data sovereignty.",
-        "Engineering automated backup replication, bare-metal provisioning scripts, and 24/7 observability suites using Prometheus and Grafana.",
-        "Bridging local on-premise compute with cloud-native workflows, providing reliable technical advisory and incident management to client engineering teams."
+        "**ERP (Odoo) Deployment & Maintenance**: End-to-end production deployment, continuous monitoring, performance tuning, and maintenance of **ERP (Odoo)** instances with optimized PostgreSQL configurations and automated cron worker management.",
+        "**Private Cloud Service Deployments**: Provisioned and deployed new services, APIs, and business workloads onto the organization's dedicated **private cloud environment**, configuring containerized runtimes and secure ingress routing.",
+        "**Legacy Server Upkeep & Monitoring**: Performed routine maintenance, security patching, disk and memory monitoring, and performance health audits on legacy server infrastructure to guarantee zero unplanned downtime.",
+        "**Multi-Data Center Operations**: Handled, monitored, and maintained servers distributed across **multiple remote data centers**, setting up centralized telemetry, node metrics, and proactive alerting with Prometheus and Grafana.",
+        "**High-Availability Backups & Recovery**: Automated scheduled database dumps, filestore synchronization, and multi-location disaster recovery pipelines to prevent any data loss across ERP and private cloud workloads."
       ],
       caseStudy: {
-        title: "Private Data Center Operations, Local Sovereign Infrastructure & High-Availability Networking",
-        overview: "Engineering resilient infrastructure within Glovion's dedicated private data centers in Nepal. Ensuring low-latency network performance, strict data residency compliance, automated self-hosted deployments, and continuous system reliability on local bare-metal and virtualized servers.",
+        title: "Enterprise ERP (Odoo) Operations, Private Cloud Deployments & Multi-Data Center Infrastructure",
+        overview: "Leading end-to-end systems operations at Glovion Consulting. Spearheading production ERP (Odoo) deployments and lifecycle maintenance, provisioning new microservices on our proprietary private cloud, preserving stability on legacy physical/virtual servers, and maintaining 24/7 unified observability across servers located in multiple external data centers.",
         features: [
           {
-            title: "On-Premise Virtualization & Compute Topology",
-            details: "Configured resilient bare-metal clusters and virtualized compute pools to maximize hardware utilization, resource isolation, and system uptime."
+            title: "ERP (Odoo) Lifecycle & PostgreSQL Tuning",
+            details: "Architected high-reliability Odoo instances with optimized worker counts, PostgreSQL memory allocations, and automated filestore backup pipelines."
           },
           {
-            title: "Local Traffic Routing & HAProxy/Nginx Load Balancing",
-            details: "Implemented reverse proxy clusters and Layer 4/Layer 7 traffic routing optimized for Nepali domestic ISP networks and edge traffic."
+            title: "Private Cloud Service Orchestration",
+            details: "Configured standardized Docker deployment templates, Nginx reverse proxies, and isolated environments to roll out new internal and client services rapidly."
           },
           {
-            title: "Self-Hosted Deployment Pipelines & Storage Replication",
-            details: "Built automated CI/CD runners and local backup synchronization mechanisms ensuring reliable zero-downtime rollouts without reliance on external SaaS."
+            title: "Legacy Server Maintenance & Hardening",
+            details: "Maintained aging production servers with proactive resource monitoring, Linux kernel updates, disk health audits, and log management to eliminate failure risks."
+          },
+          {
+            title: "Distributed Multi-Data Center Monitoring",
+            details: "Unified servers across disparate data centers under a single observability pane using Prometheus, Node Exporter, and Grafana dashboards for immediate incident triage."
           }
         ],
         challenges: [
           {
-            problem: "Sovereign Data Compliance & Local Network Latency",
-            solution: "Architected isolated on-premise network segments with strict firewall ACLs, keeping all core data residency compliant and ensuring sub-10ms domestic latency."
+            problem: "Maintaining High-Resource Odoo ERP Demands Across Mixed Legacy & Modern Server Fleet",
+            solution: "Isolated resource-heavy background jobs, implemented dedicated PostgreSQL connection pooling, and configured Nginx caching and compression to keep Odoo fast and resilient across diverse server hardware."
           }
         ],
         results: [
-          " **Data Sovereignty**: 100% compliant local data residency hosted entirely within Nepal's domestic data centers.",
-          " **Low Latency**: Achieved minimal internal latency across local ISP peering and enterprise backbones.",
-          " **High Availability**: Maintained continuous production uptime across on-premise bare-metal and virtualized compute nodes."
+          " **ERP Stability**: Maintained 99.9% uptime for core enterprise ERP (Odoo) workflows and high-volume business transactions.",
+          " **Private Cloud Velocity**: Accelerated deployment speed for onboarding new services to the private cloud infrastructure.",
+          " **Multi-DC Visibility**: 100% monitoring coverage across both legacy physical servers and distributed remote data center nodes."
         ]
       }
     },

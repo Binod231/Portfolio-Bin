@@ -6,10 +6,12 @@ import Link from "next/link";
 import { portfolio } from "@/data/portfolio";
 
 const navLinks = [
+  { name: "About", href: "#about" },
+  { name: "Experience", href: "#experience" },
   { name: "Case Studies", href: "#case-studies" },
+  { name: "Projects", href: "#projects" },
   { name: "Services", href: "#services" },
   { name: "Blogs", href: "#blogs", count: portfolio.blogs.length },
-  { name: "Projects", href: "#projects" },
   { name: "Certifications", href: "#certifications" },
   { name: "Contact", href: "#contact" },
 ];

@@ -41,7 +41,7 @@ export default function About() {
             </p>
 
             <p className="text-justify leading-relaxed">
-              Currently, I am working as a <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">DevOps Consultant at Glovion Consulting Private Limited</strong>, managing and modernizing their <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">private on-premise data center operations and dedicated Nepali server infrastructure</strong>. My focus spans bare-metal system architecture, virtualized compute pools (KVM), local traffic routing with Nginx &amp; HAProxy, self-hosted automated CI/CD runners, and strict sovereign data residency compliance.
+              Currently, I am working as a <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">DevOps Consultant at Glovion Consulting Private Limited</strong>, where my work centers on deploying, maintaining, and monitoring mission-critical <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">ERP (Odoo) enterprise environments</strong>, deploying new microservices onto our <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">proprietary private cloud</strong>, maintaining and troubleshooting legacy physical and virtual server infrastructure, and ensuring 24/7 telemetry and server health across <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">multiple remote data centers</strong>.
             </p>
 
             <p className="text-justify leading-relaxed">
@@ -98,7 +98,7 @@ export default function About() {
               <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800/80 space-y-1.5 text-xs text-neutral-600 dark:text-neutral-400">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-neutral-400">Focus:</span>
-                  <span className="font-medium text-neutral-800 dark:text-neutral-200">Data Center &amp; Nepali Servers</span>
+                  <span className="font-medium text-neutral-800 dark:text-neutral-200">ERP (Odoo), Private Cloud &amp; Multi-DC</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-neutral-400">Previous:</span>

@@ -49,7 +49,7 @@ export default function ShowcaseGrid() {
       category: "Track Record",
       count: "3+ Roles",
       title: "Experience & Timeline",
-      description: "Managing on-premise data centers at Glovion Consulting, cloud operations at One Cloud Utopia, and backend systems at Karnovation Inc.",
+      description: "ERP Odoo and private cloud operations at Glovion Consulting, cloud operations at One Cloud Utopia, and backend systems at Karnovation Inc.",
       href: "#experience",
       linkText: "View timeline →",
     },

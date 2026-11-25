@@ -38,6 +38,13 @@ export default function CommandPalette() {
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
+      const isBacktick = e.code === "Backquote" || e.key === "`";
+      if (((e.ctrlKey || e.metaKey) && isBacktick) || (e.altKey && e.key.toLowerCase() === "t")) {
+        e.preventDefault();
+        setOpen(false);
+        router.push(pathname === "/terminal" ? "/" : "/terminal");
+        return;
+      }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setOpen((prev) => !prev);
@@ -52,7 +59,7 @@ export default function CommandPalette() {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("open-command-palette", onCustomOpen);
     };
-  }, [open]);
+  }, [open, pathname, router]);
 
   const navigateToSection = (hash: string) => {
     setOpen(false);
@@ -269,7 +276,7 @@ export default function CommandPalette() {
 
         <div className="px-4 py-2 bg-neutral-50 dark:bg-[#111418] border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-[11px] font-mono text-neutral-500">
           <span>↑↓ Navigate · ↵ Open · Esc Close</span>
-          <span>Ctrl+K / ⌘K</span>
+          <span>Ctrl+` Terminal · Ctrl+K Search</span>
         </div>
       </div>
     </div>

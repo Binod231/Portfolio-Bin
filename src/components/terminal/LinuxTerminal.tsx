@@ -747,7 +747,7 @@ export default function LinuxTerminal() {
   Cloud/DevOps : aws, kubectl, docker, arch <mcqtest|outfitmirror|zyrona|glovion|karnovation>, htop, tmux
   FinOps/Hire  : ./finops-calc.sh [--spend=5000], ./hire-me.sh, resume, theme <ubuntu|kali|matrix|amber>, man <cmd>
   System/Fun   : whoami, id, hostname, uname, uptime, df, free, ps, env, neofetch, cowsay, fortune
-  Shortcuts    : Tab (multi-match autocomplete), Up/Down (history), Ctrl+L (clear), exit`}</pre>,
+  Shortcuts    : Ctrl+\` or Alt+T (toggle GUI), Tab (autocomplete), Up/Down (history), Ctrl+L (clear), exit`}</pre>,
         promptStr
       );
       return currentParts;
@@ -1232,10 +1232,10 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-[#3c3b37] hover:bg-[#555753] border border-[#6a6863] text-xs font-sans font-medium text-[#eeeeec]"
-            title="Switch to GUI Portfolio"
+            title="Switch to GUI Portfolio (Ctrl+` or Alt+T)"
           >
             <LayoutGrid className="w-3 h-3" style={{ color: theme.promptUser }} />
-            <span className="hidden sm:inline">GUI Mode</span>
+            <span className="hidden sm:inline">GUI Mode (Ctrl+`)</span>
           </Link>
           <Link
             href="/"

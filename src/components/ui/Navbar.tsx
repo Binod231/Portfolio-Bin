@@ -128,7 +128,7 @@ export default function Navbar() {
           <Link
             href={isTerminalMode ? "/" : "/terminal"}
             className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-medium border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-neutral-400 dark:hover:border-neutral-500 transition-colors whitespace-nowrap"
-            title={isTerminalMode ? "Switch back to GUI Portfolio" : "Launch Binod Linux World Terminal"}
+            title={isTerminalMode ? "Switch back to GUI Portfolio (Ctrl+` or Alt+T)" : "Launch Terminal (Ctrl+` or Alt+T)"}
           >
             {isTerminalMode ? (
               <>
@@ -139,6 +139,7 @@ export default function Navbar() {
               <>
                 <Terminal className="w-3.5 h-3.5" />
                 <span>&gt;_ Terminal</span>
+                <span className="hidden lg:inline text-[10px] text-neutral-400 dark:text-neutral-500">^`</span>
               </>
             )}
           </Link>

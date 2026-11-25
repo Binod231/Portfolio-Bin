@@ -1,4 +1,119 @@
 import { portfolio } from "@/data/portfolio";
+import { calculateFinOpsSavings, WorkloadProfile } from "@/data/finopsCalc";
+
+const ARCH_DIAGRAMS: Record<string, string> = {
+  mcqtest: `[ARCHITECTURE: MCQtest — 12-Stack CloudFormation Multi-AZ]
+Route 53 -> CloudFront -> AWS WAF (Rate-Limit) -> ALB (Public Subnets)
+                              |
+                +-------------+-------------+
+                | Private Subnets (AZ-1/2)  |
+                v                           v
+        [ECS Fargate API]           [ECS Fargate Workers]
+                |                           |
+        +-------+-------+           +-------+-------+
+        v               v           v               v
+ [RDS Postgres     [ElastiCache   [AWS Config]  [AWS Backup
+  Multi-AZ]         Redis AZ]                    Daily Vault]`,
+
+  outfitmirror: `[ARCHITECTURE: Outfitmirror — Serverless AI VTO Pipeline]
+Client -> AWS Cognito Hosted UI -> API Gateway -> AWS SAM Lambda
+                                                    |
+             +--------------------------------------+
+             v                                      v
+  [S3 Pre-Signed Media]                   [Async Worker Queue]
+                                                    |
+                                                    v
+                                     [Amazon Bedrock Nova Canvas]`,
+
+  zyrona: `[ARCHITECTURE: Zyrona — Cost-Optimized Compute & Search (-30% Spend)]
+CloudFront CDN -> ALB -> EC2 Auto Scaling Group (Zero-Downtime Instance Refresh)
+                                |
+                    +-----------+-----------+
+                    v                       v
+            [Tuned PostgreSQL]       [Redis Cache]
+      (Replaced OpenSearch: -30% AWS Monthly Bill)`,
+
+  glovion: `[ARCHITECTURE: Glovion Consulting — Enterprise ERP & Multi-DC Ops]
+Client / Edge -> Nginx Reverse Proxy (TLS + Static Cache)
+                      |
+         +------------+------------+
+         v                         v
+ [Odoo ERP Workers]       [Private Cloud Microservices]
+         |                         |
+         +------------+------------+
+                      v
+         [Tuned PostgreSQL + Filestore DR]
+                      ^
+                      |
+ [Prometheus + Node Exporter + Grafana (Multi-Data Center)]`,
+
+  karnovation: `[ARCHITECTURE: AWS Pathway (Karnovation) — High-Concurrency EdTech]
+AWS Amplify (Next.js) -> Route 53 -> FastAPI (AsyncIO + SQLAlchemy)
+                                         |
+             +---------------------------+---------------------------+
+             v                           v                           v
+  [Redis JWKS Cache]             [PostgreSQL + Alembic]      [DynamoDB + S3]
+  (-95% OAuth2 Latency)          (39+ Zero-Downtime Mig)     (DocFlow RAG)`,
+};
+
+export async function fetchLiveGitHubRepos(): Promise<string> {
+  try {
+    const res = await fetch("https://api.github.com/users/Binod231/repos?sort=updated&per_page=8");
+    if (!res.ok) throw new Error("GitHub API rate limit");
+    const repos = (await res.json()) as Array<{
+      name: string;
+      language: string | null;
+      stargazers_count: number;
+      updated_at: string;
+      html_url: string;
+    }>;
+    const header = "REPOSITORY                         LANG         STARS  UPDATED     URL";
+    const rows = repos.map((r) => {
+      const name = r.name.slice(0, 33).padEnd(35);
+      const lang = (r.language || "DevOps").slice(0, 11).padEnd(13);
+      const stars = String(r.stargazers_count).padEnd(7);
+      const date = r.updated_at.slice(0, 10);
+      return `${name}${lang}${stars}${date}  ${r.html_url}`;
+    });
+    return `[LIVE GITHUB API :: Binod231]\n${header}\n${"-".repeat(92)}\n${rows.join("\n")}`;
+  } catch {
+    const fallback = portfolio.projects
+      .map((p) => `${p.title.padEnd(35)} ${p.type.padEnd(18)} ${p.repo}`)
+      .join("\n");
+    return `[CACHED PORTFOLIO REPOS :: offline fallback]\n${fallback}`;
+  }
+}
+
+export async function fetchLiveGitLog(): Promise<string> {
+  try {
+    const res = await fetch("https://api.github.com/users/Binod231/events/public?per_page=15");
+    if (!res.ok) throw new Error("GitHub API rate limit");
+    const events = (await res.json()) as Array<{
+      type: string;
+      created_at: string;
+      repo: { name: string };
+      payload?: { commits?: Array<{ sha: string; message: string }> };
+    }>;
+    const pushes = events.filter((e) => e.type === "PushEvent" && e.payload?.commits?.length).slice(0, 8);
+    if (pushes.length > 0) {
+      const lines = pushes.map((ev) => {
+        const c = ev.payload!.commits![0];
+        return `${c.sha.slice(0, 7)}  (${ev.created_at.slice(0, 10)}) [${ev.repo.name}] ${c.message.split("\n")[0]}`;
+      });
+      return `[LIVE GITHUB COMMIT STREAM :: Binod231]\n${lines.join("\n")}`;
+    }
+  } catch {
+    // Fallback below
+  }
+  return [
+    "[PRODUCTION ENGINEERING LOG :: Binod231]",
+    "a1b2c3d  feat: Odoo ERP worker optimization & multi-DC Prometheus alerts (Glovion)",
+    "b3c4d5e  feat: 12-stack CloudFormation Multi-AZ ECS Fargate + WAF (MCQtest)",
+    "c5d6e7f  perf: Redis JWKS caching -> 95% OAuth2 latency drop (Karnovation)",
+    "d7e8f9a  finops: Replace OpenSearch with tuned PostgreSQL -> -30% AWS bill (Zyrona)",
+    "e9f0a1b  feat: Stateful AST taint analysis SAST scanner + Dockerfile audit",
+  ].join("\n");
+}
 
 export const MAN_PAGES: Record<string, string> = {
   aws: `NAME
@@ -205,6 +320,44 @@ export function handleDevOpsCommand(cmd: string, args: string[]): string | null 
 
   if (cmd === "fortune") {
     return FORTUNES[Math.floor(Math.random() * FORTUNES.length)];
+  }
+
+  if (cmd === "arch") {
+    const target = (args[0] || "").toLowerCase();
+    if (!target) {
+      return `Available architecture blueprints: ${Object.keys(ARCH_DIAGRAMS).join(", ")}\nExample: arch mcqtest`;
+    }
+    return ARCH_DIAGRAMS[target] || `Unknown blueprint '${target}'. Available: ${Object.keys(ARCH_DIAGRAMS).join(", ")}`;
+  }
+
+  if (cmd === "./finops-calc.sh" || cmd === "finops-calc") {
+    let spend = 5000;
+    let profile: WorkloadProfile = "multi-az-saas";
+    args.forEach((a) => {
+      if (a.startsWith("--spend=")) spend = Number(a.split("=")[1]) || 5000;
+      if (a.startsWith("--type=")) {
+        const t = a.split("=")[1] as WorkloadProfile;
+        if (t in { "multi-az-saas": 1, "ecommerce-search": 1, "ai-llm-bedrock": 1, "erp-legacy": 1 }) {
+          profile = t;
+        }
+      }
+    });
+    const est = calculateFinOpsSavings(spend, profile);
+    return [
+      `[AWS FINOPS AUDIT ESTIMATOR] Profile: ${est.workloadLabel}`,
+      `-------------------------------------------------------------------------`,
+      `Current Spend : $${est.monthlySpend.toLocaleString()}/mo`,
+      `Est. Savings  : ~${est.totalSavingsPct}% ($${est.monthlySaved.toLocaleString()}/mo | $${est.annualSaved.toLocaleString()}/yr)`,
+      `Optimized Bill: $${est.projectedSpend.toLocaleString()}/mo`,
+      ``,
+      `Optimization Levers:`,
+      ...est.breakdown.map(
+        (b) => `  - ${b.label.padEnd(32)} -${String(b.pct).padEnd(2)}% ($${b.monthlySaved}/mo) -> ${b.recommendation}`
+      ),
+      ``,
+      `Usage: ./finops-calc.sh --spend=10000 --type=ecommerce-search`,
+      `Types: multi-az-saas | ecommerce-search | ai-llm-bedrock | erp-legacy`,
+    ].join("\n");
   }
 
   if (cmd === "man") {

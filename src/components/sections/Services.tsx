@@ -2,6 +2,7 @@
 
 import { ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
+import FinOpsEstimator from "@/components/sections/FinOpsEstimator";
 
 export default function Services() {
   const { services } = portfolio;
@@ -85,6 +86,8 @@ export default function Services() {
             </div>
           ))}
         </div>
+
+        <FinOpsEstimator />
 
       </div>
     </section>

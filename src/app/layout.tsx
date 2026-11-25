@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Newsreader, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
+import CommandPalette from "@/components/ui/CommandPalette";
 import StructuredData from "@/components/StructuredData";
 
 const inter = Inter({
@@ -124,6 +125,7 @@ export default function RootLayout({
       >
         <StructuredData />
         <Navbar />
+        <CommandPalette />
         {children}
       </body>
     </html>

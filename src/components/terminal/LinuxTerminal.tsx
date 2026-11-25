@@ -7,7 +7,8 @@ import { createInitialFs, FsNode } from "@/data/linuxFs";
 import { portfolio } from "@/data/portfolio";
 import DotMatrixPortrait from "./DotMatrixPortrait";
 import { TERMINAL_THEMES, ThemeName } from "./terminalThemes";
-import { handleDevOpsCommand } from "./devopsCli";
+import { fetchLiveGitHubRepos, fetchLiveGitLog, handleDevOpsCommand } from "./devopsCli";
+import { answerPortfolioQuestion } from "./terminalSearch";
 import { HtopMonitor, LessPager, NanoViewer } from "./TerminalPanes";
 import {
   ArrowUpRight,
@@ -54,11 +55,17 @@ const COMMAND_LIST = [
   "aws",
   "kubectl",
   "docker",
+  "arch",
+  "ask",
+  "gh",
+  "git",
+  "tmux",
   "htop",
   "ping",
   "curl",
   "man",
   "theme",
+  "./finops-calc.sh",
   "./hire-me.sh",
   "hire-me",
   "resume",
@@ -130,6 +137,7 @@ export default function LinuxTerminal() {
   const [entries, setEntries] = useState<OutputEntry[]>([]);
   const [themeName, setThemeName] = useState<ThemeName>("ubuntu");
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
+  const [tmuxSplit, setTmuxSplit] = useState(false);
 
   const theme = TERMINAL_THEMES[themeName];
   const outputEndRef = useRef<HTMLDivElement | null>(null);
@@ -521,6 +529,61 @@ export default function LinuxTerminal() {
       setActiveModal({ kind: "htop" });
       return currentParts;
     }
+    if (cmd === "tmux" || cmd === "split" || cmd === "unsplit") {
+      if (cmd === "unsplit" || arg === "kill") {
+        setTmuxSplit(false);
+        appendOutput(trimmed, <span style={{ color: theme.muted }}>[tmux] closed split telemetry pane.</span>, promptStr);
+      } else {
+        setTmuxSplit((s) => !s);
+        appendOutput(
+          trimmed,
+          <span style={{ color: theme.promptUser }}>[tmux] toggled split-pane telemetry view (type 'unsplit' or 'tmux kill' to close).</span>,
+          promptStr
+        );
+      }
+      return currentParts;
+    }
+    if (cmd === "ask") {
+      const answer = answerPortfolioQuestion(arg);
+      appendOutput(
+        trimmed,
+        <pre className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed" style={{ color: theme.text }}>
+          {renderTextWithLinks(answer, theme.promptPath)}
+        </pre>,
+        promptStr
+      );
+      return currentParts;
+    }
+    if (cmd === "gh" || (cmd === "git" && arg.startsWith("log"))) {
+      const entryId = nextId.current++;
+      setEntries((prev) => [
+        ...prev,
+        {
+          id: entryId,
+          promptPath: promptStr,
+          command: trimmed,
+          body: <span style={{ color: theme.muted }}>Querying live GitHub API for Binod231...</span>,
+        },
+      ]);
+      const fetcher = cmd === "gh" ? fetchLiveGitHubRepos : fetchLiveGitLog;
+      fetcher().then((text) => {
+        setEntries((prev) =>
+          prev.map((e) =>
+            e.id === entryId
+              ? {
+                  ...e,
+                  body: (
+                    <pre className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed" style={{ color: theme.text }}>
+                      {renderTextWithLinks(text, theme.promptPath)}
+                    </pre>
+                  ),
+                }
+              : e
+          )
+        );
+      });
+      return currentParts;
+    }
     if (cmd === "sudo") {
       appendOutput(
         trimmed,
@@ -680,8 +743,9 @@ export default function LinuxTerminal() {
   Filesystem   : ls [-la], ll, cd <dir|..|~>, pwd, tree, cat, head [-n], tail [-n], wc [-l]
   Pagers/View  : less <file>, nano <file> (RO), view <image>, grep <term>
   Pipes/Globs  : Supports '|' and '*' (e.g. 'cat blogs/all-blogs.txt | grep Bedrock')
-  Cloud/DevOps : aws (sts/ecs/s3), kubectl (get pods/nodes), docker (ps/images), htop, curl, ping
-  Recruiter/UX : ./hire-me.sh, resume, theme <ubuntu|kali|matrix|amber>, man <cmd>, open <target>
+  AI / Search  : ask "<question>" (RAG Q&A across portfolio), gh repo list, git log
+  Cloud/DevOps : aws, kubectl, docker, arch <mcqtest|outfitmirror|zyrona|glovion|karnovation>, htop, tmux
+  FinOps/Hire  : ./finops-calc.sh [--spend=5000], ./hire-me.sh, resume, theme <ubuntu|kali|matrix|amber>, man <cmd>
   System/Fun   : whoami, id, hostname, uname, uptime, df, free, ps, env, neofetch, cowsay, fortune
   Shortcuts    : Tab (multi-match autocomplete), Up/Down (history), Ctrl+L (clear), exit`}</pre>,
         promptStr
@@ -1214,47 +1278,72 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
           }}
         />
       ) : (
-        <>
-          <div className="flex-1 p-4 sm:p-5 space-y-4 overflow-y-auto text-xs sm:text-sm min-h-0">
-            {entries.map((entry) => (
-              <div key={entry.id} className="space-y-1.5">
-                {entry.command && (
-                  <div className="flex items-center gap-1 flex-wrap">
-                    <span className="font-bold" style={{ color: theme.promptUser }}>binod@linux-world</span>
-                    <span>:</span>
-                    <span className="font-bold" style={{ color: theme.promptPath }}>{entry.promptPath}</span>
-                    <span>$ {entry.command}</span>
+        <div className="flex-1 flex flex-col min-h-0">
+          <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden">
+            {/* Primary Interactive Bash Pane */}
+            <div className="flex-1 flex flex-col min-w-0 min-h-0">
+              <div className="flex-1 p-4 sm:p-5 space-y-4 overflow-y-auto text-xs sm:text-sm min-h-0">
+                {entries.map((entry) => (
+                  <div key={entry.id} className="space-y-1.5">
+                    {entry.command && (
+                      <div className="flex items-center gap-1 flex-wrap">
+                        <span className="font-bold" style={{ color: theme.promptUser }}>binod@linux-world</span>
+                        <span>:</span>
+                        <span className="font-bold" style={{ color: theme.promptPath }}>{entry.promptPath}</span>
+                        <span>$ {entry.command}</span>
+                      </div>
+                    )}
+                    <div className="pl-1 sm:pl-2">{entry.body}</div>
                   </div>
-                )}
-                <div className="pl-1 sm:pl-2">{entry.body}</div>
+                ))}
+                <div ref={outputEndRef} />
               </div>
-            ))}
-            <div ref={outputEndRef} />
+
+              <div
+                className="px-4 sm:px-5 py-3 border-t flex items-center gap-1.5 text-xs sm:text-sm shrink-0"
+                style={{ background: theme.bgDark, borderColor: theme.border }}
+              >
+                <span className="font-bold shrink-0" style={{ color: theme.promptUser }}>binod@linux-world</span>
+                <span className="shrink-0">:</span>
+                <span className="font-bold shrink-0" style={{ color: theme.promptPath }}>{cwdDisplay}</span>
+                <span className="shrink-0">$</span>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="try ask, arch mcqtest, gh repo list, tmux, ./finops-calc.sh, ls -la..."
+                  className="flex-1 bg-transparent outline-none font-mono"
+                  style={{ color: theme.text }}
+                  autoFocus
+                  spellCheck={false}
+                  autoComplete="off"
+                />
+              </div>
+            </div>
+
+            {/* Optional Tmux Split Telemetry Pane */}
+            {tmuxSplit && (
+              <div
+                className="flex w-full h-56 lg:h-auto lg:w-[42%] border-t lg:border-t-0 lg:border-l flex-col min-h-0 shrink-0"
+                style={{ borderColor: theme.promptUser }}
+              >
+                <HtopMonitor theme={theme} onExit={() => setTmuxSplit(false)} />
+              </div>
+            )}
           </div>
 
-          <div
-            className="px-4 sm:px-5 py-3 border-t flex items-center gap-1.5 text-xs sm:text-sm shrink-0"
-            style={{ background: theme.bgDark, borderColor: theme.border }}
-          >
-            <span className="font-bold shrink-0" style={{ color: theme.promptUser }}>binod@linux-world</span>
-            <span className="shrink-0">:</span>
-            <span className="font-bold shrink-0" style={{ color: theme.promptPath }}>{cwdDisplay}</span>
-            <span className="shrink-0">$</span>
-            <input
-              ref={inputRef}
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="try ls -la, aws sts get-caller-identity, kubectl get pods, htop, cat blogs/all-blogs.txt | grep Bedrock..."
-              className="flex-1 bg-transparent outline-none font-mono"
-              style={{ color: theme.text }}
-              autoFocus
-              spellCheck={false}
-              autoComplete="off"
-            />
-          </div>
-        </>
+          {tmuxSplit && (
+            <div
+              className="px-4 py-0.5 flex items-center justify-between text-[11px] font-bold shrink-0"
+              style={{ background: theme.promptUser, color: theme.bgDark }}
+            >
+              <span>[binod-session] 0:bash*  1:htop-telemetry</span>
+              <span>Kathmandu, NP | 99.9% SLA | type 'tmux kill' to unsplit</span>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

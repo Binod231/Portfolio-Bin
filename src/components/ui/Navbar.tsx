@@ -127,17 +127,13 @@ export default function Navbar() {
           {/* Terminal Mode Toggle Button */}
           <Link
             href={isTerminalMode ? "/" : "/terminal"}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono font-semibold border transition-all whitespace-nowrap ${
-              isTerminalMode
-                ? "bg-[#300a24] text-[#8ae234] border-[#8ae234]/60 shadow-sm hover:bg-[#3f1030]"
-                : "bg-neutral-900 text-emerald-400 border-neutral-800 hover:bg-[#300a24] hover:border-[#8ae234]/60 dark:bg-emerald-950/60 dark:border-emerald-500/40"
-            }`}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono font-medium border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-neutral-400 dark:hover:border-neutral-500 transition-colors whitespace-nowrap"
             title={isTerminalMode ? "Switch back to GUI Portfolio" : "Launch Binod Linux World Terminal"}
           >
             {isTerminalMode ? (
               <>
                 <LayoutGrid className="w-3.5 h-3.5" />
-                <span>GUI Mode</span>
+                <span>GUI</span>
               </>
             ) : (
               <>
@@ -166,11 +162,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2 md:hidden">
           <Link
             href={isTerminalMode ? "/" : "/terminal"}
-            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono font-semibold border ${
-              isTerminalMode
-                ? "bg-[#300a24] text-[#8ae234] border-[#8ae234]/60"
-                : "bg-neutral-900 text-emerald-400 border-neutral-700"
-            }`}
+            className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-mono border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 text-neutral-700 dark:text-neutral-300"
           >
             {isTerminalMode ? (
               <>

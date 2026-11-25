@@ -180,13 +180,13 @@ export default function CommandPalette() {
   if (!open) return null;
 
   const renderIcon = (kind: PaletteItem["icon"]) => {
-    if (kind === "terminal") return <Terminal className="w-4 h-4 text-emerald-500" />;
-    if (kind === "project") return <FolderGit2 className="w-4 h-4 text-sky-500" />;
-    if (kind === "blog") return <BookOpen className="w-4 h-4 text-amber-500" />;
-    if (kind === "finops") return <Calculator className="w-4 h-4 text-emerald-500" />;
-    if (kind === "section") return <Compass className="w-4 h-4 text-neutral-500" />;
-    if (copiedEmail) return <Check className="w-4 h-4 text-emerald-500" />;
-    return <FileText className="w-4 h-4 text-neutral-500" />;
+    if (kind === "terminal") return <Terminal className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />;
+    if (kind === "project") return <FolderGit2 className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />;
+    if (kind === "blog") return <BookOpen className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />;
+    if (kind === "finops") return <Calculator className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />;
+    if (kind === "section") return <Compass className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />;
+    if (copiedEmail) return <Check className="w-4 h-4 text-neutral-900 dark:text-neutral-100" />;
+    return <FileText className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />;
   };
 
   return (

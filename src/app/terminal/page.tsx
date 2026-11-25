@@ -4,14 +4,13 @@ import LinuxTerminal from "@/components/terminal/LinuxTerminal";
 export const metadata: Metadata = {
   title: "Binod Linux World | Interactive Terminal",
   description:
-    "Explore Binod Prasad Joshi's DevOps portfolio through an interactive Ubuntu Linux terminal with virtual directories, cat, nano, dot-matrix portrait, and direct redirects.",
+    "Full-screen read-only Ubuntu Linux terminal for Binod Prasad Joshi's Cloud & DevOps portfolio.",
 };
 
 export default function TerminalPage() {
   return (
-    <main className="min-h-screen w-full bg-neutral-950/95 dark:bg-[#0b0d11] py-2">
+    <main className="w-screen h-screen overflow-hidden bg-[#300a24]">
       <LinuxTerminal />
     </main>
   );
 }
-

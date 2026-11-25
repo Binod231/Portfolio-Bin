@@ -6,7 +6,16 @@ import { useRouter } from "next/navigation";
 import { createInitialFs, FsNode } from "@/data/linuxFs";
 import { portfolio } from "@/data/portfolio";
 import DotMatrixPortrait from "./DotMatrixPortrait";
-import { ArrowUpRight, Folder, FileText, Image as ImageIcon, Terminal as TerminalIcon, X } from "lucide-react";
+import {
+  ArrowUpRight,
+  Folder,
+  FileText,
+  Image as ImageIcon,
+  Terminal as TerminalIcon,
+  LayoutGrid,
+  Lock,
+  X,
+} from "lucide-react";
 
 type OutputEntry = {
   id: number;
@@ -31,20 +40,35 @@ const QUICK_DIRS = [
 const COMMAND_LIST = [
   "help",
   "ls",
+  "ll",
   "cd",
   "pwd",
+  "tree",
   "cat",
+  "head",
+  "tail",
+  "wc",
   "nano",
   "view",
   "imgcat",
-  "tree",
   "open",
   "grep",
   "whoami",
+  "id",
+  "hostname",
+  "uname",
+  "uptime",
+  "df",
+  "free",
+  "ps",
+  "env",
   "neofetch",
+  "history",
   "clear",
   "exit",
 ];
+
+const READONLY_CMDS = new Set(["touch", "mkdir", "rm", "rmdir", "mv", "cp", "chmod", "chown", "vi", "vim"]);
 
 function renderTextWithLinks(text: string): React.ReactNode {
   const regex = /(https?:\/\/[^\s)]+|mailto:[^\s)]+)/g;
@@ -75,25 +99,25 @@ function renderTextWithLinks(text: string): React.ReactNode {
 
 export default function LinuxTerminal() {
   const router = useRouter();
-  const [fsRoot, setFsRoot] = useState<FsNode>(() => createInitialFs());
+  const [fsRoot] = useState<FsNode>(() => createInitialFs());
   const [cwdParts, setCwdParts] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<string[]>([]);
   const [histIdx, setHistIdx] = useState<number>(-1);
   const [entries, setEntries] = useState<OutputEntry[]>([]);
 
-  // Nano editor state
+  // Read-only Nano viewer state
   const [nanoState, setNanoState] = useState<{
-    pathParts: string[];
     fileName: string;
     content: string;
-    savedNotice: string;
+    notice: string;
     searchQuery: string;
     showSearch: boolean;
   } | null>(null);
 
   const outputEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const nanoRef = useRef<HTMLTextAreaElement | null>(null);
   const nextId = useRef(1);
 
   const cwdDisplay = cwdParts.length === 0 ? "~" : `~/${cwdParts.join("/")}`;
@@ -147,7 +171,6 @@ export default function LinuxTerminal() {
   };
 
   useEffect(() => {
-    // Boot welcome session once
     if (entries.length === 0) {
       executeCommand("welcome");
     }
@@ -157,6 +180,32 @@ export default function LinuxTerminal() {
   useEffect(() => {
     outputEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [entries]);
+
+  // Global keyboard shortcuts for nano (Esc / Ctrl+X / Ctrl+O) and terminal (Ctrl+L)
+  useEffect(() => {
+    const onGlobalKey = (e: KeyboardEvent) => {
+      if (nanoState) {
+        if (e.key === "Escape" || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "x")) {
+          e.preventDefault();
+          setNanoState(null);
+          setTimeout(() => inputRef.current?.focus(), 20);
+        } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "o") {
+          e.preventDefault();
+          setNanoState((prev) =>
+            prev ? { ...prev, notice: "[ Error: Read-only file system (chmod 444) — edits disabled ]" } : null
+          );
+        } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "w") {
+          e.preventDefault();
+          setNanoState((prev) => (prev ? { ...prev, showSearch: !prev.showSearch } : null));
+        }
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "l") {
+        e.preventDefault();
+        setEntries([]);
+      }
+    };
+    window.addEventListener("keydown", onGlobalKey);
+    return () => window.removeEventListener("keydown", onGlobalKey);
+  }, [nanoState]);
 
   const buildTreeLines = (node: FsNode, prefix = "", isLast = true, isRoot = true): string[] => {
     const lines: string[] = [];
@@ -176,8 +225,50 @@ export default function LinuxTerminal() {
     return lines;
   };
 
-  const renderDirListing = (dirNode: FsNode & { type: "dir" }, dirParts: string[]) => {
+  const renderDirListing = (dirNode: FsNode & { type: "dir" }, dirParts: string[], longMode = false) => {
     const keys = Object.keys(dirNode.children);
+    if (longMode) {
+      return (
+        <div className="space-y-1 text-xs">
+          <div className="text-[#d3d7cf]">total {keys.length * 4}</div>
+          {keys.map((key) => {
+            const item = dirNode.children[key];
+            const fullPath = dirParts.length ? `~/${dirParts.join("/")}/${key}` : `~/${key}`;
+            const perms = item.type === "dir" ? "dr-xr-xr-x" : "-r--r--r--";
+            const size = item.type === "dir" ? "4096" : String(item.content.length).padStart(4, " ");
+            return (
+              <div key={key} className="flex flex-wrap items-center gap-2 font-mono">
+                <span className="text-[#ad7fa8]">{perms}</span>
+                <span className="text-[#d3d7cf]">1 binod devops {size} Nov 25 11:40</span>
+                {item.type === "dir" ? (
+                  <button
+                    onClick={() => executeCommand(`cd ${fullPath} && ls`)}
+                    className="text-[#729fcf] font-bold hover:underline cursor-pointer"
+                  >
+                    {key}/
+                  </button>
+                ) : item.imageSrc ? (
+                  <button
+                    onClick={() => executeCommand(`view ${fullPath}`)}
+                    className="text-[#ffad8e] font-bold hover:underline cursor-pointer"
+                  >
+                    {key}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => executeCommand(`cat ${fullPath}`)}
+                    className="text-[#8ae234] hover:underline cursor-pointer"
+                  >
+                    {key}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
     return (
       <div className="space-y-2">
         <div className="flex flex-wrap gap-2">
@@ -279,18 +370,59 @@ export default function LinuxTerminal() {
     const trimmed = rawCmd.trim();
     if (!trimmed) return currentParts;
 
+    const promptStr = currentParts.length === 0 ? "~" : `~/${currentParts.join("/")}`;
+
+    // Block output redirection (`>` / `>>`) in read-only filesystem
+    if (/[^a-zA-Z0-9](>|>>)\s*\S+/.test(trimmed)) {
+      appendOutput(
+        trimmed,
+        <span className="text-red-400">bash: Read-only file system (writes and redirections are disabled)</span>,
+        promptStr
+      );
+      return currentParts;
+    }
+
     const [cmdRaw, ...rest] = trimmed.split(/\s+/);
     const cmd = cmdRaw.toLowerCase();
     const arg = rest.join(" ").trim();
-    const promptStr = currentParts.length === 0 ? "~" : `~/${currentParts.join("/")}`;
 
     if (cmd === "clear") {
       setEntries([]);
       return currentParts;
     }
 
-    if (cmd === "exit") {
+    if (cmd === "exit" || cmd === "logout") {
       router.push("/");
+      return currentParts;
+    }
+
+    if (cmd === "sudo") {
+      appendOutput(
+        trimmed,
+        <span className="text-red-400">
+          [sudo] password for binod: visitor is not in the sudoers file. This incident will be reported.
+        </span>,
+        promptStr
+      );
+      return currentParts;
+    }
+
+    if (cmd === "vi" || cmd === "vim") {
+      if (!arg) {
+        appendOutput(trimmed, <span className="text-amber-400">Usage: nano &lt;file&gt; (Read-only viewer)</span>, promptStr);
+        return currentParts;
+      }
+      return runSingleCommand(`nano ${arg}`, currentParts);
+    }
+
+    if (READONLY_CMDS.has(cmd)) {
+      appendOutput(
+        trimmed,
+        <span className="text-red-400">
+          {cmd}: cannot modify '{arg || "."}': Read-only file system (ro)
+        </span>,
+        promptStr
+      );
       return currentParts;
     }
 
@@ -299,21 +431,24 @@ export default function LinuxTerminal() {
         "welcome",
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 p-4 rounded-lg bg-[#22071a] border border-[#5c244b]">
           <div className="space-y-2.5 flex-1">
+            <div className="text-xs text-[#d3d7cf] opacity-80">
+              Ubuntu 24.04.1 LTS (GNU/Linux 6.8.0-aws-devops x86_64) — Read-Only Guest Shell
+            </div>
             <div className="text-lg sm:text-xl font-bold text-[#8ae234]">
-              Welcome to Binod Linux World (Ubuntu 24.04 LTS)
+              Welcome to Binod Linux World
             </div>
             <div className="text-xs sm:text-sm text-[#d3d7cf] leading-relaxed">
-              Interactive DevOps Portfolio Shell for <b className="text-white">{portfolio.personal.name}</b> —{" "}
+              Full-screen Linux portfolio environment for <b className="text-white">{portfolio.personal.name}</b> —{" "}
               <span className="text-sky-400">Kathmandu, Nepal (UTC+5:45)</span>
               <br />
-              All navbar sections live inside real Linux directories (<code className="text-[#8ae234]">about/</code>,{" "}
+              Directories mirror the portfolio navbar: <code className="text-[#8ae234]">about/</code>,{" "}
               <code className="text-[#8ae234]">experience/</code>, <code className="text-[#8ae234]">case-studies/</code>,{" "}
               <code className="text-[#8ae234]">projects/</code>, <code className="text-[#8ae234]">services/</code>,{" "}
               <code className="text-[#8ae234]">blogs/</code>, <code className="text-[#8ae234]">certifications/</code>,{" "}
-              <code className="text-[#8ae234]">contact/</code>).
+              <code className="text-[#8ae234]">contact/</code>.
             </div>
             <div className="text-xs text-[#ad7fa8]">
-              Try commands: <code className="text-[#8ae234]">ls</code>, <code className="text-[#8ae234]">cd experience</code>,{" "}
+              Try: <code className="text-[#8ae234]">ls -la</code>, <code className="text-[#8ae234]">cd experience</code>,{" "}
               <code className="text-[#8ae234]">cat about/bio.txt</code>, <code className="text-[#8ae234]">nano welcome.txt</code>,{" "}
               <code className="text-[#8ae234]">view about/profile-dotmatrix.img</code>, <code className="text-[#8ae234]">tree</code>,{" "}
               <code className="text-[#8ae234]">help</code>
@@ -344,13 +479,13 @@ export default function LinuxTerminal() {
                 href="/"
                 className="px-2.5 py-1 rounded bg-[#e95420] text-white font-bold inline-flex items-center gap-1"
               >
-                <span>Return to GUI Portfolio</span>
+                <span>Exit to GUI Portfolio</span>
                 <ArrowUpRight className="w-3 h-3" />
               </Link>
             </div>
           </div>
           <div className="flex flex-col items-center gap-1.5 self-center">
-            <DotMatrixPortrait src="/profile-headshot.jpg" size={180} />
+            <DotMatrixPortrait src="/profile-headshot.jpg" size={185} />
             <span className="text-[11px] text-[#ad7fa8]">[3D Dot-Matrix Profile :: Hover Me]</span>
           </div>
         </div>,
@@ -362,20 +497,27 @@ export default function LinuxTerminal() {
     if (cmd === "help" || cmd === "man") {
       appendOutput(
         trimmed,
-        <pre className="text-xs sm:text-sm text-[#eeeeec] whitespace-pre-wrap leading-relaxed">{`BINOD LINUX WORLD — SUPPORTED COMMANDS
------------------------------------------------------------------------
-  ls [dir]        List directories & clickable files
-  cd <dir|..|~>   Change directory (e.g. 'cd experience', 'cd ..')
-  pwd             Print current working directory
-  tree            Show full portfolio filesystem tree
-  cat <file>      Read file contents (clickable URLs & GUI redirects)
-  nano <file>     Open GNU nano interactive editor (view/edit/save!)
-  view <image>    View images & 3D dot-matrix portrait inline (alias: imgcat)
-  open <target>   Redirect to GUI section or social link (github, linkedin, resume, blogs)
-  grep <keyword>  Search across all portfolio files
-  whoami / neofetch  Display operator profile & system summary
-  clear           Clear terminal screen
-  exit            Return to standard portfolio GUI`}</pre>,
+        <pre className="text-xs sm:text-sm text-[#eeeeec] whitespace-pre-wrap leading-relaxed">{`BINOD LINUX WORLD — REAL LINUX SHELL COMMANDS (READ-ONLY)
+---------------------------------------------------------------------------
+  ls [-la] [dir]   List files & directories (use 'ls -la' for permissions)
+  ll               Alias for 'ls -la'
+  cd <dir|..|~>    Change directory (e.g. 'cd experience', 'cd ..')
+  pwd              Print current working directory
+  tree             Show full /home/binod directory tree
+  cat <file>       Print full file contents with clickable redirect links
+  head / tail      Show first or last 10 lines of a file
+  wc <file>        Print line, word, and byte counts
+  nano <file>      Open GNU nano in Read-Only mode (^W search, ^X exit)
+  view <image>     Render images & 3D dot-matrix portrait inline (alias: imgcat)
+  open <target>    Redirect to GUI section or external link (github, linkedin, resume, blogs)
+  grep <keyword>   Search across all portfolio files
+  whoami / id      Display current user identity & groups
+  uname / uptime   Show Linux kernel & cluster SLA uptime
+  df -h / free -h  Show mounted read-only filesystem & memory status
+  ps aux / env     Show running DevOps services & environment variables
+  neofetch         Display operator profile + dot-matrix portrait
+  clear / Ctrl+L   Clear terminal output
+  exit             Close shell and return to GUI Portfolio`}</pre>,
         promptStr
       );
       return currentParts;
@@ -388,14 +530,87 @@ export default function LinuxTerminal() {
     }
 
     if (cmd === "whoami") {
+      appendOutput(trimmed, <span className="text-[#8ae234]">binod</span>, promptStr);
+      return currentParts;
+    }
+
+    if (cmd === "id") {
       appendOutput(
         trimmed,
-        <div className="text-xs sm:text-sm text-[#eeeeec] space-y-1">
-          <div>
-            <b className="text-[#8ae234]">binod</b> — {portfolio.personal.name} ({portfolio.personal.role})
-          </div>
-          <div>Location: Kathmandu, Nepal (UTC+5:45)</div>
-        </div>,
+        <span className="text-[#eeeeec]">uid=1000(binod) gid=1000(devops) groups=1000(devops),27(aws-cb),999(docker-ro)</span>,
+        promptStr
+      );
+      return currentParts;
+    }
+
+    if (cmd === "hostname") {
+      appendOutput(trimmed, <span className="text-[#eeeeec]">binod-linux-world.kathmandu.np</span>, promptStr);
+      return currentParts;
+    }
+
+    if (cmd === "uname") {
+      appendOutput(
+        trimmed,
+        <span className="text-[#eeeeec]">Linux binod-linux-world 6.8.0-aws-devops #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux</span>,
+        promptStr
+      );
+      return currentParts;
+    }
+
+    if (cmd === "uptime") {
+      appendOutput(
+        trimmed,
+        <span className="text-[#eeeeec]"> 11:41:20 up 365 days, 23:59,  1 user,  load average: 0.12, 0.09, 0.08 (99.9% SLA)</span>,
+        promptStr
+      );
+      return currentParts;
+    }
+
+    if (cmd === "df") {
+      appendOutput(
+        trimmed,
+        <pre className="text-xs text-[#eeeeec] whitespace-pre-wrap">{`Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme0n1p1   50G  4.2G   46G   9% /home/binod (ro,noexec)`}</pre>,
+        promptStr
+      );
+      return currentParts;
+    }
+
+    if (cmd === "free") {
+      appendOutput(
+        trimmed,
+        <pre className="text-xs text-[#eeeeec] whitespace-pre-wrap">{`               total        used        free      shared  buff/cache   available
+Mem:            16Gi       3.1Gi       9.8Gi       128Mi       3.1Gi        12Gi
+Swap:          2.0Gi          0B       2.0Gi`}</pre>,
+        promptStr
+      );
+      return currentParts;
+    }
+
+    if (cmd === "ps") {
+      appendOutput(
+        trimmed,
+        <pre className="text-xs text-[#eeeeec] whitespace-pre-wrap">{`USER       PID %CPU %MEM COMMAND
+root         1  0.0  0.1 /sbin/init
+binod      104  0.4  1.2 ecs-fargate-agent --region us-east-1
+binod      218  0.2  0.9 prometheus-node-exporter --multi-dc
+binod      305  0.3  1.8 odoo-erp-worker --workers=8 --db=postgres
+binod      412  0.1  0.5 fastapi-uvicorn --workers 4 --jwks-redis-cache`}</pre>,
+        promptStr
+      );
+      return currentParts;
+    }
+
+    if (cmd === "env") {
+      appendOutput(
+        trimmed,
+        <pre className="text-xs text-[#eeeeec] whitespace-pre-wrap">{`USER=binod
+HOME=/home/binod
+SHELL=/bin/bash
+TERM=xterm-256color
+LOCATION=Kathmandu, Nepal (UTC+5:45)
+AWS_CERTIFIED=SAA-C03,CLF-C02
+FS_MODE=READ_ONLY`}</pre>,
         promptStr
       );
       return currentParts;
@@ -411,19 +626,11 @@ export default function LinuxTerminal() {
 OS       : Binod Linux World (Ubuntu 24.04 LTS)
 Host     : Glovion Consulting Private Limited
 Location : Kathmandu, Nepal (UTC+5:45)
+Shell    : bash 5.2 (Read-Only FS)
 Certs    : 2x AWS Certified (SAA-C03, CLF-C02)
 Award    : AWS Community Builder (Dev Tools 2026)
-Sections : 8 Directories | ${portfolio.blogs.length} Blogs | ${portfolio.projects.length} Projects`}</pre>
+Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.length} Projects`}</pre>
         </div>,
-        promptStr
-      );
-      return currentParts;
-    }
-
-    if (cmd === "uname") {
-      appendOutput(
-        trimmed,
-        <span className="text-[#eeeeec]">Linux binod-cloud 6.8.0-aws-devops #1 SMP x86_64 GNU/Linux</span>,
         promptStr
       );
       return currentParts;
@@ -467,6 +674,7 @@ Sections : 8 Directories | ${portfolio.blogs.length} Blogs | ${portfolio.project
     }
 
     if (cmd === "ls" || cmd === "ll" || cmd === "dir") {
+      const hasLongFlag = cmd === "ll" || rest.some((r) => r.startsWith("-") && r.includes("l"));
       const cleanArg = rest.filter((r) => !r.startsWith("-")).join(" ");
       const res = cleanArg
         ? resolveNode(cleanArg, currentParts)
@@ -476,7 +684,7 @@ Sections : 8 Directories | ${portfolio.blogs.length} Blogs | ${portfolio.project
       } else if (res.node.type === "file") {
         appendOutput(trimmed, <span className="text-[#8ae234]">{res.node.name}</span>, promptStr);
       } else {
-        appendOutput(trimmed, renderDirListing(res.node, res.parts), promptStr);
+        appendOutput(trimmed, renderDirListing(res.node, res.parts, hasLongFlag), promptStr);
       }
       return currentParts;
     }
@@ -495,21 +703,38 @@ Sections : 8 Directories | ${portfolio.blogs.length} Blogs | ${portfolio.project
       return res.parts;
     }
 
-    if (cmd === "cat") {
+    if (cmd === "cat" || cmd === "head" || cmd === "tail" || cmd === "wc") {
       if (!arg) {
-        appendOutput(trimmed, <span className="text-amber-400">Usage: cat &lt;filename&gt;</span>, promptStr);
+        appendOutput(trimmed, <span className="text-amber-400">Usage: {cmd} &lt;filename&gt;</span>, promptStr);
         return currentParts;
       }
       const res = resolveNode(arg, currentParts);
       if (!res.node) {
-        appendOutput(trimmed, <span className="text-red-400">cat: {arg}: No such file or directory</span>, promptStr);
+        appendOutput(trimmed, <span className="text-red-400">{cmd}: {arg}: No such file or directory</span>, promptStr);
         return currentParts;
       }
       if (res.node.type === "dir") {
-        appendOutput(trimmed, <span className="text-amber-400">cat: {arg}: Is a directory (use ls or cd)</span>, promptStr);
+        appendOutput(trimmed, <span className="text-amber-400">{cmd}: {arg}: Is a directory</span>, promptStr);
         return currentParts;
       }
       const fileNode = res.node;
+      if (cmd === "wc") {
+        const lines = fileNode.content.split("\n").length;
+        const words = fileNode.content.trim().split(/\s+/).filter(Boolean).length;
+        const bytes = fileNode.content.length;
+        appendOutput(trimmed, <span className="text-[#eeeeec]">{` ${lines}  ${words}  ${bytes} ${fileNode.name}`}</span>, promptStr);
+        return currentParts;
+      }
+      if (cmd === "head" || cmd === "tail") {
+        const lines = fileNode.content.split("\n");
+        const slice = cmd === "head" ? lines.slice(0, 10) : lines.slice(-10);
+        appendOutput(
+          trimmed,
+          <div className="text-xs sm:text-sm text-[#eeeeec] whitespace-pre-wrap">{renderTextWithLinks(slice.join("\n"))}</div>,
+          promptStr
+        );
+        return currentParts;
+      }
       if (fileNode.imageSrc) {
         appendOutput(trimmed, renderImageCard(fileNode), promptStr);
         return currentParts;
@@ -519,13 +744,13 @@ Sections : 8 Directories | ${portfolio.blogs.length} Blogs | ${portfolio.project
         trimmed,
         <div className="p-3 rounded-lg bg-[#22071a] border border-[#5c244b] space-y-2 text-xs sm:text-sm text-[#eeeeec]">
           <div className="flex flex-wrap items-center justify-between gap-2 pb-1.5 border-b border-[#48183a]">
-            <span className="text-[#8ae234] font-bold">{fullPath}</span>
+            <span className="text-[#8ae234] font-bold">{fullPath} [ro]</span>
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => executeCommand(`nano ${fullPath}`)}
                 className="px-2 py-0.5 rounded bg-[#3d1430] border border-[#729fcf] text-[#729fcf] text-xs cursor-pointer hover:bg-[#729fcf] hover:text-[#1a0514]"
               >
-                Open in nano
+                Inspect in nano (RO)
               </button>
               {fileNode.redirectUrl && (
                 <a
@@ -575,20 +800,30 @@ Sections : 8 Directories | ${portfolio.blogs.length} Blogs | ${portfolio.project
 
     if (cmd === "nano") {
       if (!arg) {
-        appendOutput(trimmed, <span className="text-amber-400">Usage: nano &lt;filename&gt;</span>, promptStr);
+        appendOutput(trimmed, <span className="text-amber-400">Usage: nano &lt;existing-file&gt;</span>, promptStr);
         return currentParts;
       }
       const res = resolveNode(arg, currentParts);
-      if (res.node && res.node.type === "dir") {
+      if (!res.node) {
+        appendOutput(
+          trimmed,
+          <span className="text-red-400">nano: {arg}: No such file (creating/editing files disabled in read-only mode)</span>,
+          promptStr
+        );
+        return currentParts;
+      }
+      if (res.node.type === "dir") {
         appendOutput(trimmed, <span className="text-red-400">nano: {arg}: Is a directory</span>, promptStr);
         return currentParts;
       }
-      const fileName = res.parts[res.parts.length - 1] || arg;
+      if (res.node.imageSrc) {
+        appendOutput(trimmed, renderImageCard(res.node), promptStr);
+        return currentParts;
+      }
       setNanoState({
-        pathParts: res.parts,
-        fileName,
-        content: res.node && res.node.type === "file" ? res.node.content : `# New note: ${fileName}\n`,
-        savedNotice: "",
+        fileName: res.node.name,
+        content: res.node.content,
+        notice: "[ File is READ-ONLY (-r--r--r--). Editing is disabled. Press ^X or Esc to exit. ]",
         searchQuery: "",
         showSearch: false,
       });
@@ -693,7 +928,6 @@ Sections : 8 Directories | ${portfolio.blogs.length} Blogs | ${portfolio.project
     setHistory((prev) => [...prev, trimmed]);
     setHistIdx(-1);
 
-    // Support chaining like `cd experience && ls`
     const chain = trimmed.split("&&");
     let nextParts = [...cwdParts];
     for (const part of chain) {
@@ -701,44 +935,13 @@ Sections : 8 Directories | ${portfolio.blogs.length} Blogs | ${portfolio.project
     }
   };
 
-  const saveNanoFile = () => {
-    if (!nanoState) return;
-    const parts = nanoState.pathParts;
-    if (parts.length === 0) return;
-
-    const cloneNode = (n: FsNode): FsNode =>
-      n.type === "dir"
-        ? {
-            ...n,
-            children: Object.fromEntries(
-              Object.entries(n.children).map(([k, v]) => [k, cloneNode(v)])
-            ),
-          }
-        : { ...n };
-
-    const updatedRoot = cloneNode(fsRoot);
-    let curr: FsNode = updatedRoot;
-    for (let i = 0; i < parts.length - 1; i++) {
-      if (curr.type === "dir" && curr.children[parts[i]]) {
-        curr = curr.children[parts[i]];
-      }
-    }
-    const fname = parts[parts.length - 1];
-    if (curr.type === "dir") {
-      const existing = curr.children[fname];
-      curr.children[fname] =
-        existing && existing.type === "file"
-          ? { ...existing, content: nanoState.content }
-          : { type: "file", name: fname, content: nanoState.content };
-      setFsRoot(updatedRoot);
-      setNanoState({
-        ...nanoState,
-        savedNotice: `[ Wrote ${nanoState.content.split("\n").length} lines to ${fname} ]`,
-      });
-    }
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "c") {
+      e.preventDefault();
+      appendOutput(`${input}^C`, <span className="text-[#ad7fa8]">^C</span>, cwdDisplay);
+      setInput("");
+      return;
+    }
     if (e.key === "Enter") {
       const val = input;
       setInput("");
@@ -777,169 +980,211 @@ Sections : 8 Directories | ${portfolio.blogs.length} Blogs | ${portfolio.project
     }
   };
 
+  const runNanoSearch = () => {
+    if (!nanoState || !nanoState.searchQuery || !nanoRef.current) return;
+    const idx = nanoState.content.toLowerCase().indexOf(nanoState.searchQuery.toLowerCase());
+    if (idx === -1) {
+      setNanoState({ ...nanoState, notice: `[ "${nanoState.searchQuery}" not found ]` });
+      return;
+    }
+    nanoRef.current.focus();
+    nanoRef.current.setSelectionRange(idx, idx + nanoState.searchQuery.length);
+    setNanoState({ ...nanoState, notice: `[ Found match for "${nanoState.searchQuery}" ]` });
+  };
+
   return (
-    <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
-      <div
-        className="w-full rounded-xl overflow-hidden border border-[#555753] bg-[#300a24] shadow-2xl font-mono text-[#eeeeec] flex flex-col min-h-[78vh]"
-        onClick={() => !nanoState && inputRef.current?.focus()}
-      >
-        {/* Ubuntu GNOME Window Title Bar */}
-        <div className="bg-gradient-to-b from-[#484642] to-[#2c2b29] px-4 py-2 flex items-center justify-between border-b border-[#1e1d1b] select-none">
-          <div className="flex items-center gap-2 text-xs text-[#d3d7cf]">
+    <div
+      className="w-screen h-screen bg-[#300a24] font-mono text-[#eeeeec] flex flex-col overflow-hidden"
+      onClick={() => !nanoState && inputRef.current?.focus()}
+    >
+      {/* Full-Screen Ubuntu GNOME Window Bar */}
+      <div className="bg-gradient-to-b from-[#484642] to-[#2c2b29] px-4 py-2 flex items-center justify-between border-b border-[#1e1d1b] select-none shrink-0">
+        <div className="flex items-center gap-3 text-xs text-[#d3d7cf]">
+          <span className="inline-flex items-center gap-1.5 font-semibold">
             <TerminalIcon className="w-4 h-4 text-[#8ae234]" />
-            <span className="hidden sm:inline font-semibold">Ubuntu Linux Shell</span>
-          </div>
-          <div className="text-xs sm:text-sm font-sans font-semibold text-[#eeeeec]">
-            binod@linux-world: {cwdDisplay}
-          </div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/"
-              title="Minimize to Portfolio GUI"
-              className="w-4 h-4 rounded-full bg-[#3c3b37] border border-[#555753] flex items-center justify-center text-[10px] hover:bg-[#555753]"
-            >
-              -
-            </Link>
-            <Link
-              href="/"
-              title="Exit Terminal to Portfolio GUI"
-              className="w-4 h-4 rounded-full bg-[#e95420] text-white flex items-center justify-center hover:opacity-90"
-            >
-              <X className="w-2.5 h-2.5" />
-            </Link>
-          </div>
+            <span className="hidden sm:inline">Ubuntu 24.04 LTS</span>
+          </span>
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#22071a] border border-[#5c244b] text-[10px] text-[#ad7fa8]">
+            <Lock className="w-2.5 h-2.5 text-[#8ae234]" />
+            <span>READ-ONLY FS</span>
+          </span>
         </div>
 
-        {/* Navbar-mirrored Linux Directory Quick Bar */}
-        <div className="bg-[#22071a] px-3 sm:px-4 py-2 border-b border-[#4c1a3d] flex flex-wrap items-center gap-1.5 text-xs">
-          <span className="text-[#ad7fa8] mr-1 font-bold">DIRS:</span>
-          {QUICK_DIRS.map((dir) => {
-            const isActive =
-              (dir === "~" && cwdParts.length === 0) ||
-              (cwdParts.length > 0 && cwdParts[0] === dir);
-            return (
-              <button
-                key={dir}
-                onClick={() => executeCommand(dir === "~" ? "cd ~ && ls" : `cd ~/${dir} && ls`)}
-                className={`px-2 py-0.5 rounded border text-xs cursor-pointer transition-colors ${
-                  isActive
-                    ? "bg-[#8ae234] text-[#1a0514] border-[#8ae234] font-bold"
-                    : "bg-[#3d1430] text-[#d3d7cf] border-[#5c244b] hover:border-[#8ae234] hover:text-[#8ae234]"
-                }`}
-              >
-                {dir === "~" ? "~" : `${dir}/`}
-              </button>
-            );
-          })}
-          <button
-            onClick={() => executeCommand("view about/profile-dotmatrix.img")}
-            className="ml-auto px-2 py-0.5 rounded bg-[#e95420]/20 border border-[#e95420] text-[#ffad8e] hover:bg-[#e95420] hover:text-white cursor-pointer text-xs font-bold"
+        <div className="text-xs sm:text-sm font-sans font-semibold text-[#eeeeec] truncate px-2">
+          binod@linux-world: {cwdDisplay}
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-[#3c3b37] hover:bg-[#555753] border border-[#6a6863] text-xs font-sans font-medium text-[#eeeeec]"
+            title="Switch to GUI Portfolio"
           >
-            img: dot-matrix
-          </button>
+            <LayoutGrid className="w-3 h-3 text-[#8ae234]" />
+            <span className="hidden sm:inline">GUI Mode</span>
+          </Link>
+          <Link
+            href="/"
+            title="Close Terminal & Return to GUI"
+            className="w-4 h-4 rounded-full bg-[#e95420] text-white flex items-center justify-center hover:opacity-90"
+          >
+            <X className="w-2.5 h-2.5" />
+          </Link>
         </div>
-
-        {/* GNU Nano Interactive Overlay OR Normal Terminal Session */}
-        {nanoState ? (
-          <div className="flex-1 flex flex-col bg-[#1b0514] text-xs sm:text-sm">
-            <div className="bg-[#eeeeec] text-[#1b0514] px-3 py-1 flex items-center justify-between font-bold">
-              <span>GNU nano 7.2</span>
-              <span>File: {nanoState.fileName}</span>
-              <span>Modified</span>
-            </div>
-
-            {nanoState.showSearch && (
-              <div className="bg-[#3d1430] px-3 py-1.5 flex items-center gap-2 border-b border-[#5c244b]">
-                <span className="text-[#8ae234]">Search:</span>
-                <input
-                  type="text"
-                  value={nanoState.searchQuery}
-                  onChange={(e) => setNanoState({ ...nanoState, searchQuery: e.target.value })}
-                  placeholder="find text..."
-                  className="bg-[#22071a] px-2 py-0.5 rounded text-[#eeeeec] outline-none border border-[#5c244b] flex-1 max-w-xs"
-                />
-              </div>
-            )}
-
-            <textarea
-              value={nanoState.content}
-              onChange={(e) =>
-                setNanoState({ ...nanoState, content: e.target.value, savedNotice: "" })
-              }
-              className="flex-1 w-full bg-[#1b0514] text-[#eeeeec] p-4 outline-none resize-none font-mono leading-relaxed min-h-[420px]"
-              spellCheck={false}
-            />
-
-            {nanoState.savedNotice && (
-              <div className="bg-[#eeeeec] text-[#1b0514] text-center py-0.5 font-bold">
-                {nanoState.savedNotice}
-              </div>
-            )}
-
-            <div className="bg-[#2c2b29] px-3 py-2 flex flex-wrap items-center gap-3 border-t border-[#4c4a46] text-xs">
-              <button
-                onClick={saveNanoFile}
-                className="px-2.5 py-1 rounded bg-[#8ae234] text-[#1a0514] font-bold cursor-pointer"
-              >
-                ^O Write Out (Save)
-              </button>
-              <button
-                onClick={() =>
-                  setNanoState({ ...nanoState, showSearch: !nanoState.showSearch })
-                }
-                className="px-2.5 py-1 rounded bg-[#3d1430] border border-[#729fcf] text-[#729fcf] font-bold cursor-pointer"
-              >
-                ^W Where Is
-              </button>
-              <button
-                onClick={() => setNanoState(null)}
-                className="px-2.5 py-1 rounded bg-[#e95420] text-white font-bold cursor-pointer ml-auto"
-              >
-                ^X Exit nano
-              </button>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Scrollable Terminal History */}
-            <div className="flex-1 p-4 space-y-4 overflow-y-auto max-h-[65vh] text-xs sm:text-sm">
-              {entries.map((entry) => (
-                <div key={entry.id} className="space-y-1.5">
-                  <div className="flex items-center gap-1 flex-wrap">
-                    <span className="text-[#8ae234] font-bold">binod@linux-world</span>
-                    <span className="text-[#eeeeec]">:</span>
-                    <span className="text-[#729fcf] font-bold">{entry.promptPath}</span>
-                    <span className="text-[#eeeeec]">$ {entry.command}</span>
-                  </div>
-                  <div className="pl-1 sm:pl-2">{entry.body}</div>
-                </div>
-              ))}
-              <div ref={outputEndRef} />
-            </div>
-
-            {/* Active Terminal Prompt Input */}
-            <div className="bg-[#22071a] px-4 py-3 border-t border-[#4c1a3d] flex items-center gap-1.5 text-xs sm:text-sm">
-              <span className="text-[#8ae234] font-bold shrink-0">binod@linux-world</span>
-              <span className="text-[#eeeeec] shrink-0">:</span>
-              <span className="text-[#729fcf] font-bold shrink-0">{cwdDisplay}</span>
-              <span className="text-[#eeeeec] shrink-0">$</span>
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="type command (ls, cd, cat, nano, view, help)..."
-                className="flex-1 bg-transparent outline-none text-[#eeeeec] placeholder:text-[#ad7fa8]/60 font-mono"
-                autoFocus
-                spellCheck={false}
-                autoComplete="off"
-              />
-            </div>
-          </>
-        )}
       </div>
+
+      {/* Navbar-Mirrored Directory Strip */}
+      <div className="bg-[#22071a] px-3 sm:px-5 py-2 border-b border-[#4c1a3d] flex flex-wrap items-center gap-1.5 text-xs shrink-0">
+        <span className="text-[#ad7fa8] mr-1 font-bold">DIRS:</span>
+        {QUICK_DIRS.map((dir) => {
+          const isActive =
+            (dir === "~" && cwdParts.length === 0) ||
+            (cwdParts.length > 0 && cwdParts[0] === dir);
+          return (
+            <button
+              key={dir}
+              onClick={() => executeCommand(dir === "~" ? "cd ~ && ls" : `cd ~/${dir} && ls`)}
+              className={`px-2 py-0.5 rounded border text-xs cursor-pointer transition-colors ${
+                isActive
+                  ? "bg-[#8ae234] text-[#1a0514] border-[#8ae234] font-bold"
+                  : "bg-[#3d1430] text-[#d3d7cf] border-[#5c244b] hover:border-[#8ae234] hover:text-[#8ae234]"
+              }`}
+            >
+              {dir === "~" ? "~" : `${dir}/`}
+            </button>
+          );
+        })}
+        <button
+          onClick={() => executeCommand("view about/profile-dotmatrix.img")}
+          className="ml-auto px-2.5 py-0.5 rounded bg-[#e95420]/20 border border-[#e95420] text-[#ffad8e] hover:bg-[#e95420] hover:text-white cursor-pointer text-xs font-bold"
+        >
+          img: dot-matrix
+        </button>
+      </div>
+
+      {/* Read-Only GNU Nano Viewer OR Full-Screen Terminal Session */}
+      {nanoState ? (
+        <div className="flex-1 flex flex-col bg-[#1b0514] text-xs sm:text-sm min-h-0">
+          <div className="bg-[#eeeeec] text-[#1b0514] px-4 py-1 flex items-center justify-between font-bold shrink-0">
+            <span>GNU nano 7.2</span>
+            <span>File: {nanoState.fileName}</span>
+            <span>[ Read-Only ]</span>
+          </div>
+
+          {nanoState.showSearch && (
+            <div className="bg-[#3d1430] px-4 py-1.5 flex items-center gap-2 border-b border-[#5c244b] shrink-0">
+              <span className="text-[#8ae234]">Search:</span>
+              <input
+                type="text"
+                value={nanoState.searchQuery}
+                onChange={(e) => setNanoState({ ...nanoState, searchQuery: e.target.value })}
+                onKeyDown={(e) => e.key === "Enter" && runNanoSearch()}
+                placeholder="find text & press Enter..."
+                className="bg-[#22071a] px-2 py-0.5 rounded text-[#eeeeec] outline-none border border-[#5c244b] flex-1 max-w-xs"
+                autoFocus
+              />
+              <button
+                onClick={runNanoSearch}
+                className="px-2.5 py-0.5 rounded bg-[#8ae234] text-[#1a0514] font-bold cursor-pointer text-xs"
+              >
+                Find
+              </button>
+            </div>
+          )}
+
+          <textarea
+            ref={nanoRef}
+            value={nanoState.content}
+            readOnly
+            onKeyDown={(e) => {
+              if (!e.ctrlKey && !e.metaKey && e.key.length === 1) {
+                setNanoState((prev) =>
+                  prev
+                    ? { ...prev, notice: "[ Error: Read-only file system — editing is disabled ]" }
+                    : null
+                );
+              }
+            }}
+            className="flex-1 w-full bg-[#1b0514] text-[#eeeeec] p-5 outline-none resize-none font-mono leading-relaxed min-h-0"
+            spellCheck={false}
+          />
+
+          {nanoState.notice && (
+            <div className="bg-[#eeeeec] text-[#1b0514] text-center py-0.5 font-bold shrink-0">
+              {nanoState.notice}
+            </div>
+          )}
+
+          <div className="bg-[#2c2b29] px-4 py-2 flex flex-wrap items-center gap-3 border-t border-[#4c4a46] text-xs shrink-0">
+            <button
+              onClick={() =>
+                setNanoState({
+                  ...nanoState,
+                  notice: "[ Error: Read-only file system (chmod 444) — write disabled ]",
+                })
+              }
+              className="px-2.5 py-1 rounded bg-[#3c3b37] border border-[#555753] text-[#ad7fa8] cursor-not-allowed"
+            >
+              ^O Write Out (Locked)
+            </button>
+            <button
+              onClick={() =>
+                setNanoState({ ...nanoState, showSearch: !nanoState.showSearch })
+              }
+              className="px-2.5 py-1 rounded bg-[#3d1430] border border-[#729fcf] text-[#729fcf] font-bold cursor-pointer"
+            >
+              ^W Where Is (Search)
+            </button>
+            <button
+              onClick={() => {
+                setNanoState(null);
+                setTimeout(() => inputRef.current?.focus(), 20);
+              }}
+              className="px-2.5 py-1 rounded bg-[#e95420] text-white font-bold cursor-pointer ml-auto"
+            >
+              ^X Exit nano
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Full-Height Scrollable Terminal Output */}
+          <div className="flex-1 p-4 sm:p-5 space-y-4 overflow-y-auto text-xs sm:text-sm min-h-0">
+            {entries.map((entry) => (
+              <div key={entry.id} className="space-y-1.5">
+                <div className="flex items-center gap-1 flex-wrap">
+                  <span className="text-[#8ae234] font-bold">binod@linux-world</span>
+                  <span className="text-[#eeeeec]">:</span>
+                  <span className="text-[#729fcf] font-bold">{entry.promptPath}</span>
+                  <span className="text-[#eeeeec]">$ {entry.command}</span>
+                </div>
+                <div className="pl-1 sm:pl-2">{entry.body}</div>
+              </div>
+            ))}
+            <div ref={outputEndRef} />
+          </div>
+
+          {/* Active Bottom Terminal Prompt */}
+          <div className="bg-[#22071a] px-4 sm:px-5 py-3 border-t border-[#4c1a3d] flex items-center gap-1.5 text-xs sm:text-sm shrink-0">
+            <span className="text-[#8ae234] font-bold shrink-0">binod@linux-world</span>
+            <span className="text-[#eeeeec] shrink-0">:</span>
+            <span className="text-[#729fcf] font-bold shrink-0">{cwdDisplay}</span>
+            <span className="text-[#eeeeec] shrink-0">$</span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="type Linux command (ls -la, cd, cat, nano, view, tree, help)..."
+              className="flex-1 bg-transparent outline-none text-[#eeeeec] placeholder:text-[#ad7fa8]/60 font-mono"
+              autoFocus
+              spellCheck={false}
+              autoComplete="off"
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
-

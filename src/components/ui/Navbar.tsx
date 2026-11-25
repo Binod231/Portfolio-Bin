@@ -69,6 +69,10 @@ export default function Navbar() {
     }
   };
 
+  if (isTerminalMode) {
+    return null;
+  }
+
   return (
     <header className="w-full border-b border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-[#111418]/90 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Mail, Github, Linkedin, Copy, Check, ArrowUpRight, FileText } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 
@@ -201,6 +202,11 @@ export default function Contact() {
                 <a href={links.resume} target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100">
                   Download Resume PDF
                 </a>
+              </li>
+              <li>
+                <Link href="/terminal" className="hover:underline hover:text-neutral-900 dark:hover:text-neutral-100 font-mono">
+                  &gt;_ Linux Terminal Mode
+                </Link>
               </li>
             </ul>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { portfolio } from "@/data/portfolio";
 import {
   calculateFinOpsSavings,
   WORKLOAD_PROFILES,
@@ -13,13 +14,13 @@ export default function FinOpsEstimator() {
 
   const estimate = calculateFinOpsSavings(monthlySpend, workload);
 
-  const scrollToContact = () => {
-    const el = document.getElementById("contact");
-    if (el) {
-      const topOffset = el.getBoundingClientRect().top + window.scrollY - 30;
-      window.scrollTo({ top: topOffset, behavior: "smooth" });
-    }
-  };
+  const mailtoSubject = encodeURIComponent(
+    `AWS FinOps Audit Request - $${estimate.monthlySpend.toLocaleString()}/mo (${estimate.workloadLabel})`
+  );
+  const mailtoBody = encodeURIComponent(
+    `Hi Binod,\n\nI used the FinOps Estimator on your portfolio:\n- Current Monthly AWS Spend: $${estimate.monthlySpend.toLocaleString()}/mo\n- Architecture Profile: ${estimate.workloadLabel}\n- Projected Monthly Savings: ~$${estimate.monthlySaved.toLocaleString()}/mo (~${estimate.totalSavingsPct}%)\n\nLet's discuss an audit for our infrastructure.`
+  );
+  const finopsMailto = `mailto:${portfolio.personal.email}?subject=${mailtoSubject}&body=${mailtoBody}`;
 
   return (
     <div
@@ -146,12 +147,12 @@ export default function FinOpsEstimator() {
             <span className="text-neutral-500 dark:text-neutral-400">
               CLI: <code>./finops-calc.sh --spend={monthlySpend}</code>
             </span>
-            <button
-              onClick={scrollToContact}
-              className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition-colors cursor-pointer"
+            <a
+              href={finopsMailto}
+              className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition-colors"
             >
               Request FinOps audit ➔
-            </button>
+            </a>
           </div>
         </div>
       </div>

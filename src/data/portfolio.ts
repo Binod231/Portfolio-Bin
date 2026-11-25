@@ -2,7 +2,7 @@ export const portfolio = {
   personal: {
     name: "Binod Prasad Joshi",
     role: "Cloud & DevOps Consultant | 2x AWS Certified | AWS Community Builder",
-    location: "Remote-friendly (UTC+5:45)",
+    location: "Kathmandu, Nepal (UTC+5:45 | Remote-friendly)",
     tagline: "Architecting resilient, cost-optimized cloud infrastructure & automated DevOps pipelines.",
     email: "joshibinodprasad77@gmail.com",
     links: {

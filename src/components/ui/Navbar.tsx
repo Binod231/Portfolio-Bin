@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sun, Moon, Menu, X, Terminal, LayoutGrid, Search } from "lucide-react";
+import { Sun, Moon, Menu, X, Terminal, LayoutGrid, Search, Mail } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { portfolio } from "@/data/portfolio";
@@ -158,8 +158,15 @@ export default function Navbar() {
           </button>
         </nav>
 
-        {/* Mobile Terminal Toggle, Theme Toggle & Menu */}
-        <div className="flex items-center gap-2 md:hidden">
+        {/* Mobile Search, Terminal Toggle, Theme Toggle & Menu */}
+        <div className="flex items-center gap-1.5 md:hidden">
+          <button
+            onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
+            aria-label="Open Command Palette"
+            className="p-1.5 text-neutral-600 dark:text-neutral-300 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
+          >
+            <Search className="w-4 h-4" />
+          </button>
           <Link
             href={isTerminalMode ? "/" : "/terminal"}
             className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-mono border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 text-neutral-700 dark:text-neutral-300"
@@ -219,9 +226,10 @@ export default function Navbar() {
             <span>Available for Consulting</span>
             <a
               href={`mailto:${portfolio.personal.email}`}
-              className="text-neutral-900 dark:text-neutral-100 underline"
+              aria-label="Email Binod"
+              className="p-1.5 rounded-md border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/60 text-neutral-700 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white transition-colors"
             >
-              Email Me
+              <Mail className="w-4 h-4" />
             </a>
           </div>
         </div>

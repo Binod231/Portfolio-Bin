@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { createInitialFs, FsNode } from "@/data/linuxFs";
 import { portfolio } from "@/data/portfolio";
 import DotMatrixPortrait from "./DotMatrixPortrait";
+import { TERMINAL_THEMES, ThemeName } from "./terminalThemes";
+import { handleDevOpsCommand } from "./devopsCli";
+import { HtopMonitor, LessPager, NanoViewer } from "./TerminalPanes";
 import {
   ArrowUpRight,
   Folder,
@@ -24,6 +27,12 @@ type OutputEntry = {
   body: React.ReactNode;
 };
 
+type ActiveModal =
+  | { kind: "nano"; fileName: string; content: string }
+  | { kind: "less"; fileName: string; content: string }
+  | { kind: "htop" }
+  | null;
+
 const COMMAND_LIST = [
   "help",
   "ls",
@@ -35,11 +44,26 @@ const COMMAND_LIST = [
   "head",
   "tail",
   "wc",
+  "less",
+  "more",
   "nano",
   "view",
   "imgcat",
   "open",
   "grep",
+  "aws",
+  "kubectl",
+  "docker",
+  "htop",
+  "ping",
+  "curl",
+  "man",
+  "theme",
+  "./hire-me.sh",
+  "hire-me",
+  "resume",
+  "cowsay",
+  "fortune",
   "whoami",
   "id",
   "hostname",
@@ -57,7 +81,18 @@ const COMMAND_LIST = [
 
 const READONLY_CMDS = new Set(["touch", "mkdir", "rm", "rmdir", "mv", "cp", "chmod", "chown", "vi", "vim"]);
 
-function renderTextWithLinks(text: string): React.ReactNode {
+function longestCommonPrefix(items: string[]): string {
+  if (items.length === 0) return "";
+  let prefix = items[0];
+  for (let i = 1; i < items.length; i++) {
+    while (!items[i].startsWith(prefix) && prefix.length > 0) {
+      prefix = prefix.slice(0, -1);
+    }
+  }
+  return prefix;
+}
+
+function renderTextWithLinks(text: string, linkColor = "#38bdf8"): React.ReactNode {
   const regex = /(https?:\/\/[^\s)]+|mailto:[^\s)]+)/g;
   return text.split("\n").map((line, li) => {
     const parts = line.split(regex);
@@ -70,7 +105,8 @@ function renderTextWithLinks(text: string): React.ReactNode {
               href={part}
               target={part.startsWith("http") ? "_blank" : undefined}
               rel={part.startsWith("http") ? "noopener noreferrer" : undefined}
-              className="text-sky-400 underline decoration-sky-500/50 hover:text-[#8ae234] inline-flex items-center gap-0.5 break-all"
+              className="underline hover:opacity-80 inline-flex items-center gap-0.5 break-all"
+              style={{ color: linkColor }}
             >
               <span>{part}</span>
               <ArrowUpRight className="w-3 h-3 inline shrink-0" />
@@ -92,19 +128,12 @@ export default function LinuxTerminal() {
   const [history, setHistory] = useState<string[]>([]);
   const [histIdx, setHistIdx] = useState<number>(-1);
   const [entries, setEntries] = useState<OutputEntry[]>([]);
+  const [themeName, setThemeName] = useState<ThemeName>("ubuntu");
+  const [activeModal, setActiveModal] = useState<ActiveModal>(null);
 
-  // Read-only Nano viewer state
-  const [nanoState, setNanoState] = useState<{
-    fileName: string;
-    content: string;
-    notice: string;
-    searchQuery: string;
-    showSearch: boolean;
-  } | null>(null);
-
+  const theme = TERMINAL_THEMES[themeName];
   const outputEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const nanoRef = useRef<HTMLTextAreaElement | null>(null);
   const nextId = useRef(1);
 
   const cwdDisplay = cwdParts.length === 0 ? "~" : `~/${cwdParts.join("/")}`;
@@ -148,6 +177,26 @@ export default function LinuxTerminal() {
     return { node: curr, parts: normalized };
   };
 
+  /** Expand simple globs like `*.md` or `experience/*.md` into matching file paths. */
+  const expandGlobPaths = (pattern: string, baseParts: string[]): { node: FsNode; parts: string[] }[] => {
+    if (!pattern.includes("*")) {
+      const res = resolveNode(pattern, baseParts);
+      return res.node ? [{ node: res.node, parts: res.parts }] : [];
+    }
+    const lastSlash = pattern.lastIndexOf("/");
+    const dirPart = lastSlash >= 0 ? pattern.slice(0, lastSlash) || "/" : ".";
+    const filePattern = lastSlash >= 0 ? pattern.slice(lastSlash + 1) : pattern;
+    const dirRes = resolveNode(dirPart, baseParts);
+    if (!dirRes.node || dirRes.node.type !== "dir") return [];
+
+    const regex = new RegExp(
+      "^" + filePattern.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*") + "$"
+    );
+    return Object.entries(dirRes.node.children)
+      .filter(([name]) => regex.test(name))
+      .map(([name, node]) => ({ node, parts: [...dirRes.parts, name] }));
+  };
+
   const currentDir = useMemo(() => {
     const res = resolveNode("~/" + cwdParts.join("/"), []);
     return res.node && res.node.type === "dir" ? res.node : null;
@@ -168,31 +217,16 @@ export default function LinuxTerminal() {
     outputEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [entries]);
 
-  // Global keyboard shortcuts for nano (Esc / Ctrl+X / Ctrl+O) and terminal (Ctrl+L)
   useEffect(() => {
     const onGlobalKey = (e: KeyboardEvent) => {
-      if (nanoState) {
-        if (e.key === "Escape" || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "x")) {
-          e.preventDefault();
-          setNanoState(null);
-          setTimeout(() => inputRef.current?.focus(), 20);
-        } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "o") {
-          e.preventDefault();
-          setNanoState((prev) =>
-            prev ? { ...prev, notice: "[ Error: Read-only file system (chmod 444) — edits disabled ]" } : null
-          );
-        } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "w") {
-          e.preventDefault();
-          setNanoState((prev) => (prev ? { ...prev, showSearch: !prev.showSearch } : null));
-        }
-      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "l") {
+      if (!activeModal && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "l") {
         e.preventDefault();
         setEntries([]);
       }
     };
     window.addEventListener("keydown", onGlobalKey);
     return () => window.removeEventListener("keydown", onGlobalKey);
-  }, [nanoState]);
+  }, [activeModal]);
 
   const buildTreeLines = (node: FsNode, prefix = "", isLast = true, isRoot = true): string[] => {
     const lines: string[] = [];
@@ -217,7 +251,7 @@ export default function LinuxTerminal() {
     if (longMode) {
       return (
         <div className="space-y-1 text-xs">
-          <div className="text-[#d3d7cf]">total {keys.length * 4}</div>
+          <div style={{ color: theme.text }}>total {keys.length * 4}</div>
           {keys.map((key) => {
             const item = dirNode.children[key];
             const fullPath = dirParts.length ? `~/${dirParts.join("/")}/${key}` : `~/${key}`;
@@ -225,26 +259,29 @@ export default function LinuxTerminal() {
             const size = item.type === "dir" ? "4096" : String(item.content.length).padStart(4, " ");
             return (
               <div key={key} className="flex flex-wrap items-center gap-2 font-mono">
-                <span className="text-[#ad7fa8]">{perms}</span>
-                <span className="text-[#d3d7cf]">1 binod devops {size} Nov 25 11:40</span>
+                <span style={{ color: theme.muted }}>{perms}</span>
+                <span style={{ color: theme.text }}>1 binod devops {size} Nov 25 11:55</span>
                 {item.type === "dir" ? (
                   <button
                     onClick={() => executeCommand(`cd ${fullPath} && ls`)}
-                    className="text-[#729fcf] font-bold hover:underline cursor-pointer"
+                    className="font-bold hover:underline cursor-pointer"
+                    style={{ color: theme.promptPath }}
                   >
                     {key}/
                   </button>
                 ) : item.imageSrc ? (
                   <button
                     onClick={() => executeCommand(`view ${fullPath}`)}
-                    className="text-[#ffad8e] font-bold hover:underline cursor-pointer"
+                    className="font-bold hover:underline cursor-pointer"
+                    style={{ color: theme.accent }}
                   >
                     {key}
                   </button>
                 ) : (
                   <button
                     onClick={() => executeCommand(`cat ${fullPath}`)}
-                    className="text-[#8ae234] hover:underline cursor-pointer"
+                    className="hover:underline cursor-pointer"
+                    style={{ color: theme.promptUser }}
                   >
                     {key}
                   </button>
@@ -257,102 +294,212 @@ export default function LinuxTerminal() {
     }
 
     return (
-      <div className="space-y-2">
-        <div className="flex flex-wrap gap-2">
-          {keys.map((key) => {
-            const item = dirNode.children[key];
-            const fullPath = dirParts.length ? `~/${dirParts.join("/")}/${key}` : `~/${key}`;
-            if (item.type === "dir") {
-              return (
-                <button
-                  key={key}
-                  onClick={() => executeCommand(`cd ${fullPath} && ls`)}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#3d1430] hover:bg-[#561d44] border border-[#6e2858] text-[#729fcf] font-bold text-xs cursor-pointer transition-colors"
-                >
-                  <Folder className="w-3.5 h-3.5" />
-                  <span>{key}/</span>
-                </button>
-              );
-            }
-            if (item.imageSrc) {
-              return (
-                <button
-                  key={key}
-                  onClick={() => executeCommand(`view ${fullPath}`)}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#2a0c20] hover:bg-[#421333] border border-[#e95420]/50 text-[#ffad8e] text-xs cursor-pointer transition-colors"
-                >
-                  <ImageIcon className="w-3.5 h-3.5" />
-                  <span>{key}</span>
-                </button>
-              );
-            }
+      <div className="flex flex-wrap gap-2">
+        {keys.map((key) => {
+          const item = dirNode.children[key];
+          const fullPath = dirParts.length ? `~/${dirParts.join("/")}/${key}` : `~/${key}`;
+          if (item.type === "dir") {
             return (
               <button
                 key={key}
-                onClick={() => executeCommand(`cat ${fullPath}`)}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#22071a] hover:bg-[#38102c] border border-[#5c244b] text-[#8ae234] text-xs cursor-pointer transition-colors"
+                onClick={() => executeCommand(`cd ${fullPath} && ls`)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border font-bold text-xs cursor-pointer transition-colors"
+                style={{ background: theme.bgElevated, borderColor: theme.border, color: theme.promptPath }}
               >
-                <FileText className="w-3.5 h-3.5" />
+                <Folder className="w-3.5 h-3.5" />
+                <span>{key}/</span>
+              </button>
+            );
+          }
+          if (item.imageSrc) {
+            return (
+              <button
+                key={key}
+                onClick={() => executeCommand(`view ${fullPath}`)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-xs cursor-pointer transition-colors"
+                style={{ background: theme.bgDark, borderColor: theme.accent, color: theme.accent }}
+              >
+                <ImageIcon className="w-3.5 h-3.5" />
                 <span>{key}</span>
               </button>
             );
-          })}
-        </div>
+          }
+          return (
+            <button
+              key={key}
+              onClick={() => executeCommand(`cat ${fullPath}`)}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border text-xs cursor-pointer transition-colors"
+              style={{ background: theme.bgDark, borderColor: theme.border, color: theme.promptUser }}
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>{key}</span>
+            </button>
+          );
+        })}
       </div>
     );
   };
 
   const renderImageCard = (node: FsNode & { type: "file" }) => (
-    <div className="mt-2 p-3 rounded-lg bg-[#1d0515] border border-[#5c244b] inline-flex flex-col sm:flex-row items-center gap-4">
+    <div
+      className="mt-2 p-3 rounded-lg border inline-flex flex-col sm:flex-row items-center gap-4"
+      style={{ background: theme.bgDark, borderColor: theme.border }}
+    >
       {node.isDotMatrix ? (
         <DotMatrixPortrait src={node.imageSrc || "/profile-headshot.jpg"} size={210} />
       ) : (
         <img
           src={node.imageSrc}
           alt={node.name}
-          className="max-w-[240px] max-h-[240px] rounded-lg border border-[#8ae234]/50 object-cover"
+          className="max-w-[240px] max-h-[240px] rounded-lg border object-cover"
+          style={{ borderColor: theme.promptUser }}
         />
       )}
-      <div className="text-xs space-y-1.5 text-[#eeeeec]">
-        <div className="text-[#8ae234] font-bold">[IMAGE VIEWER // {node.name}]</div>
-        <div className="text-[#d3d7cf] whitespace-pre-wrap">{renderTextWithLinks(node.content)}</div>
-        <div className="flex flex-wrap gap-2 pt-1">
-          {node.redirectUrl && (
-            <a
-              href={node.redirectUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-2.5 py-1 rounded bg-[#e95420] text-white font-bold inline-flex items-center gap-1 hover:opacity-90"
-            >
-              <span>Open Verification Link</span>
-              <ArrowUpRight className="w-3 h-3" />
-            </a>
-          )}
-          {node.guiSection && (
-            <Link
-              href={node.guiSection}
-              className="px-2.5 py-1 rounded bg-[#3d1430] border border-[#729fcf] text-[#729fcf] font-bold inline-flex items-center gap-1 hover:bg-[#729fcf] hover:text-[#1a0514]"
-            >
-              <span>Open in Portfolio GUI</span>
-              <ArrowUpRight className="w-3 h-3" />
-            </Link>
-          )}
+      <div className="text-xs space-y-1.5" style={{ color: theme.text }}>
+        <div className="font-bold" style={{ color: theme.promptUser }}>
+          [IMAGE VIEWER // {node.name}]
         </div>
+        <div className="whitespace-pre-wrap">{renderTextWithLinks(node.content, theme.promptPath)}</div>
+        {node.redirectUrl && (
+          <a
+            href={node.redirectUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-2.5 py-1 rounded text-white font-bold inline-flex items-center gap-1 hover:opacity-90"
+            style={{ background: theme.accent }}
+          >
+            <span>Open Verification Link</span>
+            <ArrowUpRight className="w-3 h-3" />
+          </a>
+        )}
       </div>
     </div>
   );
 
+  /** Evaluate a single stage returning plain text for `|` pipelines. */
+  const evalTextStage = (rawStage: string, stdinText: string | null, currentParts: string[]): string => {
+    const parts = rawStage.trim().split(/\s+/);
+    const cmd = (parts[0] || "").toLowerCase();
+    const args = parts.slice(1);
+
+    const devopsOut = handleDevOpsCommand(cmd, args);
+    if (devopsOut !== null) return devopsOut;
+
+    if (cmd === "ls" || cmd === "ll" || cmd === "dir") {
+      const hasLong = cmd === "ll" || args.some((a) => a.startsWith("-") && a.includes("l"));
+      const targetArg = args.filter((a) => !a.startsWith("-"))[0] || "";
+      const res = targetArg
+        ? resolveNode(targetArg, currentParts)
+        : resolveNode("~/" + currentParts.join("/"), []);
+      if (!res.node) return `ls: cannot access '${targetArg}': No such file or directory`;
+      if (res.node.type === "file") return res.node.name;
+      const entriesList = Object.entries(res.node.children);
+      if (hasLong) {
+        return entriesList
+          .map(([k, item]) => {
+            const perms = item.type === "dir" ? "dr-xr-xr-x" : "-r--r--r--";
+            const sz = item.type === "dir" ? "4096" : String(item.content.length).padStart(4, " ");
+            return `${perms} 1 binod devops ${sz} Nov 25 11:55 ${k}${item.type === "dir" ? "/" : ""}`;
+          })
+          .join("\n");
+      }
+      return entriesList.map(([k, item]) => `${k}${item.type === "dir" ? "/" : ""}`).join("\n");
+    }
+
+    if (cmd === "tree") {
+      const targetArg = args[0] || "";
+      const target = targetArg ? resolveNode(targetArg, currentParts) : { node: currentDir || fsRoot, parts: currentParts };
+      return target.node ? buildTreeLines(target.node).join("\n") : `tree: ${targetArg}: No such directory`;
+    }
+
+    if (cmd === "cat" || cmd === "head" || cmd === "tail" || cmd === "wc") {
+      let nLines = 10;
+      const nonFlagArgs: string[] = [];
+      for (let i = 0; i < args.length; i++) {
+        if (args[i] === "-n" && args[i + 1]) {
+          nLines = Math.max(1, parseInt(args[i + 1], 10) || 10);
+          i++;
+        } else if (!args[i].startsWith("-")) {
+          nonFlagArgs.push(args[i]);
+        }
+      }
+
+      let sourceText = stdinText;
+      if (sourceText === null) {
+        if (nonFlagArgs.length === 0) return `Usage: ${cmd} <file>`;
+        const matched = nonFlagArgs.flatMap((a) => expandGlobPaths(a, currentParts));
+        const files = matched.filter((m) => m.node.type === "file");
+        if (files.length === 0) return `${cmd}: ${nonFlagArgs[0]}: No such file`;
+        sourceText = files.map((f) => (f.node.type === "file" ? f.node.content : "")).join("\n\n");
+      }
+
+      if (cmd === "head") return sourceText.split("\n").slice(0, nLines).join("\n");
+      if (cmd === "tail") return sourceText.split("\n").slice(-nLines).join("\n");
+      if (cmd === "wc") {
+        const lines = sourceText === "" ? 0 : sourceText.split("\n").length;
+        const words = sourceText.trim().split(/\s+/).filter(Boolean).length;
+        const bytes = sourceText.length;
+        if (args.includes("-l")) return String(lines);
+        if (args.includes("-w")) return String(words);
+        if (args.includes("-c")) return String(bytes);
+        return ` ${lines}  ${words}  ${bytes}`;
+      }
+      return sourceText;
+    }
+
+    if (cmd === "grep") {
+      const q = args.filter((a) => !a.startsWith("-")).join(" ").toLowerCase();
+      if (!q) return "Usage: grep <keyword>";
+      if (stdinText !== null) {
+        const matched = stdinText.split("\n").filter((ln) => ln.toLowerCase().includes(q));
+        return matched.join("\n") || `(no lines matched "${q}")`;
+      }
+      const hits: string[] = [];
+      const walk = (n: FsNode, p: string[]) => {
+        if (n.type === "file") {
+          n.content.split("\n").forEach((ln) => {
+            if (ln.toLowerCase().includes(q)) hits.push(`~/${p.join("/")}: ${ln.trim()}`);
+          });
+        } else {
+          Object.entries(n.children).forEach(([k, ch]) => walk(ch, [...p, k]));
+        }
+      };
+      walk(fsRoot, []);
+      return hits.slice(0, 30).join("\n") || `No matches for "${q}"`;
+    }
+
+    return `bash: ${cmd}: unsupported in pipe`;
+  };
+
   const runSingleCommand = (rawCmd: string, currentParts: string[]): string[] => {
     const trimmed = rawCmd.trim();
     if (!trimmed) return currentParts;
-
     const promptStr = currentParts.length === 0 ? "~" : `~/${currentParts.join("/")}`;
 
-    // Block output redirection (`>` / `>>`) in read-only filesystem
+    // Block shell output redirection (`>` / `>>`)
     if (/[^a-zA-Z0-9](>|>>)\s*\S+/.test(trimmed)) {
       appendOutput(
         trimmed,
-        <span className="text-red-400">bash: Read-only file system (writes and redirections are disabled)</span>,
+        <span style={{ color: theme.danger }}>
+          [AWS IAM GUARDRAIL] bash: Read-only file system (writes and redirections are disabled)
+        </span>,
+        promptStr
+      );
+      return currentParts;
+    }
+
+    // Handle true Unix pipes `|`
+    if (trimmed.includes("|")) {
+      const stages = trimmed.split("|").map((s) => s.trim()).filter(Boolean);
+      let buffer: string | null = null;
+      for (const stage of stages) {
+        buffer = evalTextStage(stage, buffer, currentParts);
+      }
+      appendOutput(
+        trimmed,
+        <div className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed" style={{ color: theme.text }}>
+          {renderTextWithLinks(buffer || "", theme.promptPath)}
+        </div>,
         promptStr
       );
       return currentParts;
@@ -366,37 +513,99 @@ export default function LinuxTerminal() {
       setEntries([]);
       return currentParts;
     }
-
     if (cmd === "exit" || cmd === "logout") {
       router.push("/");
       return currentParts;
     }
-
+    if (cmd === "htop") {
+      setActiveModal({ kind: "htop" });
+      return currentParts;
+    }
     if (cmd === "sudo") {
       appendOutput(
         trimmed,
-        <span className="text-red-400">
+        <span style={{ color: theme.danger }}>
           [sudo] password for binod: visitor is not in the sudoers file. This incident will be reported.
         </span>,
         promptStr
       );
       return currentParts;
     }
-
+    if (cmd === "rm" && (arg.includes("-rf /") || arg.includes("-rf *") || arg.includes("-r /"))) {
+      appendOutput(
+        trimmed,
+        <span style={{ color: theme.danger }}>
+          [AWS IAM GUARDRAIL] Action denied: Production filesystem mounted read-only (ro). Nice try!
+        </span>,
+        promptStr
+      );
+      return currentParts;
+    }
     if (cmd === "vi" || cmd === "vim") {
       if (!arg) {
-        appendOutput(trimmed, <span className="text-amber-400">Usage: nano &lt;file&gt; (Read-only viewer)</span>, promptStr);
+        appendOutput(trimmed, <span style={{ color: theme.warn }}>Usage: nano &lt;file&gt; (Read-only viewer)</span>, promptStr);
         return currentParts;
       }
       return runSingleCommand(`nano ${arg}`, currentParts);
     }
-
     if (READONLY_CMDS.has(cmd)) {
       appendOutput(
         trimmed,
-        <span className="text-red-400">
+        <span style={{ color: theme.danger }}>
           {cmd}: cannot modify '{arg || "."}': Read-only file system (ro)
         </span>,
+        promptStr
+      );
+      return currentParts;
+    }
+
+    if (cmd === "theme") {
+      const target = arg.toLowerCase() as ThemeName;
+      if (target && TERMINAL_THEMES[target]) {
+        setThemeName(target);
+        appendOutput(
+          trimmed,
+          <span style={{ color: TERMINAL_THEMES[target].promptUser }}>
+            Theme switched to {TERMINAL_THEMES[target].label} ({target})
+          </span>,
+          promptStr
+        );
+      } else {
+        appendOutput(
+          trimmed,
+          <span style={{ color: theme.warn }}>
+            Current: {themeName} | Available: {Object.keys(TERMINAL_THEMES).join(", ")} (e.g. 'theme kali')
+          </span>,
+          promptStr
+        );
+      }
+      return currentParts;
+    }
+
+    if (cmd === "./hire-me.sh" || cmd === "hire-me" || cmd === "resume") {
+      const p = portfolio.personal;
+      appendOutput(
+        trimmed,
+        <pre className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed" style={{ color: theme.text }}>
+          {renderTextWithLinks(
+            [
+              `==================================================================`,
+              `EXECUTIVE BRIEF — ${p.name.toUpperCase()}`,
+              `==================================================================`,
+              `Role       : ${p.role}`,
+              `Current    : DevOps Consultant @ Glovion Consulting Private Limited`,
+              `Location   : Kathmandu, Nepal (UTC+5:45 | Remote-ready)`,
+              `Impact     : 99.9% Uptime SLA | ~50% Faster CI/CD | ~30% FinOps Cut | -95% OAuth2 Latency`,
+              ``,
+              `Resume PDF : ${p.links.resume}`,
+              `LinkedIn   : ${p.links.linkedin}`,
+              `GitHub     : ${p.links.github}`,
+              `Credly     : https://www.credly.com/users/binod-prasad-joshi.69a505f6/badges/credly`,
+              `Email      : mailto:${p.email}`,
+            ].join("\n"),
+            theme.promptPath
+          )}
+        </pre>,
         promptStr
       );
       return currentParts;
@@ -407,54 +616,55 @@ export default function LinuxTerminal() {
         "",
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 py-1">
           <div className="space-y-2 text-xs sm:text-sm leading-snug">
-            <pre className="text-[#8ae234] font-bold whitespace-pre overflow-x-auto leading-tight text-[10px] sm:text-xs">{` ____  ___ _   _  ___  ____    _     ___ _   _ _   ___  __
+            <pre
+              className="font-bold whitespace-pre overflow-x-auto leading-tight text-[10px] sm:text-xs"
+              style={{ color: theme.promptUser }}
+            >{` ____  ___ _   _  ___  ____    _     ___ _   _ _   ___  __
 | __ )|_ _| \\ | |/ _ \\|  _ \\  | |   |_ _| \\ | | | | \\ \\/ /
 |  _ \\ | ||  \\| | | | | | | | | |    | ||  \\| | | | |\\  / 
 | |_) || || |\\  | |_| | |_| | | |___ | || |\\  | |_| |/  \\ 
 |____/|___|_| \\_|\\___/|____/  |_____|___|_| \\_|\\___//_/\\_\\`}</pre>
 
-            <pre className="text-[#d3d7cf] whitespace-pre-wrap text-xs sm:text-[13px] pt-1">{`       =[ binod-linux-world v2026.11-devops-ro         ]
+            <pre className="whitespace-pre-wrap text-xs sm:text-[13px] pt-1" style={{ color: theme.text }}>{`       =[ binod-linux-world v2026.11-devops-ro         ]
 + -- --=[ ${portfolio.experience.length} experiences  - ${portfolio.experience.filter((e) => e.caseStudy).length} case-studies - ${portfolio.projects.length} projects ]
 + -- --=[ ${portfolio.services.length} services     - ${portfolio.blogs.length} blogs       - ${portfolio.certifications.length} certs    ]
 + -- --=[ 2x AWS Certified | AWS Community Builder 2026 ]
 + -- --=[ Kathmandu, Nepal (UTC+5:45) | Read-Only Shell ]`}</pre>
 
-            <div className="text-[#eeeeec] pt-1">
-              Welcome to <span className="text-[#8ae234] font-bold">Binod Linux World</span>. Type{" "}
-              <button
-                onClick={() => executeCommand("help")}
-                className="text-[#8ae234] underline cursor-pointer font-bold"
-              >
+            <div className="pt-1" style={{ color: theme.text }}>
+              Welcome to <span className="font-bold" style={{ color: theme.promptUser }}>Binod Linux World</span>. Type{" "}
+              <button onClick={() => executeCommand("help")} className="underline cursor-pointer font-bold" style={{ color: theme.promptUser }}>
                 help
               </button>
               ,{" "}
-              <button
-                onClick={() => executeCommand("tree")}
-                className="text-[#729fcf] underline cursor-pointer font-bold"
-              >
-                tree
-              </button>
-              ,{" "}
-              <button
-                onClick={() => executeCommand("ls -la")}
-                className="text-[#8ae234] underline cursor-pointer font-bold"
-              >
+              <button onClick={() => executeCommand("ls -la")} className="underline cursor-pointer font-bold" style={{ color: theme.promptPath }}>
                 ls -la
               </button>
+              ,{" "}
+              <button onClick={() => executeCommand("aws sts get-caller-identity")} className="underline cursor-pointer font-bold" style={{ color: theme.promptUser }}>
+                aws
+              </button>
+              ,{" "}
+              <button onClick={() => executeCommand("kubectl get pods -A")} className="underline cursor-pointer font-bold" style={{ color: theme.promptPath }}>
+                kubectl
+              </button>
+              ,{" "}
+              <button onClick={() => executeCommand("htop")} className="underline cursor-pointer font-bold" style={{ color: theme.warn }}>
+                htop
+              </button>
               , or{" "}
-              <button
-                onClick={() => executeCommand("cat contact/links.txt")}
-                className="text-[#ffad8e] underline cursor-pointer font-bold"
-              >
-                cat contact/links.txt
-              </button>{" "}
-              (or <Link href="/" className="text-[#e95420] underline font-bold">exit</Link> for GUI).
+              <button onClick={() => executeCommand("./hire-me.sh")} className="underline cursor-pointer font-bold" style={{ color: theme.accent }}>
+                ./hire-me.sh
+              </button>
+              .
             </div>
           </div>
 
           <div className="flex flex-col items-center gap-1 self-start lg:self-center">
             <DotMatrixPortrait src="/profile-headshot.jpg" size={172} />
-            <span className="text-[10px] text-[#ad7fa8]">[dot-matrix // binod231]</span>
+            <span className="text-[10px]" style={{ color: theme.muted }}>
+              [dot-matrix // binod231]
+            </span>
           </div>
         </div>,
         ""
@@ -462,120 +672,106 @@ export default function LinuxTerminal() {
       return currentParts;
     }
 
-    if (cmd === "help" || cmd === "man") {
+    if (cmd === "help") {
       appendOutput(
         trimmed,
-        <pre className="text-xs sm:text-sm text-[#eeeeec] whitespace-pre-wrap leading-relaxed">{`BINOD LINUX WORLD — REAL LINUX SHELL COMMANDS (READ-ONLY)
+        <pre className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed" style={{ color: theme.text }}>{`BINOD LINUX WORLD — SUPPORTED COMMANDS (READ-ONLY SHELL)
 ---------------------------------------------------------------------------
-  ls [-la] [dir]   List files & directories (use 'ls -la' for permissions)
-  ll               Alias for 'ls -la'
-  cd <dir|..|~>    Change directory (e.g. 'cd experience', 'cd ..')
-  pwd              Print current working directory
-  tree             Show full /home/binod directory tree
-  cat <file>       Print full file contents with clickable redirect links
-  head / tail      Show first or last 10 lines of a file
-  wc <file>        Print line, word, and byte counts
-  nano <file>      Open GNU nano in Read-Only mode (^W search, ^X exit)
-  view <image>     Render images & 3D dot-matrix portrait inline (alias: imgcat)
-  open <target>    Redirect to GUI section or external link (github, linkedin, resume, blogs)
-  grep <keyword>   Search across all portfolio files
-  whoami / id      Display current user identity & groups
-  uname / uptime   Show Linux kernel & cluster SLA uptime
-  df -h / free -h  Show mounted read-only filesystem & memory status
-  ps aux / env     Show running DevOps services & environment variables
-  neofetch         Display operator profile + dot-matrix portrait
-  clear / Ctrl+L   Clear terminal output
-  exit             Close shell and return to GUI Portfolio`}</pre>,
+  Filesystem   : ls [-la], ll, cd <dir|..|~>, pwd, tree, cat, head [-n], tail [-n], wc [-l]
+  Pagers/View  : less <file>, nano <file> (RO), view <image>, grep <term>
+  Pipes/Globs  : Supports '|' and '*' (e.g. 'cat blogs/all-blogs.txt | grep Bedrock')
+  Cloud/DevOps : aws (sts/ecs/s3), kubectl (get pods/nodes), docker (ps/images), htop, curl, ping
+  Recruiter/UX : ./hire-me.sh, resume, theme <ubuntu|kali|matrix|amber>, man <cmd>, open <target>
+  System/Fun   : whoami, id, hostname, uname, uptime, df, free, ps, env, neofetch, cowsay, fortune
+  Shortcuts    : Tab (multi-match autocomplete), Up/Down (history), Ctrl+L (clear), exit`}</pre>,
+        promptStr
+      );
+      return currentParts;
+    }
+
+    const devopsOut = handleDevOpsCommand(cmd, rest);
+    if (devopsOut !== null) {
+      appendOutput(
+        trimmed,
+        <pre className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed" style={{ color: theme.text }}>
+          {renderTextWithLinks(devopsOut, theme.promptPath)}
+        </pre>,
         promptStr
       );
       return currentParts;
     }
 
     if (cmd === "pwd") {
-      const abs = currentParts.length === 0 ? "/home/binod" : `/home/binod/${currentParts.join("/")}`;
-      appendOutput(trimmed, <span className="text-[#eeeeec]">{abs}</span>, promptStr);
+      appendOutput(
+        trimmed,
+        <span style={{ color: theme.text }}>{currentParts.length === 0 ? "/home/binod" : `/home/binod/${currentParts.join("/")}`}</span>,
+        promptStr
+      );
       return currentParts;
     }
-
     if (cmd === "whoami") {
-      appendOutput(trimmed, <span className="text-[#8ae234]">binod</span>, promptStr);
+      appendOutput(trimmed, <span style={{ color: theme.promptUser }}>binod</span>, promptStr);
       return currentParts;
     }
-
     if (cmd === "id") {
       appendOutput(
         trimmed,
-        <span className="text-[#eeeeec]">uid=1000(binod) gid=1000(devops) groups=1000(devops),27(aws-cb),999(docker-ro)</span>,
+        <span style={{ color: theme.text }}>uid=1000(binod) gid=1000(devops) groups=1000(devops),27(aws-cb),999(docker-ro)</span>,
         promptStr
       );
       return currentParts;
     }
-
     if (cmd === "hostname") {
-      appendOutput(trimmed, <span className="text-[#eeeeec]">binod-linux-world.kathmandu.np</span>, promptStr);
+      appendOutput(trimmed, <span style={{ color: theme.text }}>binod-linux-world.kathmandu.np</span>, promptStr);
       return currentParts;
     }
-
     if (cmd === "uname") {
       appendOutput(
         trimmed,
-        <span className="text-[#eeeeec]">Linux binod-linux-world 6.8.0-aws-devops #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux</span>,
+        <span style={{ color: theme.text }}>Linux binod-linux-world 6.8.0-aws-devops #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux</span>,
         promptStr
       );
       return currentParts;
     }
-
     if (cmd === "uptime") {
       appendOutput(
         trimmed,
-        <span className="text-[#eeeeec]"> 11:41:20 up 365 days, 23:59,  1 user,  load average: 0.12, 0.09, 0.08 (99.9% SLA)</span>,
+        <span style={{ color: theme.text }}> 11:55:00 up 365 days, 23:59,  1 user,  load average: 0.12, 0.09, 0.08 (99.9% SLA)</span>,
         promptStr
       );
       return currentParts;
     }
-
     if (cmd === "df") {
       appendOutput(
         trimmed,
-        <pre className="text-xs text-[#eeeeec] whitespace-pre-wrap">{`Filesystem      Size  Used Avail Use% Mounted on
+        <pre className="text-xs whitespace-pre-wrap" style={{ color: theme.text }}>{`Filesystem      Size  Used Avail Use% Mounted on
 /dev/nvme0n1p1   50G  4.2G   46G   9% /home/binod (ro,noexec)`}</pre>,
         promptStr
       );
       return currentParts;
     }
-
     if (cmd === "free") {
       appendOutput(
         trimmed,
-        <pre className="text-xs text-[#eeeeec] whitespace-pre-wrap">{`               total        used        free      shared  buff/cache   available
+        <pre className="text-xs whitespace-pre-wrap" style={{ color: theme.text }}>{`               total        used        free      shared  buff/cache   available
 Mem:            16Gi       3.1Gi       9.8Gi       128Mi       3.1Gi        12Gi
 Swap:          2.0Gi          0B       2.0Gi`}</pre>,
         promptStr
       );
       return currentParts;
     }
-
     if (cmd === "ps") {
-      appendOutput(
-        trimmed,
-        <pre className="text-xs text-[#eeeeec] whitespace-pre-wrap">{`USER       PID %CPU %MEM COMMAND
-root         1  0.0  0.1 /sbin/init
-binod      104  0.4  1.2 ecs-fargate-agent --region us-east-1
-binod      218  0.2  0.9 prometheus-node-exporter --multi-dc
-binod      305  0.3  1.8 odoo-erp-worker --workers=8 --db=postgres
-binod      412  0.1  0.5 fastapi-uvicorn --workers 4 --jwks-redis-cache`}</pre>,
-        promptStr
-      );
+      appendOutput(trimmed, <pre className="text-xs whitespace-pre-wrap" style={{ color: theme.text }}>{handleDevOpsCommand("docker", ["ps"])}</pre>, promptStr);
       return currentParts;
     }
-
     if (cmd === "env") {
       appendOutput(
         trimmed,
-        <pre className="text-xs text-[#eeeeec] whitespace-pre-wrap">{`USER=binod
+        <pre className="text-xs whitespace-pre-wrap" style={{ color: theme.text }}>{`USER=binod
 HOME=/home/binod
 SHELL=/bin/bash
 TERM=xterm-256color
+THEME=${themeName}
 LOCATION=Kathmandu, Nepal (UTC+5:45)
 AWS_CERTIFIED=SAA-C03,CLF-C02
 FS_MODE=READ_ONLY`}</pre>,
@@ -583,18 +779,17 @@ FS_MODE=READ_ONLY`}</pre>,
       );
       return currentParts;
     }
-
     if (cmd === "neofetch") {
       appendOutput(
         trimmed,
-        <div className="flex flex-col sm:flex-row items-center gap-4 p-3 rounded bg-[#22071a] border border-[#5c244b]">
+        <div className="flex flex-col sm:flex-row items-center gap-4 p-3 rounded border" style={{ background: theme.bgDark, borderColor: theme.border }}>
           <DotMatrixPortrait src="/profile-headshot.jpg" size={150} />
-          <pre className="text-xs text-[#eeeeec] whitespace-pre-wrap">{`binod@linux-world
+          <pre className="text-xs whitespace-pre-wrap" style={{ color: theme.text }}>{`binod@linux-world
 -----------------
-OS       : Binod Linux World (Ubuntu 24.04 LTS)
+OS       : Binod Linux World (${theme.label})
 Host     : Glovion Consulting Private Limited
 Location : Kathmandu, Nepal (UTC+5:45)
-Shell    : bash 5.2 (Read-Only FS)
+Shell    : bash 5.2 (Read-Only FS + Pipes)
 Certs    : 2x AWS Certified (SAA-C03, CLF-C02)
 Award    : AWS Community Builder (Dev Tools 2026)
 Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.length} Projects`}</pre>
@@ -603,21 +798,18 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
       );
       return currentParts;
     }
-
     if (cmd === "date") {
-      appendOutput(trimmed, <span className="text-[#eeeeec]">{new Date().toString()}</span>, promptStr);
+      appendOutput(trimmed, <span style={{ color: theme.text }}>{new Date().toString()}</span>, promptStr);
       return currentParts;
     }
-
     if (cmd === "echo") {
-      appendOutput(trimmed, <span className="text-[#eeeeec]">{arg}</span>, promptStr);
+      appendOutput(trimmed, <span style={{ color: theme.text }}>{arg}</span>, promptStr);
       return currentParts;
     }
-
     if (cmd === "history") {
       appendOutput(
         trimmed,
-        <pre className="text-xs text-[#d3d7cf] whitespace-pre-wrap">
+        <pre className="text-xs whitespace-pre-wrap" style={{ color: theme.muted }}>
           {history.map((h, i) => `  ${i + 1}  ${h}`).join("\n") || "(empty)"}
         </pre>,
         promptStr
@@ -627,30 +819,41 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
 
     if (cmd === "tree") {
       const target = arg ? resolveNode(arg, currentParts) : { node: currentDir || fsRoot, parts: currentParts };
-      if (!target.node) {
-        appendOutput(trimmed, <span className="text-red-400">tree: {arg}: No such directory</span>, promptStr);
-      } else {
-        appendOutput(
-          trimmed,
-          <pre className="text-xs text-[#8ae234] whitespace-pre-wrap leading-relaxed">
+      appendOutput(
+        trimmed,
+        target.node ? (
+          <pre className="text-xs whitespace-pre-wrap leading-relaxed" style={{ color: theme.promptUser }}>
             {buildTreeLines(target.node).join("\n")}
-          </pre>,
-          promptStr
-        );
-      }
+          </pre>
+        ) : (
+          <span style={{ color: theme.danger }}>tree: {arg}: No such directory</span>
+        ),
+        promptStr
+      );
       return currentParts;
     }
 
     if (cmd === "ls" || cmd === "ll" || cmd === "dir") {
       const hasLongFlag = cmd === "ll" || rest.some((r) => r.startsWith("-") && r.includes("l"));
       const cleanArg = rest.filter((r) => !r.startsWith("-")).join(" ");
-      const res = cleanArg
-        ? resolveNode(cleanArg, currentParts)
-        : resolveNode("~/" + currentParts.join("/"), []);
+      if (cleanArg.includes("*")) {
+        const matches = expandGlobPaths(cleanArg, currentParts);
+        appendOutput(
+          trimmed,
+          matches.length ? (
+            <span style={{ color: theme.promptUser }}>{matches.map((m) => m.node.name).join("  ")}</span>
+          ) : (
+            <span style={{ color: theme.danger }}>ls: cannot access '{cleanArg}': No such file or directory</span>
+          ),
+          promptStr
+        );
+        return currentParts;
+      }
+      const res = cleanArg ? resolveNode(cleanArg, currentParts) : resolveNode("~/" + currentParts.join("/"), []);
       if (!res.node) {
-        appendOutput(trimmed, <span className="text-red-400">ls: cannot access '{cleanArg}': No such file or directory</span>, promptStr);
+        appendOutput(trimmed, <span style={{ color: theme.danger }}>ls: cannot access '{cleanArg}': No such file or directory</span>, promptStr);
       } else if (res.node.type === "file") {
-        appendOutput(trimmed, <span className="text-[#8ae234]">{res.node.name}</span>, promptStr);
+        appendOutput(trimmed, <span style={{ color: theme.promptUser }}>{res.node.name}</span>, promptStr);
       } else {
         appendOutput(trimmed, renderDirListing(res.node, res.parts, hasLongFlag), promptStr);
       }
@@ -660,49 +863,57 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
     if (cmd === "cd") {
       const res = resolveNode(arg || "~", currentParts);
       if (!res.node) {
-        appendOutput(trimmed, <span className="text-red-400">bash: cd: {arg}: No such file or directory</span>, promptStr);
+        appendOutput(trimmed, <span style={{ color: theme.danger }}>bash: cd: {arg}: No such file or directory</span>, promptStr);
         return currentParts;
       }
       if (res.node.type !== "dir") {
-        appendOutput(trimmed, <span className="text-red-400">bash: cd: {arg}: Not a directory</span>, promptStr);
+        appendOutput(trimmed, <span style={{ color: theme.danger }}>bash: cd: {arg}: Not a directory</span>, promptStr);
         return currentParts;
       }
       setCwdParts(res.parts);
       return res.parts;
     }
 
-    if (cmd === "cat" || cmd === "head" || cmd === "tail" || cmd === "wc") {
+    if (cmd === "less" || cmd === "more") {
       if (!arg) {
-        appendOutput(trimmed, <span className="text-amber-400">Usage: {cmd} &lt;filename&gt;</span>, promptStr);
+        appendOutput(trimmed, <span style={{ color: theme.warn }}>Usage: less &lt;filename&gt;</span>, promptStr);
         return currentParts;
       }
       const res = resolveNode(arg, currentParts);
-      if (!res.node) {
-        appendOutput(trimmed, <span className="text-red-400">{cmd}: {arg}: No such file or directory</span>, promptStr);
+      if (!res.node || res.node.type !== "file") {
+        appendOutput(trimmed, <span style={{ color: theme.danger }}>{cmd}: {arg}: No such file</span>, promptStr);
         return currentParts;
       }
-      if (res.node.type === "dir") {
-        appendOutput(trimmed, <span className="text-amber-400">{cmd}: {arg}: Is a directory</span>, promptStr);
-        return currentParts;
-      }
-      const fileNode = res.node;
-      if (cmd === "wc") {
-        const lines = fileNode.content.split("\n").length;
-        const words = fileNode.content.trim().split(/\s+/).filter(Boolean).length;
-        const bytes = fileNode.content.length;
-        appendOutput(trimmed, <span className="text-[#eeeeec]">{` ${lines}  ${words}  ${bytes} ${fileNode.name}`}</span>, promptStr);
-        return currentParts;
-      }
-      if (cmd === "head" || cmd === "tail") {
-        const lines = fileNode.content.split("\n");
-        const slice = cmd === "head" ? lines.slice(0, 10) : lines.slice(-10);
+      setActiveModal({ kind: "less", fileName: res.node.name, content: res.node.content });
+      return currentParts;
+    }
+
+    if (cmd === "cat" || cmd === "head" || cmd === "tail" || cmd === "wc") {
+      if (arg.includes("*") || cmd === "head" || cmd === "tail" || cmd === "wc") {
+        const out = evalTextStage(trimmed, null, currentParts);
         appendOutput(
           trimmed,
-          <div className="text-xs sm:text-sm text-[#eeeeec] whitespace-pre-wrap">{renderTextWithLinks(slice.join("\n"))}</div>,
+          <div className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed" style={{ color: theme.text }}>
+            {renderTextWithLinks(out, theme.promptPath)}
+          </div>,
           promptStr
         );
         return currentParts;
       }
+      if (!arg) {
+        appendOutput(trimmed, <span style={{ color: theme.warn }}>Usage: cat &lt;filename&gt;</span>, promptStr);
+        return currentParts;
+      }
+      const res = resolveNode(arg, currentParts);
+      if (!res.node) {
+        appendOutput(trimmed, <span style={{ color: theme.danger }}>cat: {arg}: No such file or directory</span>, promptStr);
+        return currentParts;
+      }
+      if (res.node.type === "dir") {
+        appendOutput(trimmed, <span style={{ color: theme.warn }}>cat: {arg}: Is a directory</span>, promptStr);
+        return currentParts;
+      }
+      const fileNode = res.node;
       if (fileNode.imageSrc) {
         appendOutput(trimmed, renderImageCard(fileNode), promptStr);
         return currentParts;
@@ -710,39 +921,39 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
       const fullPath = `~/${res.parts.join("/")}`;
       appendOutput(
         trimmed,
-        <div className="p-3 rounded-lg bg-[#22071a] border border-[#5c244b] space-y-2 text-xs sm:text-sm text-[#eeeeec]">
-          <div className="flex flex-wrap items-center justify-between gap-2 pb-1.5 border-b border-[#48183a]">
-            <span className="text-[#8ae234] font-bold">{fullPath} [ro]</span>
+        <div className="p-3 rounded-lg border space-y-2 text-xs sm:text-sm" style={{ background: theme.bgDark, borderColor: theme.border, color: theme.text }}>
+          <div className="flex flex-wrap items-center justify-between gap-2 pb-1.5 border-b" style={{ borderColor: theme.border }}>
+            <span className="font-bold" style={{ color: theme.promptUser }}>{fullPath} [ro]</span>
             <div className="flex flex-wrap gap-2">
               <button
-                onClick={() => executeCommand(`nano ${fullPath}`)}
-                className="px-2 py-0.5 rounded bg-[#3d1430] border border-[#729fcf] text-[#729fcf] text-xs cursor-pointer hover:bg-[#729fcf] hover:text-[#1a0514]"
+                onClick={() => executeCommand(`less ${fullPath}`)}
+                className="px-2 py-0.5 rounded border text-xs cursor-pointer"
+                style={{ background: theme.bgElevated, borderColor: theme.promptUser, color: theme.promptUser }}
               >
-                Inspect in nano (RO)
+                Pager (less)
+              </button>
+              <button
+                onClick={() => executeCommand(`nano ${fullPath}`)}
+                className="px-2 py-0.5 rounded border text-xs cursor-pointer"
+                style={{ background: theme.bgElevated, borderColor: theme.promptPath, color: theme.promptPath }}
+              >
+                Nano (RO)
               </button>
               {fileNode.redirectUrl && (
                 <a
                   href={fileNode.redirectUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-2 py-0.5 rounded bg-[#e95420] text-white text-xs font-bold inline-flex items-center gap-1"
+                  className="px-2 py-0.5 rounded text-white text-xs font-bold inline-flex items-center gap-1"
+                  style={{ background: theme.accent }}
                 >
                   <span>Visit Link</span>
                   <ArrowUpRight className="w-3 h-3" />
                 </a>
               )}
-              {fileNode.guiSection && (
-                <Link
-                  href={fileNode.guiSection}
-                  className="px-2 py-0.5 rounded bg-[#8ae234]/20 border border-[#8ae234] text-[#8ae234] text-xs inline-flex items-center gap-1"
-                >
-                  <span>GUI View</span>
-                  <ArrowUpRight className="w-3 h-3" />
-                </Link>
-              )}
             </div>
           </div>
-          <div className="leading-relaxed whitespace-pre-wrap">{renderTextWithLinks(fileNode.content)}</div>
+          <div className="leading-relaxed whitespace-pre-wrap">{renderTextWithLinks(fileNode.content, theme.promptPath)}</div>
         </div>,
         promptStr
       );
@@ -755,7 +966,7 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
       if (!res.node || res.node.type !== "file" || !res.node.imageSrc) {
         appendOutput(
           trimmed,
-          <span className="text-amber-400">
+          <span style={{ color: theme.warn }}>
             Usage: view about/profile-dotmatrix.img | view about/profile-headshot.jpg | view about/aws-stage-speaking.jpg | view certifications/saa-c03.png
           </span>,
           promptStr
@@ -768,33 +979,27 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
 
     if (cmd === "nano") {
       if (!arg) {
-        appendOutput(trimmed, <span className="text-amber-400">Usage: nano &lt;existing-file&gt;</span>, promptStr);
+        appendOutput(trimmed, <span style={{ color: theme.warn }}>Usage: nano &lt;existing-file&gt;</span>, promptStr);
         return currentParts;
       }
       const res = resolveNode(arg, currentParts);
       if (!res.node) {
         appendOutput(
           trimmed,
-          <span className="text-red-400">nano: {arg}: No such file (creating/editing files disabled in read-only mode)</span>,
+          <span style={{ color: theme.danger }}>nano: {arg}: No such file (creating/editing disabled in read-only mode)</span>,
           promptStr
         );
         return currentParts;
       }
       if (res.node.type === "dir") {
-        appendOutput(trimmed, <span className="text-red-400">nano: {arg}: Is a directory</span>, promptStr);
+        appendOutput(trimmed, <span style={{ color: theme.danger }}>nano: {arg}: Is a directory</span>, promptStr);
         return currentParts;
       }
       if (res.node.imageSrc) {
         appendOutput(trimmed, renderImageCard(res.node), promptStr);
         return currentParts;
       }
-      setNanoState({
-        fileName: res.node.name,
-        content: res.node.content,
-        notice: "[ File is READ-ONLY (-r--r--r--). Editing is disabled. Press ^X or Esc to exit. ]",
-        searchQuery: "",
-        showSearch: false,
-      });
+      setActiveModal({ kind: "nano", fileName: res.node.name, content: res.node.content });
       return currentParts;
     }
 
@@ -819,18 +1024,13 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
       };
       const targetUrl = map[key];
       if (targetUrl) {
-        if (targetUrl.startsWith("/")) {
-          router.push(targetUrl);
-        } else {
-          window.open(targetUrl, "_blank", "noopener,noreferrer");
-        }
-        appendOutput(trimmed, <span className="text-[#8ae234]">Redirecting to {targetUrl}...</span>, promptStr);
+        if (targetUrl.startsWith("/")) router.push(targetUrl);
+        else window.open(targetUrl, "_blank", "noopener,noreferrer");
+        appendOutput(trimmed, <span style={{ color: theme.promptUser }}>Redirecting to {targetUrl}...</span>, promptStr);
       } else {
         appendOutput(
           trimmed,
-          <span className="text-amber-400">
-            Targets: github, linkedin, resume, builder, credly, email, about, experience, case-studies, projects, services, blogs, certifications, contact, gui
-          </span>,
+          <span style={{ color: theme.warn }}>Targets: {Object.keys(map).join(", ")}</span>,
           promptStr
         );
       }
@@ -838,43 +1038,12 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
     }
 
     if (cmd === "grep") {
-      if (!arg) {
-        appendOutput(trimmed, <span className="text-amber-400">Usage: grep &lt;keyword&gt;</span>, promptStr);
-        return currentParts;
-      }
-      const q = arg.toLowerCase();
-      const hits: { path: string; line: string }[] = [];
-      const walk = (n: FsNode, p: string[]) => {
-        if (n.type === "file") {
-          n.content.split("\n").forEach((ln) => {
-            if (ln.toLowerCase().includes(q)) {
-              hits.push({ path: `~/${p.join("/")}`, line: ln.trim() });
-            }
-          });
-        } else {
-          Object.entries(n.children).forEach(([k, ch]) => walk(ch, [...p, k]));
-        }
-      };
-      walk(fsRoot, []);
+      const out = evalTextStage(trimmed, null, currentParts);
       appendOutput(
         trimmed,
-        hits.length ? (
-          <div className="space-y-1 text-xs">
-            {hits.slice(0, 20).map((h, idx) => (
-              <div key={idx}>
-                <button
-                  onClick={() => executeCommand(`cat ${h.path}`)}
-                  className="text-[#8ae234] hover:underline font-bold cursor-pointer"
-                >
-                  {h.path}
-                </button>
-                <span className="text-[#d3d7cf]">: {h.line}</span>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <span className="text-neutral-400">No matches for "{arg}"</span>
-        ),
+        <pre className="text-xs whitespace-pre-wrap" style={{ color: theme.text }}>
+          {out}
+        </pre>,
         promptStr
       );
       return currentParts;
@@ -882,8 +1051,8 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
 
     appendOutput(
       trimmed,
-      <span className="text-red-400">
-        bash: {cmd}: command not found. Type <b className="text-[#8ae234]">help</b> to see all commands.
+      <span style={{ color: theme.danger }}>
+        bash: {cmd}: command not found. Type <b style={{ color: theme.promptUser }}>help</b> to see all commands.
       </span>,
       promptStr
     );
@@ -906,7 +1075,7 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "c") {
       e.preventDefault();
-      appendOutput(`${input}^C`, <span className="text-[#ad7fa8]">^C</span>, cwdDisplay);
+      appendOutput(`${input}^C`, <span style={{ color: theme.muted }}>^C</span>, cwdDisplay);
       setInput("");
       return;
     }
@@ -935,50 +1104,63 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
       e.preventDefault();
       const tokens = input.split(/\s+/);
       if (tokens.length === 1) {
-        const match = COMMAND_LIST.find((c) => c.startsWith(tokens[0]));
-        if (match) setInput(match + " ");
+        const matches = COMMAND_LIST.filter((c) => c.startsWith(tokens[0]));
+        if (matches.length === 1) {
+          setInput(matches[0] + " ");
+        } else if (matches.length > 1) {
+          setInput(longestCommonPrefix(matches));
+          appendOutput(input, <span style={{ color: theme.promptPath }}>{matches.join("   ")}</span>, cwdDisplay);
+        }
       } else if (currentDir) {
         const last = tokens[tokens.length - 1];
-        const match = Object.keys(currentDir.children).find((k) => k.startsWith(last));
-        if (match) {
-          tokens[tokens.length - 1] = match;
-          setInput(tokens.join(" "));
+        const slashIdx = last.lastIndexOf("/");
+        const dirPrefix = slashIdx >= 0 ? last.slice(0, slashIdx + 1) : "";
+        const partial = slashIdx >= 0 ? last.slice(slashIdx + 1) : last;
+        const targetDirRes = dirPrefix ? resolveNode(dirPrefix.slice(0, -1) || "~") : { node: currentDir, parts: cwdParts };
+
+        if (targetDirRes.node && targetDirRes.node.type === "dir") {
+          const dirObj = targetDirRes.node;
+          const matches = Object.keys(dirObj.children).filter((k) => k.startsWith(partial));
+          if (matches.length === 1) {
+            const node = dirObj.children[matches[0]];
+            tokens[tokens.length - 1] = dirPrefix + matches[0] + (node.type === "dir" ? "/" : "");
+            setInput(tokens.join(" "));
+          } else if (matches.length > 1) {
+            tokens[tokens.length - 1] = dirPrefix + longestCommonPrefix(matches);
+            setInput(tokens.join(" "));
+            appendOutput(input, <span style={{ color: theme.promptUser }}>{matches.join("   ")}</span>, cwdDisplay);
+          }
         }
       }
     }
   };
 
-  const runNanoSearch = () => {
-    if (!nanoState || !nanoState.searchQuery || !nanoRef.current) return;
-    const idx = nanoState.content.toLowerCase().indexOf(nanoState.searchQuery.toLowerCase());
-    if (idx === -1) {
-      setNanoState({ ...nanoState, notice: `[ "${nanoState.searchQuery}" not found ]` });
-      return;
-    }
-    nanoRef.current.focus();
-    nanoRef.current.setSelectionRange(idx, idx + nanoState.searchQuery.length);
-    setNanoState({ ...nanoState, notice: `[ Found match for "${nanoState.searchQuery}" ]` });
-  };
-
   return (
     <div
-      className="w-screen h-screen bg-[#300a24] font-mono text-[#eeeeec] flex flex-col overflow-hidden"
-      onClick={() => !nanoState && inputRef.current?.focus()}
+      className="w-screen h-screen font-mono flex flex-col overflow-hidden transition-colors duration-200"
+      style={{ background: theme.bg, color: theme.text }}
+      onClick={() => !activeModal && inputRef.current?.focus()}
     >
-      {/* Full-Screen Ubuntu GNOME Window Bar */}
-      <div className="bg-gradient-to-b from-[#484642] to-[#2c2b29] px-4 py-2 flex items-center justify-between border-b border-[#1e1d1b] select-none shrink-0">
-        <div className="flex items-center gap-3 text-xs text-[#d3d7cf]">
+      {/* Full-Screen Window Title Bar */}
+      <div
+        className="px-4 py-2 flex items-center justify-between border-b border-[#1e1d1b] select-none shrink-0"
+        style={{ background: theme.titleGrad }}
+      >
+        <div className="flex items-center gap-3 text-xs" style={{ color: theme.text }}>
           <span className="inline-flex items-center gap-1.5 font-semibold">
-            <TerminalIcon className="w-4 h-4 text-[#8ae234]" />
-            <span className="hidden sm:inline">Ubuntu 24.04 LTS</span>
+            <TerminalIcon className="w-4 h-4" style={{ color: theme.promptUser }} />
+            <span className="hidden sm:inline">{theme.label}</span>
           </span>
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#22071a] border border-[#5c244b] text-[10px] text-[#ad7fa8]">
-            <Lock className="w-2.5 h-2.5 text-[#8ae234]" />
+          <span
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px]"
+            style={{ background: theme.bgDark, borderColor: theme.border, color: theme.muted }}
+          >
+            <Lock className="w-2.5 h-2.5" style={{ color: theme.promptUser }} />
             <span>READ-ONLY FS</span>
           </span>
         </div>
 
-        <div className="text-xs sm:text-sm font-sans font-semibold text-[#eeeeec] truncate px-2">
+        <div className="text-xs sm:text-sm font-sans font-semibold truncate px-2" style={{ color: theme.text }}>
           binod@linux-world: {cwdDisplay}
         </div>
 
@@ -988,115 +1170,60 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
             className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-[#3c3b37] hover:bg-[#555753] border border-[#6a6863] text-xs font-sans font-medium text-[#eeeeec]"
             title="Switch to GUI Portfolio"
           >
-            <LayoutGrid className="w-3 h-3 text-[#8ae234]" />
+            <LayoutGrid className="w-3 h-3" style={{ color: theme.promptUser }} />
             <span className="hidden sm:inline">GUI Mode</span>
           </Link>
           <Link
             href="/"
             title="Close Terminal & Return to GUI"
-            className="w-4 h-4 rounded-full bg-[#e95420] text-white flex items-center justify-center hover:opacity-90"
+            className="w-4 h-4 rounded-full text-white flex items-center justify-center hover:opacity-90"
+            style={{ background: theme.accent }}
           >
             <X className="w-2.5 h-2.5" />
           </Link>
         </div>
       </div>
 
-      {/* Read-Only GNU Nano Viewer OR Full-Screen Terminal Session */}
-      {nanoState ? (
-        <div className="flex-1 flex flex-col bg-[#1b0514] text-xs sm:text-sm min-h-0">
-          <div className="bg-[#eeeeec] text-[#1b0514] px-4 py-1 flex items-center justify-between font-bold shrink-0">
-            <span>GNU nano 7.2</span>
-            <span>File: {nanoState.fileName}</span>
-            <span>[ Read-Only ]</span>
-          </div>
-
-          {nanoState.showSearch && (
-            <div className="bg-[#3d1430] px-4 py-1.5 flex items-center gap-2 border-b border-[#5c244b] shrink-0">
-              <span className="text-[#8ae234]">Search:</span>
-              <input
-                type="text"
-                value={nanoState.searchQuery}
-                onChange={(e) => setNanoState({ ...nanoState, searchQuery: e.target.value })}
-                onKeyDown={(e) => e.key === "Enter" && runNanoSearch()}
-                placeholder="find text & press Enter..."
-                className="bg-[#22071a] px-2 py-0.5 rounded text-[#eeeeec] outline-none border border-[#5c244b] flex-1 max-w-xs"
-                autoFocus
-              />
-              <button
-                onClick={runNanoSearch}
-                className="px-2.5 py-0.5 rounded bg-[#8ae234] text-[#1a0514] font-bold cursor-pointer text-xs"
-              >
-                Find
-              </button>
-            </div>
-          )}
-
-          <textarea
-            ref={nanoRef}
-            value={nanoState.content}
-            readOnly
-            onKeyDown={(e) => {
-              if (!e.ctrlKey && !e.metaKey && e.key.length === 1) {
-                setNanoState((prev) =>
-                  prev
-                    ? { ...prev, notice: "[ Error: Read-only file system — editing is disabled ]" }
-                    : null
-                );
-              }
-            }}
-            className="flex-1 w-full bg-[#1b0514] text-[#eeeeec] p-5 outline-none resize-none font-mono leading-relaxed min-h-0"
-            spellCheck={false}
-          />
-
-          {nanoState.notice && (
-            <div className="bg-[#eeeeec] text-[#1b0514] text-center py-0.5 font-bold shrink-0">
-              {nanoState.notice}
-            </div>
-          )}
-
-          <div className="bg-[#2c2b29] px-4 py-2 flex flex-wrap items-center gap-3 border-t border-[#4c4a46] text-xs shrink-0">
-            <button
-              onClick={() =>
-                setNanoState({
-                  ...nanoState,
-                  notice: "[ Error: Read-only file system (chmod 444) — write disabled ]",
-                })
-              }
-              className="px-2.5 py-1 rounded bg-[#3c3b37] border border-[#555753] text-[#ad7fa8] cursor-not-allowed"
-            >
-              ^O Write Out (Locked)
-            </button>
-            <button
-              onClick={() =>
-                setNanoState({ ...nanoState, showSearch: !nanoState.showSearch })
-              }
-              className="px-2.5 py-1 rounded bg-[#3d1430] border border-[#729fcf] text-[#729fcf] font-bold cursor-pointer"
-            >
-              ^W Where Is (Search)
-            </button>
-            <button
-              onClick={() => {
-                setNanoState(null);
-                setTimeout(() => inputRef.current?.focus(), 20);
-              }}
-              className="px-2.5 py-1 rounded bg-[#e95420] text-white font-bold cursor-pointer ml-auto"
-            >
-              ^X Exit nano
-            </button>
-          </div>
-        </div>
+      {/* Modal Views: Nano / Less / Htop OR Active Terminal Session */}
+      {activeModal?.kind === "nano" ? (
+        <NanoViewer
+          fileName={activeModal.fileName}
+          content={activeModal.content}
+          theme={theme}
+          onExit={() => {
+            setActiveModal(null);
+            setTimeout(() => inputRef.current?.focus(), 20);
+          }}
+        />
+      ) : activeModal?.kind === "less" ? (
+        <LessPager
+          fileName={activeModal.fileName}
+          content={activeModal.content}
+          theme={theme}
+          onExit={() => {
+            setActiveModal(null);
+            setTimeout(() => inputRef.current?.focus(), 20);
+          }}
+        />
+      ) : activeModal?.kind === "htop" ? (
+        <HtopMonitor
+          theme={theme}
+          onExit={() => {
+            setActiveModal(null);
+            setTimeout(() => inputRef.current?.focus(), 20);
+          }}
+        />
       ) : (
         <>
-          {/* Full-Height Scrollable Terminal Output */}
           <div className="flex-1 p-4 sm:p-5 space-y-4 overflow-y-auto text-xs sm:text-sm min-h-0">
             {entries.map((entry) => (
               <div key={entry.id} className="space-y-1.5">
                 {entry.command && (
                   <div className="flex items-center gap-1 flex-wrap">
-                    <span className="text-[#8ae234] font-bold">binod@linux-world</span>
-                    <span className="text-[#eeeeec]">:</span>
-                    <span className="text-[#729fcf] font-bold">{entry.promptPath}</span>
-                    <span className="text-[#eeeeec]">$ {entry.command}</span>
+                    <span className="font-bold" style={{ color: theme.promptUser }}>binod@linux-world</span>
+                    <span>:</span>
+                    <span className="font-bold" style={{ color: theme.promptPath }}>{entry.promptPath}</span>
+                    <span>$ {entry.command}</span>
                   </div>
                 )}
                 <div className="pl-1 sm:pl-2">{entry.body}</div>
@@ -1105,20 +1232,23 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
             <div ref={outputEndRef} />
           </div>
 
-          {/* Active Bottom Terminal Prompt */}
-          <div className="bg-[#22071a] px-4 sm:px-5 py-3 border-t border-[#4c1a3d] flex items-center gap-1.5 text-xs sm:text-sm shrink-0">
-            <span className="text-[#8ae234] font-bold shrink-0">binod@linux-world</span>
-            <span className="text-[#eeeeec] shrink-0">:</span>
-            <span className="text-[#729fcf] font-bold shrink-0">{cwdDisplay}</span>
-            <span className="text-[#eeeeec] shrink-0">$</span>
+          <div
+            className="px-4 sm:px-5 py-3 border-t flex items-center gap-1.5 text-xs sm:text-sm shrink-0"
+            style={{ background: theme.bgDark, borderColor: theme.border }}
+          >
+            <span className="font-bold shrink-0" style={{ color: theme.promptUser }}>binod@linux-world</span>
+            <span className="shrink-0">:</span>
+            <span className="font-bold shrink-0" style={{ color: theme.promptPath }}>{cwdDisplay}</span>
+            <span className="shrink-0">$</span>
             <input
               ref={inputRef}
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="type Linux command (ls -la, cd, cat, nano, view, tree, help)..."
-              className="flex-1 bg-transparent outline-none text-[#eeeeec] placeholder:text-[#ad7fa8]/60 font-mono"
+              placeholder="try ls -la, aws sts get-caller-identity, kubectl get pods, htop, cat blogs/all-blogs.txt | grep Bedrock..."
+              className="flex-1 bg-transparent outline-none font-mono"
+              style={{ color: theme.text }}
               autoFocus
               spellCheck={false}
               autoComplete="off"

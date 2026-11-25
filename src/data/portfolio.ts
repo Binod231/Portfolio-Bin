@@ -8,7 +8,7 @@ export const portfolio = {
     links: {
       github: "https://github.com/Binod231",
       linkedin: "https://www.linkedin.com/in/binod-prasad-joshi-549067281",
-      resume: "https://drive.google.com/file/d/1QdJ0GqlDd9ft0moKAfKePkIh_cKaUklA/view?usp=sharing",
+      resume: "https://drive.google.com/file/d/1aCP_dh8pSJ2Vy_KncT_PfvOj3z5LHWPf/view?usp=sharing",
     },
     photo: "/portfoilo.jpeg",
     aboutCards: [

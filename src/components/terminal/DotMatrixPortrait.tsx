@@ -163,7 +163,7 @@ export default function DotMatrixPortrait({
       onMouseLeave={() => {
         pointerRef.current.active = false;
       }}
-      className="rounded-full cursor-crosshair bg-[#1c0615]/80 shrink-0"
+      className="rounded-full cursor-crosshair shrink-0"
       title="Interactive 3D Dot-Matrix Profile (Hover to interact)"
     />
   );

@@ -24,19 +24,6 @@ type OutputEntry = {
   body: React.ReactNode;
 };
 
-const QUICK_DIRS = [
-  "~",
-  "about",
-  "experience",
-  "case-studies",
-  "projects",
-  "services",
-  "blogs",
-  "certifications",
-  "skills",
-  "contact",
-];
-
 const COMMAND_LIST = [
   "help",
   "ls",
@@ -428,68 +415,60 @@ export default function LinuxTerminal() {
 
     if (cmd === "welcome") {
       appendOutput(
-        "welcome",
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 p-4 rounded-lg bg-[#22071a] border border-[#5c244b]">
-          <div className="space-y-2.5 flex-1">
-            <div className="text-xs text-[#d3d7cf] opacity-80">
-              Ubuntu 24.04.1 LTS (GNU/Linux 6.8.0-aws-devops x86_64) — Read-Only Guest Shell
-            </div>
-            <div className="text-lg sm:text-xl font-bold text-[#8ae234]">
-              Welcome to Binod Linux World
-            </div>
-            <div className="text-xs sm:text-sm text-[#d3d7cf] leading-relaxed">
-              Full-screen Linux portfolio environment for <b className="text-white">{portfolio.personal.name}</b> —{" "}
-              <span className="text-sky-400">Kathmandu, Nepal (UTC+5:45)</span>
-              <br />
-              Directories mirror the portfolio navbar: <code className="text-[#8ae234]">about/</code>,{" "}
-              <code className="text-[#8ae234]">experience/</code>, <code className="text-[#8ae234]">case-studies/</code>,{" "}
-              <code className="text-[#8ae234]">projects/</code>, <code className="text-[#8ae234]">services/</code>,{" "}
-              <code className="text-[#8ae234]">blogs/</code>, <code className="text-[#8ae234]">certifications/</code>,{" "}
-              <code className="text-[#8ae234]">contact/</code>.
-            </div>
-            <div className="text-xs text-[#ad7fa8]">
-              Try: <code className="text-[#8ae234]">ls -la</code>, <code className="text-[#8ae234]">cd experience</code>,{" "}
-              <code className="text-[#8ae234]">cat about/bio.txt</code>, <code className="text-[#8ae234]">nano welcome.txt</code>,{" "}
-              <code className="text-[#8ae234]">view about/profile-dotmatrix.img</code>, <code className="text-[#8ae234]">tree</code>,{" "}
-              <code className="text-[#8ae234]">help</code>
-            </div>
-            <div className="flex flex-wrap gap-2 pt-1 text-xs">
+        "",
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 py-1">
+          <div className="space-y-2 text-xs sm:text-sm leading-snug">
+            <pre className="text-[#8ae234] font-bold whitespace-pre overflow-x-auto leading-tight text-[10px] sm:text-xs">{` ____  ___ _   _  ___  ____    _     ___ _   _ _   ___  __
+| __ )|_ _| \\ | |/ _ \\|  _ \\  | |   |_ _| \\ | | | | \\ \\/ /
+|  _ \\ | ||  \\| | | | | | | | | |    | ||  \\| | | | |\\  / 
+| |_) || || |\\  | |_| | |_| | | |___ | || |\\  | |_| |/  \\ 
+|____/|___|_| \\_|\\___/|____/  |_____|___|_| \\_|\\___//_/\\_\\`}</pre>
+
+            <pre className="text-[#d3d7cf] whitespace-pre-wrap text-xs sm:text-[13px] pt-1">{`       =[ binod-linux-world v2026.11-devops-ro         ]
++ -- --=[ ${portfolio.experience.length} experiences  - ${portfolio.experience.filter((e) => e.caseStudy).length} case-studies - ${portfolio.projects.length} projects ]
++ -- --=[ ${portfolio.services.length} services     - ${portfolio.blogs.length} blogs       - ${portfolio.certifications.length} certs    ]
++ -- --=[ 2x AWS Certified | AWS Community Builder 2026 ]
++ -- --=[ Kathmandu, Nepal (UTC+5:45) | Read-Only Shell ]`}</pre>
+
+            <div className="text-[#eeeeec] pt-1">
+              Welcome to <span className="text-[#8ae234] font-bold">Binod Linux World</span>. Type{" "}
               <button
                 onClick={() => executeCommand("help")}
-                className="px-2.5 py-1 rounded bg-[#8ae234] text-[#1a0514] font-bold cursor-pointer"
+                className="text-[#8ae234] underline cursor-pointer font-bold"
               >
-                $ help
+                help
               </button>
+              ,{" "}
               <button
                 onClick={() => executeCommand("tree")}
-                className="px-2.5 py-1 rounded bg-[#3d1430] border border-[#729fcf] text-[#729fcf] font-bold cursor-pointer"
+                className="text-[#729fcf] underline cursor-pointer font-bold"
               >
-                $ tree
+                tree
               </button>
-              <a
-                href={portfolio.personal.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-2.5 py-1 rounded bg-[#3d1430] border border-[#8ae234]/60 text-[#8ae234] font-bold inline-flex items-center gap-1"
+              ,{" "}
+              <button
+                onClick={() => executeCommand("ls -la")}
+                className="text-[#8ae234] underline cursor-pointer font-bold"
               >
-                <span>GitHub</span>
-                <ArrowUpRight className="w-3 h-3" />
-              </a>
-              <Link
-                href="/"
-                className="px-2.5 py-1 rounded bg-[#e95420] text-white font-bold inline-flex items-center gap-1"
+                ls -la
+              </button>
+              , or{" "}
+              <button
+                onClick={() => executeCommand("cat contact/links.txt")}
+                className="text-[#ffad8e] underline cursor-pointer font-bold"
               >
-                <span>Exit to GUI Portfolio</span>
-                <ArrowUpRight className="w-3 h-3" />
-              </Link>
+                cat contact/links.txt
+              </button>{" "}
+              (or <Link href="/" className="text-[#e95420] underline font-bold">exit</Link> for GUI).
             </div>
           </div>
-          <div className="flex flex-col items-center gap-1.5 self-center">
-            <DotMatrixPortrait src="/profile-headshot.jpg" size={185} />
-            <span className="text-[11px] text-[#ad7fa8]">[3D Dot-Matrix Profile :: Hover Me]</span>
+
+          <div className="flex flex-col items-center gap-1 self-start lg:self-center">
+            <DotMatrixPortrait src="/profile-headshot.jpg" size={172} />
+            <span className="text-[10px] text-[#ad7fa8]">[dot-matrix // binod231]</span>
           </div>
         </div>,
-        promptStr
+        ""
       );
       return currentParts;
     }
@@ -1033,35 +1012,6 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
         </div>
       </div>
 
-      {/* Navbar-Mirrored Directory Strip */}
-      <div className="bg-[#22071a] px-3 sm:px-5 py-2 border-b border-[#4c1a3d] flex flex-wrap items-center gap-1.5 text-xs shrink-0">
-        <span className="text-[#ad7fa8] mr-1 font-bold">DIRS:</span>
-        {QUICK_DIRS.map((dir) => {
-          const isActive =
-            (dir === "~" && cwdParts.length === 0) ||
-            (cwdParts.length > 0 && cwdParts[0] === dir);
-          return (
-            <button
-              key={dir}
-              onClick={() => executeCommand(dir === "~" ? "cd ~ && ls" : `cd ~/${dir} && ls`)}
-              className={`px-2 py-0.5 rounded border text-xs cursor-pointer transition-colors ${
-                isActive
-                  ? "bg-[#8ae234] text-[#1a0514] border-[#8ae234] font-bold"
-                  : "bg-[#3d1430] text-[#d3d7cf] border-[#5c244b] hover:border-[#8ae234] hover:text-[#8ae234]"
-              }`}
-            >
-              {dir === "~" ? "~" : `${dir}/`}
-            </button>
-          );
-        })}
-        <button
-          onClick={() => executeCommand("view about/profile-dotmatrix.img")}
-          className="ml-auto px-2.5 py-0.5 rounded bg-[#e95420]/20 border border-[#e95420] text-[#ffad8e] hover:bg-[#e95420] hover:text-white cursor-pointer text-xs font-bold"
-        >
-          img: dot-matrix
-        </button>
-      </div>
-
       {/* Read-Only GNU Nano Viewer OR Full-Screen Terminal Session */}
       {nanoState ? (
         <div className="flex-1 flex flex-col bg-[#1b0514] text-xs sm:text-sm min-h-0">
@@ -1152,12 +1102,14 @@ Contents : 8 Dirs | ${portfolio.blogs.length} Blogs | ${portfolio.projects.lengt
           <div className="flex-1 p-4 sm:p-5 space-y-4 overflow-y-auto text-xs sm:text-sm min-h-0">
             {entries.map((entry) => (
               <div key={entry.id} className="space-y-1.5">
-                <div className="flex items-center gap-1 flex-wrap">
-                  <span className="text-[#8ae234] font-bold">binod@linux-world</span>
-                  <span className="text-[#eeeeec]">:</span>
-                  <span className="text-[#729fcf] font-bold">{entry.promptPath}</span>
-                  <span className="text-[#eeeeec]">$ {entry.command}</span>
-                </div>
+                {entry.command && (
+                  <div className="flex items-center gap-1 flex-wrap">
+                    <span className="text-[#8ae234] font-bold">binod@linux-world</span>
+                    <span className="text-[#eeeeec]">:</span>
+                    <span className="text-[#729fcf] font-bold">{entry.promptPath}</span>
+                    <span className="text-[#eeeeec]">$ {entry.command}</span>
+                  </div>
+                )}
                 <div className="pl-1 sm:pl-2">{entry.body}</div>
               </div>
             ))}

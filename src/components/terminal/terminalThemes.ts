@@ -83,3 +83,4 @@ export const TERMINAL_THEMES: Record<ThemeName, TerminalTheme> = {
     warn: "#fde047",
   },
 };
+

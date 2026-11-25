@@ -298,17 +298,6 @@ export default function LinuxTerminal() {
             );
           })}
         </div>
-        {dirNode.guiSection && (
-          <div className="pt-1">
-            <Link
-              href={dirNode.guiSection}
-              className="inline-flex items-center gap-1 text-xs text-sky-400 hover:text-[#8ae234] underline"
-            >
-              <span>Redirect to GUI section ({dirNode.guiSection})</span>
-              <ArrowUpRight className="w-3 h-3" />
-            </Link>
-          </div>
-        )}
       </div>
     );
   };
